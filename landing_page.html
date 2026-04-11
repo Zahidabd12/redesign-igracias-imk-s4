@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telkom University - iGRACIAS Redesign</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .sidebar-item-active { border-left: 4px solid #b91c1c; background-color: #fee2e2; color: #b91c1c; }
+        .card { background: white; border-radius: 1rem; border: 1px solid #e2e8f0; }
+        
+        /* Hide scrollbar for sidebar but allow scrolling */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col hidden md:flex">
+        <div class="p-6 flex items-center gap-3 border-b border-slate-100">
+            <div class="w-8 h-8 bg-red-700 rounded-lg flex items-center justify-center text-white font-bold italic shadow-sm">iG</div>
+            <span class="text-xl font-bold text-slate-800 tracking-tight">iGRACIAS</span>
+        </div>
+
+        <div class="px-6 py-4 border-b border-slate-100">
+            <p class="text-sm font-bold text-slate-800 truncate">Zahid Abdullah N. M.</p>
+            <p class="text-xs text-slate-500">101102400004</p>
+            <div class="mt-2 inline-flex items-center gap-1 bg-red-50 text-red-700 px-2 py-1 rounded text-[10px] font-bold border border-red-100">
+                <i class="fa-solid fa-user-graduate"></i> MAHASISWA
+            </div>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto no-scrollbar px-4 py-4 space-y-1">
+            <p class="text-xs font-semibold text-slate-400 uppercase px-2 mb-2">Main Menu</p>
+            
+            <a href="#" class="sidebar-item-active flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition">
+                <i class="fa-solid fa-house w-4 text-center"></i> Dashboard
+            </a>
+            
+            <div class="mt-4 mb-2">
+                <p class="text-xs font-semibold text-slate-400 uppercase px-2">Akademik & Layanan</p>
+            </div>
+            
+            <a href="#" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+                <i class="fa-solid fa-user w-4 text-center"></i> Akun
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+                <i class="fa-solid fa-building w-4 text-center"></i> Asrama Mahasiswa
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+                <i class="fa-solid fa-comments w-4 text-center"></i> Bimbingan Konseling
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+                <i class="fa-solid fa-laptop-code w-4 text-center"></i> Elearning (Idea)
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+                <i class="fa-solid fa-file-invoice w-4 text-center"></i> Pembayaran
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+                <i class="fa-solid fa-graduation-cap w-4 text-center"></i> Nilai
+            </a>
+            <a href="presensi.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+    <i class="fa-solid fa-clipboard-list w-4 text-center"></i> Presensi
+</a>
+        </nav>
+
+        <div class="p-4 border-t border-slate-200">
+    <a href="login.html" class="w-full flex items-center justify-center gap-2 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-red-50 hover:text-red-700 rounded-lg transition">
+        <i class="fa-solid fa-right-from-bracket"></i> Logout
+    </a>
+</div>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-y-auto">
+        
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-10">
+            <div class="relative w-96">
+                <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="text" placeholder="Search menu or info..." class="w-full pl-10 pr-4 py-2 bg-slate-100 rounded-full border-none focus:ring-2 focus:ring-red-500 focus:bg-white text-sm transition outline-none">
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="hidden md:flex items-center gap-2 bg-slate-100 px-3 py-1 rounded-md">
+                    <i class="fa-regular fa-calendar text-slate-500 text-xs"></i>
+                    <span class="text-xs font-semibold text-slate-600">TA 2526/2</span>
+                </div>
+                
+                <button class="text-sm font-semibold text-slate-500 hover:text-slate-800 flex items-center gap-1">
+                    <img src="https://flagcdn.com/w20/gb.png" class="w-4 h-auto rounded-sm"> ENG
+                </button>
+
+                <button class="relative text-slate-400 hover:text-red-600 transition">
+                    <i class="fa-solid fa-bell text-lg"></i>
+                    <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+                </button>
+
+                <div class="flex items-center gap-2 bg-slate-100 p-1 rounded-full px-4 cursor-pointer hover:bg-slate-200 transition">
+                    <img src="https://ui-avatars.com/api/?name=Zahid+Abdullah&background=b91c1c&color=fff" class="w-8 h-8 rounded-full">
+                    <span class="text-sm font-semibold text-slate-700">Zahid</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="p-8">
+            
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-800">Welcome back, Zahid! 👋</h1>
+                    <p class="text-sm text-slate-500 mt-1">Here is your academic overview and latest announcements.</p>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-red-700 to-red-900 rounded-2xl p-8 text-white shadow-lg mb-8 relative overflow-hidden flex flex-col md:flex-row gap-8 items-center justify-between">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -translate-y-1/2 translate-x-1/3"></div>
+                <div class="absolute bottom-0 left-0 w-40 h-40 bg-red-500 opacity-20 rounded-full translate-y-1/3 -translate-x-1/4 filter blur-xl"></div>
+                
+                <div class="relative z-10 max-w-lg">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-semibold mb-4 border border-white/20">
+                        <i class="fa-solid fa-bullhorn"></i> Announcement
+                    </div>
+                    <h2 class="text-3xl lg:text-4xl font-extrabold mb-2 leading-tight">Jadwal TOEFL ITP®<br><span class="text-red-200">Daring & Luring</span></h2>
+                    <p class="text-sm text-red-100 mb-6">Pendaftaran tes TOEFL ITP untuk periode Mei 2026 telah dibuka. Pastikan Anda mendaftar sebelum kuota penuh.</p>
+                    
+                    <div class="flex flex-wrap gap-4">
+                        <div class="bg-white/10 border border-white/20 backdrop-blur px-5 py-3 rounded-xl">
+                            <p class="text-[10px] text-red-200 uppercase tracking-wider font-semibold mb-1">Civitas Tel-U</p>
+                            <p class="font-bold text-xl text-white">Rp 550.000</p>
+                        </div>
+                        <div class="bg-black/20 border border-black/10 backdrop-blur px-5 py-3 rounded-xl">
+                            <p class="text-[10px] text-red-200 uppercase tracking-wider font-semibold mb-1">Umum</p>
+                            <p class="font-bold text-xl text-white">Rp 610.500</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative z-10 bg-white text-slate-800 rounded-xl p-5 shadow-xl w-full md:w-80 shrink-0">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-sm">Mei 2026</h3>
+                        <span class="text-[10px] font-semibold text-red-600 bg-red-50 px-2 py-1 rounded">4 Batch Tersedia</span>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between text-xs border-b border-slate-100 pb-2">
+                            <div class="flex items-center gap-2 font-semibold">
+                                <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-slate-600">5</div>
+                                <span>Mei</span>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-slate-500">Tutup Daftar: <span class="font-medium text-slate-700">20 Apr</span></p>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between text-xs border-b border-slate-100 pb-2">
+                            <div class="flex items-center gap-2 font-semibold">
+                                <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-slate-600">12</div>
+                                <span>Mei</span>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-slate-500">Tutup Daftar: <span class="font-medium text-slate-700">27 Apr</span></p>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between text-xs border-b border-slate-100 pb-2">
+                            <div class="flex items-center gap-2 font-semibold">
+                                <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-slate-600">19</div>
+                                <span>Mei</span>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-slate-500">Tutup Daftar: <span class="font-medium text-slate-700">4 Mei</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="w-full mt-4 bg-red-700 text-white text-xs font-bold py-2 rounded-lg hover:bg-red-800 transition shadow">
+                        Daftar Sekarang
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <div class="col-span-1 lg:col-span-2 space-y-6">
+                    <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+                        <i class="fa-solid fa-newspaper text-red-600"></i> Informasi & Berita
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="card overflow-hidden hover:shadow-md transition cursor-pointer group">
+                            <div class="h-32 bg-blue-50 relative p-6 flex flex-col justify-center border-b border-slate-100">
+                                <div class="absolute top-4 right-4 text-slate-300 group-hover:text-blue-500 transition"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+                                <span class="text-[10px] font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded w-max mb-2">BEASISWA</span>
+                                <h4 class="font-bold text-xl text-blue-900">LPDP 2026 Batch 2</h4>
+                            </div>
+                            <div class="p-5">
+                                <p class="text-xs text-slate-500 mb-3 line-clamp-2">Pendaftaran beasiswa LPDP Batch 2 Intake Februari 2027 telah dibuka untuk mahasiswa jenjang Magister dan Doktoral.</p>
+                                <div class="flex items-center justify-between text-[10px] font-medium text-slate-400">
+                                    <span><i class="fa-regular fa-clock"></i> 11 Mar 2026</span>
+                                    <span class="text-blue-600 font-semibold">Read More</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card overflow-hidden hover:shadow-md transition cursor-pointer group">
+                            <div class="h-32 bg-rose-50 relative p-6 flex flex-col justify-center border-b border-slate-100">
+                                <div class="absolute top-4 right-4 text-slate-300 group-hover:text-rose-500 transition"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+                                <span class="text-[10px] font-bold text-rose-600 bg-rose-100 px-2 py-1 rounded w-max mb-2">SURVEI</span>
+                                <h4 class="font-bold text-lg text-rose-900 leading-tight">Literasi Baca-Tulis & Numerasi</h4>
+                            </div>
+                            <div class="p-5">
+                                <p class="text-xs text-slate-500 mb-3 line-clamp-2">Wajib diisi oleh seluruh mahasiswa aktif. Survei ini bertujuan untuk pemetaan tingkat literasi kampus.</p>
+                                <div class="flex items-center justify-between text-[10px] font-medium text-slate-400">
+                                    <span><i class="fa-regular fa-clock"></i> 10 Mar 2026</span>
+                                    <span class="text-rose-600 font-semibold">Isi Survei</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-span-1">
+                    <div class="card p-6 h-full flex flex-col">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="font-bold text-slate-800 text-lg">Jadwal Kuliah</h3>
+                            <button class="text-xs font-semibold text-red-600 hover:underline">Lihat Semua</button>
+                        </div>
+                        
+                        <div class="space-y-6 flex-1">
+                            
+                            <div class="flex gap-4 group cursor-pointer">
+                                <div class="flex flex-col items-center">
+                                    <div class="w-3 h-3 rounded-full bg-red-500 outline outline-4 outline-red-50 group-hover:outline-red-100 transition"></div>
+                                    <div class="w-0.5 h-full bg-slate-100 my-1"></div>
+                                </div>
+                                <div class="pb-2">
+                                    <p class="text-[10px] font-bold text-red-500 mb-1">HARI INI • 08:30 - 11:30</p>
+                                    <h4 class="text-sm font-bold text-slate-800">Rekayasa Perangkat Lunak</h4>
+                                    <p class="text-xs text-slate-500 flex items-center gap-1 mt-1">
+                                        <i class="fa-solid fa-location-dot"></i> TULT 08.01
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4 group cursor-pointer">
+                                <div class="flex flex-col items-center">
+                                    <div class="w-3 h-3 rounded-full bg-indigo-500 outline outline-4 outline-indigo-50 group-hover:outline-indigo-100 transition"></div>
+                                    <div class="w-0.5 h-full bg-slate-100 my-1"></div>
+                                </div>
+                                <div class="pb-2">
+                                    <p class="text-[10px] font-bold text-indigo-500 mb-1">HARI INI • 13:30 - 15:30</p>
+                                    <h4 class="text-sm font-bold text-slate-800">Kecerdasan Buatan</h4>
+                                    <p class="text-xs text-slate-500 flex items-center gap-1 mt-1">
+                                        <i class="fa-solid fa-laptop"></i> Online (Zoom)
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4">
+                                <div class="flex flex-col items-center">
+                                    <div class="w-3 h-3 rounded-full border-2 border-slate-300 bg-white"></div>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-medium text-slate-400 italic">Tidak ada jadwal lagi hari ini.</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="mt-6 pt-6 border-t border-slate-100">
+                            <button class="w-full flex items-center justify-center gap-2 py-3 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-sm font-semibold transition shadow-md">
+                                <i class="fa-solid fa-qrcode"></i> Scan Presensi Kehadiran
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</body>
+</html>
