@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Learning (Idea) - iGRACIAS Redesign</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .sidebar-item-active { border-left: 4px solid #b91c1c; background-color: #fee2e2; color: #b91c1c; }
+        .card { background: white; border-radius: 1rem; border: 1px solid #e2e8f0; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Dropdown & Modal Animations */
+        .dropdown-enter { opacity: 0; transform: scale(0.95) translateY(-10px); visibility: hidden; }
+        .dropdown-active { opacity: 1; transform: scale(1) translateY(0); visibility: visible; transition: all 0.2s ease-out; }
+        .modal-enter { opacity: 0; transform: scale(0.95); }
+        .modal-active { opacity: 1; transform: scale(1); transition: all 0.2s ease-out; }
+        .toast-enter { transform: translateY(100%); opacity: 0; }
+        .toast-active { transform: translateY(0); opacity: 1; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col hidden md:flex shrink-0">
+        <div class="p-6 flex items-center gap-3 border-b border-slate-100">
+            <div class="w-8 h-8 bg-red-700 rounded-lg flex items-center justify-center text-white font-bold italic shadow-sm">iG</div>
+            <span class="text-xl font-bold text-slate-800 tracking-tight">iGRACIAS</span>
+        </div>
+
+        <div class="px-6 py-4 border-b border-slate-100">
+            <p class="text-sm font-bold text-slate-800 truncate">Zahid Abdullah N. M.</p>
+            <p class="text-xs text-slate-500">101102400004</p>
+            <div class="mt-2 inline-flex items-center gap-1 bg-red-50 text-red-700 px-2 py-1 rounded text-[10px] font-bold border border-red-100">
+                <i class="fa-solid fa-user-graduate"></i> MAHASISWA
+            </div>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto no-scrollbar px-4 py-4 space-y-1">
+            <p class="text-xs font-semibold text-slate-400 uppercase px-2 mb-2">Main Menu</p>
+            
+            <a href="landing_page.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+                <i class="fa-solid fa-house w-4 text-center"></i> Dashboard
+            </a>
+            
+            <div class="mt-4 mb-2">
+                <p class="text-xs font-semibold text-slate-400 uppercase px-2">Akademik & Layanan</p>
+            </div>
+            
+            <a href="akun.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+                <i class="fa-solid fa-user w-4 text-center"></i> Akun
+            </a>
+            <a href="nilai.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+                <i class="fa-solid fa-graduation-cap w-4 text-center"></i> Nilai
+            </a>
+            <a href="pembayaran.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+                <i class="fa-solid fa-file-invoice w-4 text-center"></i> Pembayaran
+            </a>
+            <a href="presensi.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+                <i class="fa-solid fa-clipboard-list w-4 text-center"></i> Presensi
+            </a>
+            
+            <a href="elearning.html" class="sidebar-item-active flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition">
+                <i class="fa-solid fa-laptop-code w-4 text-center"></i> Elearning (Idea)
+            </a>
+            
+            <a href="bimbingan.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+                <i class="fa-solid fa-comments w-4 text-center"></i> Bimbingan Akademik
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-slate-200">
+            <a href="login.html" class="w-full flex items-center justify-center gap-2 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-red-50 hover:text-red-700 rounded-lg transition">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-y-auto bg-slate-50/50">
+        
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-20">
+            <div class="flex items-center gap-4">
+                <div class="w-8 h-8 rounded bg-blue-100 text-blue-700 flex items-center justify-center font-bold italic shadow-sm">Id</div>
+                <h2 class="text-lg font-bold text-slate-800">Idea Learning</h2>
+            </div>
+            <div class="flex items-center gap-6 relative">
+                <div class="relative w-64 hidden lg:block">
+                    <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <input type="text" id="courseSearch" onkeyup="filterCourses()" placeholder="Cari materi / kelas..." class="w-full pl-9 pr-4 py-1.5 bg-slate-100 rounded-full border-none focus:ring-2 focus:ring-blue-500 text-xs outline-none transition">
+                </div>
+                
+                <div class="relative">
+                    <div onclick="toggleDropdown(event, 'profileDropdown')" class="flex items-center gap-2 bg-slate-100 p-1 rounded-full px-4 cursor-pointer hover:bg-slate-200 transition">
+                        <img src="https://ui-avatars.com/api/?name=Zahid+Abdullah&background=b91c1c&color=fff" class="w-8 h-8 rounded-full">
+                        <span class="text-sm font-semibold text-slate-700">Zahid</span>
+                    </div>
+                    <div id="profileDropdown" class="dropdown-enter absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden z-50">
+                        <div class="p-3 border-b border-slate-100">
+                            <p class="text-sm font-bold text-slate-800">Zahid Abdullah</p>
+                            <p class="text-[10px] text-slate-500">NIM: 101102400004</p>
+                        </div>
+                        <div class="p-1">
+                            <a href="akun.html" class="flex items-center gap-2 px-3 py-2 text-xs text-slate-600 hover:bg-slate-50 hover:text-red-600 rounded-lg transition"><i class="fa-solid fa-user-pen w-4"></i> Edit Profil</a>
+                            <a href="login.html" class="flex items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 rounded-lg transition mt-1 border-t border-slate-100"><i class="fa-solid fa-right-from-bracket w-4"></i> Keluar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="p-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <div class="col-span-1 lg:col-span-2 space-y-6">
+                    
+                    <div class="bg-gradient-to-r from-blue-800 to-indigo-900 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden flex items-center justify-between">
+                        <div class="absolute right-0 top-0 w-64 h-64 bg-white opacity-5 rounded-full -translate-y-1/2 translate-x-1/4"></div>
+                        <div class="relative z-10">
+                            <h2 class="text-2xl font-extrabold mb-1">Tetap Fokus dan Disiplin! 🚀</h2>
+                            <p class="text-sm text-blue-100 mb-4">Kamu memiliki 2 tugas yang harus diselesaikan minggu ini. Mari selesaikan lebih awal.</p>
+                            <div class="flex gap-3">
+                                <span class="bg-blue-900/50 backdrop-blur border border-blue-400/30 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2">
+                                    <i class="fa-solid fa-book"></i> <span id="activeCourseCount">6</span> Kelas Aktif
+                                </span>
+                                <span class="bg-red-500/80 backdrop-blur border border-red-400/30 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2">
+                                    <i class="fa-solid fa-fire"></i> 2 Deadline
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center border-b border-slate-200 pb-2">
+                        <h3 class="font-bold text-slate-800 text-lg">Kelas Saya (Semester Genap 25/26)</h3>
+                        <div class="flex gap-2">
+                            <button onclick="showToast('Fitur filter lanjutan sedang dalam pengembangan.')" class="bg-white border border-slate-200 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-50 transition"><i class="fa-solid fa-filter"></i> Filter</button>
+                            <button class="bg-white border border-slate-200 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-50 transition"><i class="fa-solid fa-list"></i></button>
+                            <button class="bg-blue-50 border border-blue-200 text-blue-700 px-3 py-1.5 rounded-lg text-xs font-semibold"><i class="fa-solid fa-border-all"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="courseGrid">
+                        
+                        <div class="card course-card overflow-hidden hover:shadow-md transition group flex flex-col">
+                            <div class="h-24 bg-gradient-to-r from-teal-500 to-emerald-600 relative p-4 flex flex-col justify-end">
+                                <div class="absolute top-3 right-3 bg-white/20 backdrop-blur px-2 py-1 rounded text-[10px] text-white font-bold border border-white/30">CII3B4</div>
+                                <h4 class="course-title font-bold text-white text-lg leading-tight drop-shadow-sm">Kecerdasan Buatan</h4>
+                            </div>
+                            <div class="p-5 flex-1 flex flex-col">
+                                <p class="text-xs font-semibold text-slate-500 flex items-center gap-2 mb-4">
+                                    <i class="fa-solid fa-chalkboard-user"></i> Pak Dimas
+                                </p>
+                                <div class="mb-4">
+                                    <div class="flex justify-between text-[10px] font-bold text-slate-400 mb-1">
+                                        <span>Progress Pertemuan</span>
+                                        <span class="text-teal-600">60%</span>
+                                    </div>
+                                    <div class="w-full bg-slate-100 rounded-full h-1.5">
+                                        <div class="bg-teal-500 h-1.5 rounded-full" style="width: 60%"></div>
+                                    </div>
+                                </div>
+                                <button onclick="enterCourse(event, this, 'Kecerdasan Buatan')" class="w-full mt-auto bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 text-slate-700 hover:text-blue-700 font-semibold py-2 rounded-lg text-xs transition">
+                                    Masuk Kelas
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="card course-card overflow-hidden hover:shadow-md transition group flex flex-col">
+                            <div class="h-24 bg-gradient-to-r from-indigo-500 to-purple-600 relative p-4 flex flex-col justify-end">
+                                <div class="absolute top-3 right-3 bg-white/20 backdrop-blur px-2 py-1 rounded text-[10px] text-white font-bold border border-white/30">CII3H3</div>
+                                <h4 class="course-title font-bold text-white text-lg leading-tight drop-shadow-sm">Bioinformatika Dasar</h4>
+                            </div>
+                            <div class="p-5 flex-1 flex flex-col">
+                                <p class="text-xs font-semibold text-slate-500 flex items-center gap-2 mb-4">
+                                    <i class="fa-solid fa-chalkboard-user"></i> Dr. Anisa Maharani
+                                </p>
+                                <div class="mb-4">
+                                    <div class="flex justify-between text-[10px] font-bold text-slate-400 mb-1">
+                                        <span>Progress Pertemuan</span>
+                                        <span class="text-indigo-600">55%</span>
+                                    </div>
+                                    <div class="w-full bg-slate-100 rounded-full h-1.5">
+                                        <div class="bg-indigo-500 h-1.5 rounded-full" style="width: 55%"></div>
+                                    </div>
+                                </div>
+                                <button onclick="enterCourse(event, this, 'Bioinformatika Dasar')" class="w-full mt-auto bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 text-slate-700 hover:text-blue-700 font-semibold py-2 rounded-lg text-xs transition">
+                                    Masuk Kelas
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="card course-card overflow-hidden hover:shadow-md transition group flex flex-col">
+                            <div class="h-24 bg-gradient-to-r from-orange-500 to-red-500 relative p-4 flex flex-col justify-end">
+                                <div class="absolute top-3 right-3 bg-white/20 backdrop-blur px-2 py-1 rounded text-[10px] text-white font-bold border border-white/30">PKM2026</div>
+                                <h4 class="course-title font-bold text-white text-lg leading-tight drop-shadow-sm">Metodologi Penelitian & Inovasi</h4>
+                            </div>
+                            <div class="p-5 flex-1 flex flex-col">
+                                <p class="text-xs font-semibold text-slate-500 flex items-center gap-2 mb-4">
+                                    <i class="fa-solid fa-chalkboard-user"></i> Prof. Bambang S.
+                                </p>
+                                <div class="mb-4">
+                                    <div class="flex justify-between text-[10px] font-bold text-slate-400 mb-1">
+                                        <span>Progress Pertemuan</span>
+                                        <span class="text-orange-600">70%</span>
+                                    </div>
+                                    <div class="w-full bg-slate-100 rounded-full h-1.5">
+                                        <div class="bg-orange-500 h-1.5 rounded-full" style="width: 70%"></div>
+                                    </div>
+                                </div>
+                                <button onclick="enterCourse(event, this, 'Metodologi Penelitian & Inovasi')" class="w-full mt-auto bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 text-slate-700 hover:text-blue-700 font-semibold py-2 rounded-lg text-xs transition">
+                                    Masuk Kelas
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="card overflow-hidden hover:shadow-md transition group flex flex-col border-dashed border-2 bg-slate-50 cursor-pointer" onclick="showToast('Menampilkan seluruh kelas dari arsip semester sebelumnya.')">
+                            <div class="p-5 flex-1 flex flex-col items-center justify-center text-center">
+                                <div class="w-12 h-12 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-layer-group"></i>
+                                </div>
+                                <p class="text-sm font-bold text-slate-600">Lihat Semua Kelas</p>
+                                <p class="text-xs text-slate-400 mt-1">Tampilkan sisa 3 kelas lainnya semester ini.</p>
+                            </div>
+                        </div>
+
+                        <div id="emptySearch" class="hidden col-span-1 md:col-span-2 text-center py-10">
+                            <i class="fa-solid fa-magnifying-glass text-4xl text-slate-300 mb-3"></i>
+                            <p class="text-slate-500 font-medium text-sm">Kelas tidak ditemukan.</p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-span-1 space-y-6">
+                    
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sticky top-24">
+                        <h3 class="font-bold text-slate-800 border-b border-slate-100 pb-3 mb-5 flex items-center justify-between">
+                            <span><i class="fa-regular fa-clock text-blue-600 mr-2"></i> Tenggat Tugas</span>
+                            <span class="bg-red-100 text-red-600 px-2 py-0.5 rounded text-[10px]">2 Due</span>
+                        </h3>
+
+                        <div class="space-y-5">
+                            
+                            <div class="group cursor-pointer" onclick="openTaskModal('Implementasi Arsitektur Model untuk Deteksi Citra Medis', 'Kecerdasan Buatan', 'Besok, 23:59', 'Tugas ini mengharuskan praktikan untuk mengimplementasikan algoritma MobileNetV2 dan melakukan evaluasi akurasi pada dataset citra medis yang diberikan di modul. Kumpulkan dalam bentuk file .ipynb dan laporan PDF.')">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-2 h-2 mt-1.5 rounded-full bg-red-500 outline outline-2 outline-red-100 shrink-0"></div>
+                                    <div>
+                                        <h4 class="text-sm font-bold text-slate-800 group-hover:text-blue-600 transition leading-tight mb-1">Implementasi Arsitektur Model untuk Deteksi Citra Medis</h4>
+                                        <p class="text-xs text-slate-500 mb-2 font-medium">Kecerdasan Buatan</p>
+                                        <div class="flex items-center gap-4 text-[10px] font-bold">
+                                            <span class="text-red-600 flex items-center gap-1 bg-red-50 px-2 py-1 rounded border border-red-100">
+                                                <i class="fa-solid fa-hourglass-half"></i> Besok, 23:59
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="group cursor-pointer" onclick="openTaskModal('Pengumpulan Draft Proposal PKM-KC (Leukoscan)', 'Metodologi Penelitian', '15 April 2026, 23:59', 'Kumpulkan draft Bab 1 hingga Bab 3 beserta Rencana Anggaran Biaya (RAB) terbaru untuk proyek Leukoscan. Pastikan format penulisan sudah sesuai dengan pedoman Simbelmawa terbaru.')">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-2 h-2 mt-1.5 rounded-full bg-orange-500 outline outline-2 outline-orange-100 shrink-0"></div>
+                                    <div>
+                                        <h4 class="text-sm font-bold text-slate-800 group-hover:text-blue-600 transition leading-tight mb-1">Pengumpulan Draft Proposal PKM-KC (Leukoscan)</h4>
+                                        <p class="text-xs text-slate-500 mb-2 font-medium">Metodologi Penelitian</p>
+                                        <div class="flex items-center gap-4 text-[10px] font-bold">
+                                            <span class="text-orange-600 flex items-center gap-1 bg-orange-50 px-2 py-1 rounded border border-orange-100">
+                                                <i class="fa-regular fa-calendar-days"></i> 15 April 2026
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="group cursor-pointer opacity-50" onclick="showToast('Tugas ini sudah kamu kumpulkan!', 'success')">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-2 h-2 mt-1.5 rounded-full bg-green-500 shrink-0"></div>
+                                    <div>
+                                        <h4 class="text-sm font-bold text-slate-800 line-through leading-tight mb-1">Kuis 1: Neural Networks</h4>
+                                        <p class="text-xs text-slate-500 font-medium">Kecerdasan Buatan</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        
+                        <button onclick="showToast('Membuka kalender tugas lengkap...')" class="w-full mt-6 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold py-2.5 rounded-lg transition">
+                            Lihat Semua Tugas
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div id="taskModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl transform transition-all scale-95 opacity-0 flex flex-col max-h-[90vh]" id="taskModalContent">
+                
+                <div class="flex justify-between items-start p-6 border-b border-slate-100">
+                    <div>
+                        <span id="modalCourse" class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded border border-blue-100 uppercase">Mata Kuliah</span>
+                        <h3 id="modalTitle" class="font-bold text-slate-800 text-lg mt-2 leading-tight">Judul Tugas</h3>
+                    </div>
+                    <button onclick="closeTaskModal()" class="text-slate-400 hover:text-red-500 transition bg-slate-50 rounded-full w-8 h-8 flex items-center justify-center shrink-0"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                
+                <div class="p-6 overflow-y-auto flex-1">
+                    <div class="flex items-center gap-2 mb-4 bg-red-50 border border-red-100 p-3 rounded-lg w-max">
+                        <i class="fa-solid fa-hourglass-half text-red-600 text-xs"></i>
+                        <span class="text-xs font-bold text-red-700">Tenggat: <span id="modalDeadline">Tanggal</span></span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-400 uppercase mb-2">Instruksi Tugas</p>
+                    <p id="modalDesc" class="text-sm text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        Deskripsi tugas...
+                    </p>
+                    
+                    <div class="mt-6 border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-blue-400 transition cursor-pointer bg-slate-50 hover:bg-blue-50/50">
+                        <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-400 mb-2"></i>
+                        <p class="text-sm font-bold text-slate-700">Klik atau Drag & Drop file ke sini</p>
+                        <p class="text-[10px] text-slate-500 mt-1">Maks. ukuran file 10MB (.pdf, .zip, .ipynb)</p>
+                    </div>
+                </div>
+
+                <div class="p-6 border-t border-slate-100 bg-slate-50 rounded-b-2xl">
+                    <button onclick="submitTask(this)" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i> Kumpulkan Tugas
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-800 text-white px-5 py-3.5 rounded-xl shadow-2xl toast-enter z-50 flex items-center gap-3 border border-slate-700">
+        <i id="toast-icon" class="fa-solid fa-circle-info text-blue-400 text-lg"></i>
+        <span id="toast-message" class="text-sm font-medium">Ini adalah pesan notifikasi.</span>
+    </div>
+
+    <script>
+        // 1. Profile Dropdown Logic
+        function toggleDropdown(event, id) {
+            event.stopPropagation();
+            const dropdown = document.getElementById(id);
+            const isClosing = dropdown.classList.contains('dropdown-active');
+            
+            document.querySelectorAll('.dropdown-active').forEach(dd => {
+                dd.classList.remove('dropdown-active');
+                dd.classList.add('dropdown-enter');
+            });
+
+            if (!isClosing) {
+                dropdown.classList.remove('dropdown-enter');
+                dropdown.classList.add('dropdown-active');
+            }
+        }
+
+        window.onclick = function() {
+            document.querySelectorAll('.dropdown-active').forEach(dd => {
+                dd.classList.remove('dropdown-active');
+                dd.classList.add('dropdown-enter');
+            });
+        }
+
+        // 2. Toast Notification System
+        let toastTimeout;
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+            
+            toastMsg.innerText = message;
+            toastIcon.className = type === 'success' ? "fa-solid fa-circle-check text-green-400 text-lg" : "fa-solid fa-circle-info text-blue-400 text-lg";
+            
+            toast.classList.remove('toast-enter');
+            toast.classList.add('toast-active');
+            
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('toast-active');
+                toast.classList.add('toast-enter');
+            }, 3000);
+        }
+
+        // 3. Search / Filter Class Live
+        function filterCourses() {
+            const input = document.getElementById('courseSearch').value.toLowerCase();
+            const cards = document.querySelectorAll('.course-card');
+            const emptyState = document.getElementById('emptySearch');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const title = card.querySelector('.course-title').innerText.toLowerCase();
+                if (title.includes(input)) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Tampilkan Empty State jika tidak ada yang cocok
+            if (visibleCount === 0 && input !== "") {
+                emptyState.classList.remove('hidden');
+                emptyState.classList.add('block');
+            } else {
+                emptyState.classList.remove('block');
+                emptyState.classList.add('hidden');
+            }
+        }
+
+        // 4. Animasi Loading Masuk Kelas
+        function enterCourse(event, btn, courseName) {
+            event.stopPropagation();
+            const originalHTML = btn.innerHTML;
+            
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memuat materi...';
+            btn.disabled = true;
+            btn.classList.add('opacity-75', 'cursor-wait');
+
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+                btn.classList.remove('opacity-75', 'cursor-wait');
+                showToast('Berhasil masuk ke ruang kelas ' + courseName, 'success');
+            }, 1000);
+        }
+
+        // 5. Modal Detail Tugas
+        const modal = document.getElementById('taskModal');
+        const modalContent = document.getElementById('taskModalContent');
+
+        function openTaskModal(title, course, deadline, desc) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalCourse').innerText = course;
+            document.getElementById('modalDeadline').innerText = deadline;
+            document.getElementById('modalDesc').innerText = desc;
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('modal-active');
+            }, 10);
+        }
+
+        function closeTaskModal() {
+            modalContent.classList.remove('modal-active');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        function submitTask(btn) {
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengunggah...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                closeTaskModal();
+                showToast('Tugas berhasil dikumpulkan!', 'success');
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

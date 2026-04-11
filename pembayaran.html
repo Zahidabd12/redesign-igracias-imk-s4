@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembayaran & Tagihan - iGRACIAS Redesign</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .sidebar-item-active { border-left: 4px solid #b91c1c; background-color: #fee2e2; color: #b91c1c; }
+        .card { background: white; border-radius: 1rem; border: 1px solid #e2e8f0; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Animasi Interaktif */
+        .dropdown-enter { opacity: 0; transform: scale(0.95) translateY(-10px); visibility: hidden; }
+        .dropdown-active { opacity: 1; transform: scale(1) translateY(0); visibility: visible; transition: all 0.2s ease-out; }
+        .modal-enter { opacity: 0; transform: scale(0.95); }
+        .modal-active { opacity: 1; transform: scale(1); transition: all 0.2s ease-out; }
+        .toast-enter { transform: translateY(100%); opacity: 0; }
+        .toast-active { transform: translateY(0); opacity: 1; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        /* Custom highlight untuk payment method */
+        .payment-active { border-color: #ef4444 !important; background-color: #334155 !important; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col hidden md:flex shrink-0">
+        <div class="p-6 flex items-center gap-3 border-b border-slate-100">
+            <div class="w-8 h-8 bg-red-700 rounded-lg flex items-center justify-center text-white font-bold italic shadow-sm">iG</div>
+            <span class="text-xl font-bold text-slate-800 tracking-tight">iGRACIAS</span>
+        </div>
+
+        <div class="px-6 py-4 border-b border-slate-100">
+            <p class="text-sm font-bold text-slate-800 truncate">Zahid Abdullah N. M.</p>
+            <p class="text-xs text-slate-500">101102400004</p>
+            <div class="mt-2 inline-flex items-center gap-1 bg-red-50 text-red-700 px-2 py-1 rounded text-[10px] font-bold border border-red-100">
+                <i class="fa-solid fa-user-graduate"></i> MAHASISWA
+            </div>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto no-scrollbar px-4 py-4 space-y-1">
+            <p class="text-xs font-semibold text-slate-400 uppercase px-2 mb-2">Main Menu</p>
+            
+            <a href="landing_page.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+                <i class="fa-solid fa-house w-4 text-center"></i> Dashboard
+            </a>
+            
+            <div class="mt-4 mb-2">
+                <p class="text-xs font-semibold text-slate-400 uppercase px-2">Akademik & Layanan</p>
+            </div>
+            
+            <a href="akun.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+                <i class="fa-solid fa-user w-4 text-center"></i> Akun
+            </a>
+            <a href="nilai.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+                <i class="fa-solid fa-graduation-cap w-4 text-center"></i> Nilai
+            </a>
+            
+            <a href="pembayaran.html" class="sidebar-item-active flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition">
+                <i class="fa-solid fa-file-invoice w-4 text-center"></i> Pembayaran
+            </a>
+            
+            <a href="presensi.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+                <i class="fa-solid fa-clipboard-list w-4 text-center"></i> Presensi
+            </a>
+            <a href="elearning.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+                <i class="fa-solid fa-laptop-code w-4 text-center"></i> Elearning (Idea)
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-slate-200">
+            <a href="login.html" class="w-full flex items-center justify-center gap-2 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-red-50 hover:text-red-700 rounded-lg transition">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-y-auto bg-slate-50/50 relative">
+        
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-20">
+            <div class="flex items-center gap-4">
+                <h2 class="text-lg font-bold text-slate-800">Informasi Pembayaran</h2>
+            </div>
+            <div class="flex items-center gap-6 relative">
+                <div class="hidden md:flex items-center gap-2 bg-slate-100 px-3 py-1 rounded-md">
+                    <i class="fa-regular fa-calendar text-slate-500 text-xs"></i>
+                    <span class="text-xs font-semibold text-slate-600">TA 2526/2</span>
+                </div>
+                
+                <div class="relative">
+                    <div onclick="toggleDropdown(event, 'profileDropdown')" class="flex items-center gap-2 bg-slate-100 p-1 rounded-full px-4 cursor-pointer hover:bg-slate-200 transition">
+                        <img src="https://ui-avatars.com/api/?name=Zahid+Abdullah&background=b91c1c&color=fff" class="w-8 h-8 rounded-full">
+                        <span class="text-sm font-semibold text-slate-700">Zahid</span>
+                    </div>
+                    <div id="profileDropdown" class="dropdown-enter absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden z-50">
+                        <div class="p-3 border-b border-slate-100">
+                            <p class="text-sm font-bold text-slate-800">Zahid Abdullah</p>
+                            <p class="text-[10px] text-slate-500">NIM: 101102400004</p>
+                        </div>
+                        <div class="p-1">
+                            <a href="akun.html" class="flex items-center gap-2 px-3 py-2 text-xs text-slate-600 hover:bg-slate-50 hover:text-red-600 rounded-lg transition"><i class="fa-solid fa-user-pen w-4"></i> Edit Profil</a>
+                            <a href="login.html" class="flex items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 rounded-lg transition mt-1 border-t border-slate-100"><i class="fa-solid fa-right-from-bracket w-4"></i> Keluar</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </header>
+
+        <div class="p-8">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <div class="col-span-1 lg:col-span-2 space-y-6">
+                    
+                    <div class="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-r-lg flex items-start gap-3">
+                        <i class="fa-solid fa-circle-exclamation text-orange-500 mt-0.5"></i>
+                        <div>
+                            <h4 class="text-sm font-bold text-orange-800">Tagihan Belum Lunas</h4>
+                            <p class="text-xs text-orange-700 mt-1">Anda memiliki tagihan Biaya Penyelenggaraan Pendidikan (BPP) untuk Semester Genap 2025/2026. Jatuh tempo pada <span class="font-bold">20 April 2026</span>.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden relative">
+                        <div class="h-2 w-full bg-gradient-to-r from-red-600 to-red-800"></div>
+                        
+                        <div class="p-6 md:p-8">
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-100 pb-6 mb-6 gap-4">
+                                <div>
+                                    <h3 class="text-2xl font-extrabold text-slate-800">Rp 8.500.000</h3>
+                                    <p class="text-sm text-slate-500 mt-1">Total Tagihan Saat Ini</p>
+                                </div>
+                                <div class="text-left md:text-right">
+                                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Nomor Tagihan</p>
+                                    <p class="text-sm font-mono font-semibold text-slate-800">INV-25262-101102400004</p>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center text-sm">
+                                    <div>
+                                        <p class="font-semibold text-slate-700">Biaya Pendidikan (BPP)</p>
+                                        <p class="text-xs text-slate-500">S1 Sains Data - Semester Genap 2025/2026</p>
+                                    </div>
+                                    <p class="font-semibold text-slate-800">Rp 8.000.000</p>
+                                </div>
+                                <div class="flex justify-between items-center text-sm">
+                                    <div>
+                                        <p class="font-semibold text-slate-700">Asuransi Kesehatan & Fasilitas</p>
+                                        <p class="text-xs text-slate-500">Periode 6 Bulan</p>
+                                    </div>
+                                    <p class="font-semibold text-slate-800">Rp 500.000</p>
+                                </div>
+                                
+                                <div class="border-t border-dashed border-slate-200 pt-4 mt-4 flex justify-between items-center">
+                                    <p class="font-bold text-slate-800">Total Harus Dibayar</p>
+                                    <p class="text-xl font-extrabold text-red-700">Rp 8.500.000</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+                        <h3 class="font-bold text-slate-800 mb-4">Riwayat Pembayaran</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 border border-slate-100 rounded-xl hover:bg-slate-50 transition">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-green-50 text-green-600 flex items-center justify-center">
+                                        <i class="fa-solid fa-check"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-800">BPP Semester Ganjil 2025/2026</p>
+                                        <p class="text-xs text-slate-500">Dibayar pada 10 Agustus 2025 via VA Mandiri</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm font-bold text-slate-800">Rp 8.500.000</p>
+                                    <span class="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded uppercase">Lunas</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between p-4 border border-slate-100 rounded-xl hover:bg-slate-50 transition">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-green-50 text-green-600 flex items-center justify-center">
+                                        <i class="fa-solid fa-check"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-800">BPP Semester Genap 2024/2025</p>
+                                        <p class="text-xs text-slate-500">Dibayar pada 15 Februari 2025 via VA BNI</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm font-bold text-slate-800">Rp 8.500.000</p>
+                                    <span class="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded uppercase">Lunas</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="showToast('Menampilkan seluruh arsip riwayat pembayaran...')" class="w-full mt-4 text-xs font-semibold text-red-600 hover:text-red-800 transition">Lihat Seluruh Riwayat</button>
+                    </div>
+
+                </div>
+
+                <div class="col-span-1">
+                    <div class="bg-slate-800 rounded-2xl shadow-lg p-6 text-white sticky top-24">
+                        <h3 class="font-bold text-lg mb-2">Pilih Metode Pembayaran</h3>
+                        <p class="text-xs text-slate-400 mb-6">Pilih bank atau e-wallet untuk mendapatkan nomor Virtual Account atau kode QRIS.</p>
+
+                        <div class="space-y-3">
+                            <label id="lbl-mandiri" onclick="selectMethod('mandiri', 'Mandiri Virtual Account')" class="payment-box payment-active flex items-center justify-between p-3 border border-slate-600 rounded-xl cursor-pointer hover:bg-slate-700 transition">
+                                <div class="flex items-center gap-3">
+                                    <input type="radio" name="payment" id="rad-mandiri" class="w-4 h-4 text-red-600 bg-slate-700 border-slate-500 focus:ring-red-500" checked>
+                                    <span class="text-sm font-semibold">Mandiri Virtual Account</span>
+                                </div>
+                                <i class="fa-solid fa-building-columns text-slate-400"></i>
+                            </label>
+                            
+                            <label id="lbl-bni" onclick="selectMethod('bni', 'BNI Virtual Account')" class="payment-box flex items-center justify-between p-3 border border-slate-600 rounded-xl cursor-pointer hover:bg-slate-700 transition">
+                                <div class="flex items-center gap-3">
+                                    <input type="radio" name="payment" id="rad-bni" class="w-4 h-4 text-red-600 bg-slate-700 border-slate-500 focus:ring-red-500">
+                                    <span class="text-sm font-semibold">BNI Virtual Account</span>
+                                </div>
+                                <i class="fa-solid fa-building-columns text-slate-400"></i>
+                            </label>
+
+                            <label id="lbl-qris" onclick="selectMethod('qris', 'QRIS (All Payment)')" class="payment-box flex items-center justify-between p-3 border border-slate-600 rounded-xl cursor-pointer hover:bg-slate-700 transition">
+                                <div class="flex items-center gap-3">
+                                    <input type="radio" name="payment" id="rad-qris" class="w-4 h-4 text-red-600 bg-slate-700 border-slate-500 focus:ring-red-500">
+                                    <span class="text-sm font-semibold">QRIS (All Payment)</span>
+                                </div>
+                                <i class="fa-solid fa-qrcode text-slate-400"></i>
+                            </label>
+                        </div>
+
+                        <div class="mt-6 pt-6 border-t border-slate-700">
+                            <button id="btn-pay" onclick="processPayment()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition transform hover:-translate-y-0.5 flex justify-center items-center gap-2">
+                                <i class="fa-solid fa-shield-halved"></i> Bayar Sekarang
+                            </button>
+                            <p class="text-center text-[10px] text-slate-400 mt-3"><i class="fa-solid fa-lock text-slate-500"></i> Pembayaran dijamin aman dan terenkripsi.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="paymentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl transform transition-all scale-95 opacity-0 flex flex-col" id="paymentModalContent">
+                
+                <div class="flex justify-between items-center p-5 border-b border-slate-100 bg-slate-50 rounded-t-2xl">
+                    <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+                        <i class="fa-solid fa-file-invoice text-red-600"></i> Detail Transaksi
+                    </h3>
+                    <button onclick="closePaymentModal()" class="text-slate-400 hover:text-red-500 transition w-8 h-8 flex items-center justify-center shrink-0"><i class="fa-solid fa-xmark text-xl"></i></button>
+                </div>
+                
+                <div class="p-6 text-center">
+                    <p class="text-xs font-bold text-slate-400 uppercase mb-1">Metode Dipilih</p>
+                    <p id="modal-method-name" class="font-bold text-slate-800 mb-6">Mandiri Virtual Account</p>
+
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6">
+                        <p class="text-[10px] text-slate-500 font-semibold mb-2">NOMOR VIRTUAL ACCOUNT / KODE BAYAR</p>
+                        <h2 id="modal-va-code" class="text-2xl font-mono font-extrabold text-slate-800 tracking-wider">8993 1011 0240 0004</h2>
+                        <button onclick="copyVACode()" class="mt-3 text-xs bg-white border border-slate-200 hover:border-red-300 hover:text-red-600 text-slate-600 px-4 py-1.5 rounded-lg font-semibold transition flex items-center justify-center gap-2 mx-auto">
+                            <i class="fa-regular fa-copy"></i> Salin Kode
+                        </button>
+                    </div>
+
+                    <div class="flex justify-between items-center border-t border-dashed border-slate-200 pt-4 mb-2">
+                        <span class="text-sm font-medium text-slate-600">Total Tagihan</span>
+                        <span class="font-extrabold text-red-700 text-lg">Rp 8.500.000</span>
+                    </div>
+                    <p class="text-[10px] text-slate-400">Segera lakukan pembayaran sebelum 24 jam untuk menghindari pembatalan otomatis.</p>
+                </div>
+
+                <div class="p-5 border-t border-slate-100">
+                    <button onclick="closePaymentModal()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl shadow-md transition">
+                        Selesai & Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-800 text-white px-5 py-3.5 rounded-xl shadow-2xl toast-enter z-50 flex items-center gap-3 border border-slate-700">
+        <i id="toast-icon" class="fa-solid fa-circle-info text-blue-400 text-lg"></i>
+        <span id="toast-message" class="text-sm font-medium">Ini adalah pesan notifikasi.</span>
+    </div>
+
+    <script>
+        // 1. Toast Notification System
+        let toastTimeout;
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+            
+            toastMsg.innerText = message;
+            toastIcon.className = type === 'success' ? "fa-solid fa-circle-check text-green-400 text-lg" : "fa-solid fa-circle-info text-blue-400 text-lg";
+            
+            toast.classList.remove('toast-enter');
+            toast.classList.add('toast-active');
+            
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('toast-active');
+                toast.classList.add('toast-enter');
+            }, 3000);
+        }
+
+        // 2. Profile Dropdown Logic
+        function toggleDropdown(event, id) {
+            event.stopPropagation();
+            const dropdown = document.getElementById(id);
+            const isClosing = dropdown.classList.contains('dropdown-active');
+            
+            document.querySelectorAll('.dropdown-active').forEach(dd => {
+                dd.classList.remove('dropdown-active');
+                dd.classList.add('dropdown-enter');
+            });
+
+            if (!isClosing) {
+                dropdown.classList.remove('dropdown-enter');
+                dropdown.classList.add('dropdown-active');
+            }
+        }
+
+        window.onclick = function() {
+            document.querySelectorAll('.dropdown-active').forEach(dd => {
+                dd.classList.remove('dropdown-active');
+                dd.classList.add('dropdown-enter');
+            });
+        }
+
+        // 3. Logic Pilih Metode Pembayaran
+        let currentMethodName = 'Mandiri Virtual Account'; // Default
+
+        function selectMethod(methodId, methodName) {
+            currentMethodName = methodName;
+            
+            // Reset semua border dan background (kembali ke abu-abu)
+            document.querySelectorAll('.payment-box').forEach(box => {
+                box.classList.remove('payment-active');
+            });
+
+            // Highlight yang dipilih (merah & bg gelap)
+            document.getElementById('lbl-' + methodId).classList.add('payment-active');
+            document.getElementById('rad-' + methodId).checked = true;
+        }
+
+        // 4. Logic Tombol Bayar & Memunculkan Modal
+        const modal = document.getElementById('paymentModal');
+        const modalContent = document.getElementById('paymentModalContent');
+
+        function processPayment() {
+            const btn = document.getElementById('btn-pay');
+            const originalText = btn.innerHTML;
+            
+            // Animasi Loading
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyiapkan...';
+            btn.disabled = true;
+            btn.classList.add('opacity-80', 'cursor-wait');
+
+            setTimeout(() => {
+                // Kembalikan tombol ke semula
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                btn.classList.remove('opacity-80', 'cursor-wait');
+
+                // Set teks nama metode di dalam modal
+                document.getElementById('modal-method-name').innerText = currentMethodName;
+
+                // Jika pilih QRIS, pura-puranya kodenya beda
+                if(currentMethodName.includes('QRIS')) {
+                    document.getElementById('modal-va-code').innerText = "QRIS-ID-101102400004";
+                } else {
+                    document.getElementById('modal-va-code').innerText = "8993 1011 0240 0004";
+                }
+
+                // Munculkan Modal
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                    modalContent.classList.add('modal-active');
+                }, 10);
+                
+                showToast('Kode pembayaran berhasil dibuat!', 'success');
+            }, 1200);
+        }
+
+        function closePaymentModal() {
+            modalContent.classList.remove('modal-active');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        // 5. Logic Copy VA Code
+        function copyVACode() {
+            const code = document.getElementById('modal-va-code').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                showToast('Kode pembayaran berhasil disalin!', 'success');
+            }).catch(err => {
+                showToast('Gagal menyalin kode.', 'error');
+            });
+        }
+    </script>
+</body>
+</html>

@@ -15,11 +15,18 @@
         /* Hide scrollbar for sidebar but allow scrolling */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Dropdown & Modal Animations */
+        .dropdown-enter { opacity: 0; transform: scale(0.95) translateY(-10px); visibility: hidden; }
+        .dropdown-active { opacity: 1; transform: scale(1) translateY(0); visibility: visible; transition: all 0.2s ease-out; }
+        
+        .modal-enter { opacity: 0; transform: scale(0.95); }
+        .modal-active { opacity: 1; transform: scale(1); transition: all 0.2s ease-out; }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden">
 
-    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col hidden md:flex">
+    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col hidden md:flex shrink-0">
         <div class="p-6 flex items-center gap-3 border-b border-slate-100">
             <div class="w-8 h-8 bg-red-700 rounded-lg flex items-center justify-center text-white font-bold italic shadow-sm">iG</div>
             <span class="text-xl font-bold text-slate-800 tracking-tight">iGRACIAS</span>
@@ -36,7 +43,7 @@
         <nav class="flex-1 overflow-y-auto no-scrollbar px-4 py-4 space-y-1">
             <p class="text-xs font-semibold text-slate-400 uppercase px-2 mb-2">Main Menu</p>
             
-            <a href="#" class="sidebar-item-active flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition">
+            <a href="landing_page.html" class="sidebar-item-active flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition">
                 <i class="fa-solid fa-house w-4 text-center"></i> Dashboard
             </a>
             
@@ -44,62 +51,91 @@
                 <p class="text-xs font-semibold text-slate-400 uppercase px-2">Akademik & Layanan</p>
             </div>
             
-            <a href="#" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+            <a href="akun.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
                 <i class="fa-solid fa-user w-4 text-center"></i> Akun
             </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+            <a href="asrama.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
                 <i class="fa-solid fa-building w-4 text-center"></i> Asrama Mahasiswa
             </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
-                <i class="fa-solid fa-comments w-4 text-center"></i> Bimbingan Konseling
+            <a href="bimbingan.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+                <i class="fa-solid fa-comments w-4 text-center"></i> Bimbingan Akademik
             </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+            <a href="elearning.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
                 <i class="fa-solid fa-laptop-code w-4 text-center"></i> Elearning (Idea)
             </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+            <a href="pembayaran.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
                 <i class="fa-solid fa-file-invoice w-4 text-center"></i> Pembayaran
             </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
+            <a href="nilai.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
                 <i class="fa-solid fa-graduation-cap w-4 text-center"></i> Nilai
             </a>
             <a href="presensi.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
-    <i class="fa-solid fa-clipboard-list w-4 text-center"></i> Presensi
-</a>
+                <i class="fa-solid fa-clipboard-list w-4 text-center"></i> Presensi
+            </a>
         </nav>
 
         <div class="p-4 border-t border-slate-200">
-    <a href="login.html" class="w-full flex items-center justify-center gap-2 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-red-50 hover:text-red-700 rounded-lg transition">
-        <i class="fa-solid fa-right-from-bracket"></i> Logout
-    </a>
-</div>
+            <a href="login.html" class="w-full flex items-center justify-center gap-2 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-red-50 hover:text-red-700 rounded-lg transition">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+        </div>
     </aside>
 
-    <main class="flex-1 flex flex-col overflow-y-auto">
+    <main class="flex-1 flex flex-col overflow-y-auto relative">
         
-        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-10">
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-30">
             <div class="relative w-96">
                 <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="text" placeholder="Search menu or info..." class="w-full pl-10 pr-4 py-2 bg-slate-100 rounded-full border-none focus:ring-2 focus:ring-red-500 focus:bg-white text-sm transition outline-none">
+                <input type="text" id="searchInput" onkeyup="searchSimulation()" placeholder="Search menu or info..." class="w-full pl-10 pr-4 py-2 bg-slate-100 rounded-full border-none focus:ring-2 focus:ring-red-500 focus:bg-white text-sm transition outline-none">
             </div>
-            <div class="flex items-center gap-6">
+            
+            <div class="flex items-center gap-6 relative">
                 <div class="hidden md:flex items-center gap-2 bg-slate-100 px-3 py-1 rounded-md">
                     <i class="fa-regular fa-calendar text-slate-500 text-xs"></i>
                     <span class="text-xs font-semibold text-slate-600">TA 2526/2</span>
                 </div>
                 
-                <button class="text-sm font-semibold text-slate-500 hover:text-slate-800 flex items-center gap-1">
-                    <img src="https://flagcdn.com/w20/gb.png" class="w-4 h-auto rounded-sm"> ENG
-                </button>
-
-                <button class="relative text-slate-400 hover:text-red-600 transition">
-                    <i class="fa-solid fa-bell text-lg"></i>
-                    <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
-                </button>
-
-                <div class="flex items-center gap-2 bg-slate-100 p-1 rounded-full px-4 cursor-pointer hover:bg-slate-200 transition">
-                    <img src="https://ui-avatars.com/api/?name=Zahid+Abdullah&background=b91c1c&color=fff" class="w-8 h-8 rounded-full">
-                    <span class="text-sm font-semibold text-slate-700">Zahid</span>
+                <div class="relative">
+                    <button onclick="toggleDropdown(event, 'notifDropdown')" class="relative text-slate-400 hover:text-red-600 transition p-2">
+                        <i class="fa-solid fa-bell text-lg"></i>
+                        <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+                    </button>
+                    <div id="notifDropdown" class="dropdown-enter absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden z-50">
+                        <div class="p-3 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                            <span class="font-bold text-sm text-slate-700">Notifikasi</span>
+                            <span class="text-[10px] text-blue-600 cursor-pointer hover:underline">Tandai dibaca</span>
+                        </div>
+                        <div class="max-h-64 overflow-y-auto">
+                            <div class="p-3 border-b border-slate-50 hover:bg-slate-50 cursor-pointer transition">
+                                <p class="text-xs font-bold text-slate-800">Tenggat Waktu Kuis</p>
+                                <p class="text-[10px] text-slate-500 mt-0.5">Kuis Kecerdasan Buatan ditutup besok jam 23:59.</p>
+                            </div>
+                            <div class="p-3 hover:bg-slate-50 cursor-pointer transition">
+                                <p class="text-xs font-bold text-slate-800">Persetujuan Dosen</p>
+                                <p class="text-[10px] text-slate-500 mt-0.5">Pak Dimas telah membalas log bimbingan Anda.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <div class="relative">
+                    <div onclick="toggleDropdown(event, 'profileDropdown')" class="flex items-center gap-2 bg-slate-100 p-1 rounded-full px-4 cursor-pointer hover:bg-slate-200 transition">
+                        <img src="https://ui-avatars.com/api/?name=Zahid+Abdullah&background=b91c1c&color=fff" class="w-8 h-8 rounded-full">
+                        <span class="text-sm font-semibold text-slate-700">Zahid</span>
+                    </div>
+                    <div id="profileDropdown" class="dropdown-enter absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden z-50">
+                        <div class="p-3 border-b border-slate-100">
+                            <p class="text-sm font-bold text-slate-800">Zahid Abdullah</p>
+                            <p class="text-[10px] text-slate-500">NIM: 101102400004</p>
+                        </div>
+                        <div class="p-1">
+                            <a href="akun.html" class="flex items-center gap-2 px-3 py-2 text-xs text-slate-600 hover:bg-slate-50 hover:text-red-600 rounded-lg transition"><i class="fa-solid fa-user-pen w-4"></i> Edit Profil</a>
+                            <a href="#" class="flex items-center gap-2 px-3 py-2 text-xs text-slate-600 hover:bg-slate-50 hover:text-red-600 rounded-lg transition"><i class="fa-solid fa-gear w-4"></i> Pengaturan</a>
+                            <a href="login.html" class="flex items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 rounded-lg transition mt-1 border-t border-slate-100"><i class="fa-solid fa-right-from-bracket w-4"></i> Keluar</a>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </header>
 
@@ -143,30 +179,21 @@
                     <div class="space-y-3">
                         <div class="flex items-center justify-between text-xs border-b border-slate-100 pb-2">
                             <div class="flex items-center gap-2 font-semibold">
-                                <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-slate-600">5</div>
-                                <span>Mei</span>
+                                <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-slate-600">5</div><span>Mei</span>
                             </div>
-                            <div class="text-right">
-                                <p class="text-slate-500">Tutup Daftar: <span class="font-medium text-slate-700">20 Apr</span></p>
-                            </div>
+                            <div class="text-right"><p class="text-slate-500">Tutup: <span class="font-medium text-slate-700">20 Apr</span></p></div>
                         </div>
                         <div class="flex items-center justify-between text-xs border-b border-slate-100 pb-2">
                             <div class="flex items-center gap-2 font-semibold">
-                                <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-slate-600">12</div>
-                                <span>Mei</span>
+                                <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-slate-600">12</div><span>Mei</span>
                             </div>
-                            <div class="text-right">
-                                <p class="text-slate-500">Tutup Daftar: <span class="font-medium text-slate-700">27 Apr</span></p>
-                            </div>
+                            <div class="text-right"><p class="text-slate-500">Tutup: <span class="font-medium text-slate-700">27 Apr</span></p></div>
                         </div>
                         <div class="flex items-center justify-between text-xs border-b border-slate-100 pb-2">
                             <div class="flex items-center gap-2 font-semibold">
-                                <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-slate-600">19</div>
-                                <span>Mei</span>
+                                <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-slate-600">19</div><span>Mei</span>
                             </div>
-                            <div class="text-right">
-                                <p class="text-slate-500">Tutup Daftar: <span class="font-medium text-slate-700">4 Mei</span></p>
-                            </div>
+                            <div class="text-right"><p class="text-slate-500">Tutup: <span class="font-medium text-slate-700">4 Mei</span></p></div>
                         </div>
                     </div>
                     <button class="w-full mt-4 bg-red-700 text-white text-xs font-bold py-2 rounded-lg hover:bg-red-800 transition shadow">
@@ -183,7 +210,7 @@
                     </h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="card overflow-hidden hover:shadow-md transition cursor-pointer group">
+                        <div onclick="openModal('Beasiswa LPDP 2026 Batch 2', 'Pendaftaran beasiswa LPDP Batch 2 Intake Februari 2027 resmi dibuka mulai 11 Maret 2026. Beasiswa ini diperuntukkan bagi mahasiswa yang ingin melanjutkan studi Magister (S2) dan Doktoral (S3). Segera lengkapi dokumen persyaratan Anda di website resmi LPDP.')" class="card overflow-hidden hover:shadow-md transition cursor-pointer group">
                             <div class="h-32 bg-blue-50 relative p-6 flex flex-col justify-center border-b border-slate-100">
                                 <div class="absolute top-4 right-4 text-slate-300 group-hover:text-blue-500 transition"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
                                 <span class="text-[10px] font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded w-max mb-2">BEASISWA</span>
@@ -193,12 +220,12 @@
                                 <p class="text-xs text-slate-500 mb-3 line-clamp-2">Pendaftaran beasiswa LPDP Batch 2 Intake Februari 2027 telah dibuka untuk mahasiswa jenjang Magister dan Doktoral.</p>
                                 <div class="flex items-center justify-between text-[10px] font-medium text-slate-400">
                                     <span><i class="fa-regular fa-clock"></i> 11 Mar 2026</span>
-                                    <span class="text-blue-600 font-semibold">Read More</span>
+                                    <span class="text-blue-600 font-semibold">Klik untuk baca</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="card overflow-hidden hover:shadow-md transition cursor-pointer group">
+                        <div onclick="openModal('Survei Literasi Baca-Tulis & Numerasi', 'Direktorat Akademik mewajibkan seluruh mahasiswa aktif untuk mengisi survei pemetaan literasi. Survei ini berlangsung dari tanggal 10 Maret hingga 25 Maret 2026. Mahasiswa yang tidak mengisi survei tidak dapat melakukan perwalian pada semester berikutnya.')" class="card overflow-hidden hover:shadow-md transition cursor-pointer group">
                             <div class="h-32 bg-rose-50 relative p-6 flex flex-col justify-center border-b border-slate-100">
                                 <div class="absolute top-4 right-4 text-slate-300 group-hover:text-rose-500 transition"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
                                 <span class="text-[10px] font-bold text-rose-600 bg-rose-100 px-2 py-1 rounded w-max mb-2">SURVEI</span>
@@ -208,7 +235,7 @@
                                 <p class="text-xs text-slate-500 mb-3 line-clamp-2">Wajib diisi oleh seluruh mahasiswa aktif. Survei ini bertujuan untuk pemetaan tingkat literasi kampus.</p>
                                 <div class="flex items-center justify-between text-[10px] font-medium text-slate-400">
                                     <span><i class="fa-regular fa-clock"></i> 10 Mar 2026</span>
-                                    <span class="text-rose-600 font-semibold">Isi Survei</span>
+                                    <span class="text-rose-600 font-semibold">Klik untuk baca</span>
                                 </div>
                             </div>
                         </div>
@@ -223,7 +250,6 @@
                         </div>
                         
                         <div class="space-y-6 flex-1">
-                            
                             <div class="flex gap-4 group cursor-pointer">
                                 <div class="flex flex-col items-center">
                                     <div class="w-3 h-3 rounded-full bg-red-500 outline outline-4 outline-red-50 group-hover:outline-red-100 transition"></div>
@@ -251,20 +277,10 @@
                                     </p>
                                 </div>
                             </div>
-
-                            <div class="flex gap-4">
-                                <div class="flex flex-col items-center">
-                                    <div class="w-3 h-3 rounded-full border-2 border-slate-300 bg-white"></div>
-                                </div>
-                                <div>
-                                    <p class="text-xs font-medium text-slate-400 italic">Tidak ada jadwal lagi hari ini.</p>
-                                </div>
-                            </div>
-
                         </div>
 
                         <div class="mt-6 pt-6 border-t border-slate-100">
-                            <button class="w-full flex items-center justify-center gap-2 py-3 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-sm font-semibold transition shadow-md">
+                            <button onclick="window.location.href='presensi.html'" class="w-full flex items-center justify-center gap-2 py-3 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-sm font-semibold transition shadow-md">
                                 <i class="fa-solid fa-qrcode"></i> Scan Presensi Kehadiran
                             </button>
                         </div>
@@ -273,6 +289,80 @@
 
             </div>
         </div>
+
+        <div id="news-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+            <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-6 transform transition-all scale-95 opacity-0" id="modal-content">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 id="modal-title" class="font-bold text-slate-800 text-xl pr-4">Judul Berita</h3>
+                    <button onclick="closeModal()" class="text-slate-400 hover:text-red-500 transition bg-slate-100 rounded-full w-8 h-8 flex items-center justify-center shrink-0"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="text-sm text-slate-600 leading-relaxed mb-6" id="modal-body">
+                    Isi detail berita akan muncul di sini...
+                </div>
+                <button onclick="closeModal()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl shadow-md transition">
+                    Tutup
+                </button>
+            </div>
+        </div>
+
     </main>
+
+    <script>
+        // 1. Logic Dropdown (Notif & Profile)
+        function toggleDropdown(event, id) {
+            event.stopPropagation(); // Mencegah event klik bocor ke window
+            const dropdown = document.getElementById(id);
+            
+            // Tutup dropdown lain yang sedang terbuka
+            const allDropdowns = document.querySelectorAll('.dropdown-active');
+            allDropdowns.forEach(dd => {
+                if(dd.id !== id) {
+                    dd.classList.remove('dropdown-active');
+                    dd.classList.add('dropdown-enter');
+                }
+            });
+
+            // Toggle dropdown yang di-klik
+            if(dropdown.classList.contains('dropdown-enter')) {
+                dropdown.classList.remove('dropdown-enter');
+                dropdown.classList.add('dropdown-active');
+            } else {
+                dropdown.classList.remove('dropdown-active');
+                dropdown.classList.add('dropdown-enter');
+            }
+        }
+
+        // Tutup dropdown jika klik sembarang tempat di layar
+        window.onclick = function() {
+            const allDropdowns = document.querySelectorAll('.dropdown-active');
+            allDropdowns.forEach(dd => {
+                dd.classList.remove('dropdown-active');
+                dd.classList.add('dropdown-enter');
+            });
+        }
+
+        // 2. Logic Modal (Pop-up Berita)
+        const modal = document.getElementById('news-modal');
+        const modalContent = document.getElementById('modal-content');
+        
+        function openModal(title, content) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-body').innerText = content;
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('modal-active');
+            }, 10);
+        }
+
+        function closeModal() {
+            modalContent.classList.remove('modal-active');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+    </script>
 </body>
 </html>
