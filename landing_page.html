@@ -1,368 +1,1919 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telkom University - iGRACIAS Redesign</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>iGRACIAS — Telkom University</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        .sidebar-item-active { border-left: 4px solid #b91c1c; background-color: #fee2e2; color: #b91c1c; }
-        .card { background: white; border-radius: 1rem; border: 1px solid #e2e8f0; }
-        
-        /* Hide scrollbar for sidebar but allow scrolling */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        /* ===== TOKENS ===== */
+        :root {
+            --red-50: #fff1f1;
+            --red-100: #ffe0e0;
+            --red-400: #f87171;
+            --red-500: #ef4444;
+            --red-600: #cc2222;
+            --red-700: #a81c1c;
+            --red-800: #8b1818;
+            --red-900: #6f1414;
 
-        /* Dropdown & Modal Animations */
-        .dropdown-enter { opacity: 0; transform: scale(0.95) translateY(-10px); visibility: hidden; }
-        .dropdown-active { opacity: 1; transform: scale(1) translateY(0); visibility: visible; transition: all 0.2s ease-out; }
-        
-        .modal-enter { opacity: 0; transform: scale(0.95); }
-        .modal-active { opacity: 1; transform: scale(1); transition: all 0.2s ease-out; }
+            --bg: #f6f5f2;
+            --surface: #ffffff;
+            --surface-2: #f0ede8;
+            --border: #e5e0d8;
+            --border-strong: #ccc6bb;
+            --text: #1a1714;
+            --text-2: #5a5248;
+            --text-3: #9a9088;
+            --accent: var(--red-600);
+            --accent-light: #fff1f1;
+
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+
+            --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+            --shadow-md: 0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
+            --shadow-lg: 0 12px 32px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05);
+            --shadow-xl: 0 24px 64px rgba(0,0,0,.14);
+
+            --sidebar-w: 256px;
+            --header-h: 60px;
+            --transition: all .2s cubic-bezier(.4,0,.2,1);
+        }
+
+        html.dark {
+            --bg: #0e0d0b;
+            --surface: #1a1815;
+            --surface-2: #242019;
+            --border: #2e2b26;
+            --border-strong: #3d3930;
+            --text: #f0ece6;
+            --text-2: #a09880;
+            --text-3: #6a6050;
+            --accent: #e03535;
+            --accent-light: #2a1414;
+        }
+
+        /* ===== RESET ===== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            transition: background .3s, color .3s;
+        }
+        a { text-decoration: none; color: inherit; }
+        button { cursor: pointer; border: none; background: none; font-family: inherit; }
+        input { font-family: inherit; }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 2px; }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: var(--sidebar-w);
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            transition: var(--transition);
+            z-index: 40;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 20px 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo-mark {
+            width: 36px; height: 36px;
+            background: var(--red-700);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: white;
+            font-family: 'DM Serif Display', serif;
+            font-style: italic;
+            font-size: 14px;
+            letter-spacing: -0.5px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(168,28,28,.35);
+        }
+
+        .logo-text {
+            font-size: 17px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--text);
+        }
+        .logo-text span { color: var(--accent); }
+
+        /* User profile in sidebar */
+        .sidebar-user {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .user-card {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .user-avatar {
+            width: 38px; height: 38px;
+            border-radius: 10px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: var(--red-700);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700;
+            color: white;
+            font-size: 13px;
+        }
+
+        .user-info p { font-size: 12px; font-weight: 700; line-height: 1.3; }
+        .user-info span { font-size: 10px; color: var(--text-3); font-weight: 500; }
+
+        .user-badge {
+            margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: .4px;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--red-100);
+        }
+        html.dark .user-badge { border-color: transparent; }
+
+        /* Nav */
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px 12px;
+        }
+
+        .nav-label {
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-3);
+            padding: 8px 8px 6px;
+            margin-top: 6px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-2);
+            transition: var(--transition);
+            cursor: pointer;
+            margin-bottom: 1px;
+        }
+
+        .nav-item:hover {
+            background: var(--surface-2);
+            color: var(--text);
+        }
+
+        .nav-item.active {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700;
+        }
+        html.dark .nav-item.active { background: #2a1212; }
+
+        .nav-item i { width: 16px; text-align: center; font-size: 12px; opacity: .75; }
+        .nav-item.active i { opacity: 1; }
+
+        /* Sidebar footer */
+        .sidebar-footer {
+            padding: 12px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .sidebar-footer-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 9px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn-ghost {
+            color: var(--text-2);
+            background: var(--surface-2);
+        }
+        .btn-ghost:hover { background: var(--border); color: var(--text); }
+
+        .btn-danger {
+            background: var(--accent);
+            color: white;
+            font-weight: 700;
+        }
+        .btn-danger:hover { background: var(--red-700); }
+
+        /* ===== MAIN ===== */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            height: var(--header-h);
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            z-index: 30;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .search-wrap {
+            position: relative;
+        }
+
+        .search-wrap i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-3);
+            font-size: 12px;
+        }
+
+        .search-input {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 7px 16px 7px 34px;
+            font-size: 12.5px;
+            color: var(--text);
+            width: 240px;
+            outline: none;
+            transition: var(--transition);
+        }
+        .search-input::placeholder { color: var(--text-3); }
+        .search-input:focus { border-color: var(--accent); width: 290px; background: var(--surface); }
+
+        .term-pill {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 5px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-2);
+            letter-spacing: .2px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .icon-btn {
+            width: 36px; height: 36px;
+            border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-2);
+            font-size: 14px;
+            transition: var(--transition);
+            position: relative;
+        }
+        .icon-btn:hover { background: var(--surface-2); color: var(--text); }
+
+        .badge-dot {
+            position: absolute;
+            top: 6px; right: 6px;
+            width: 7px; height: 7px;
+            background: var(--accent);
+            border-radius: 50%;
+            border: 1.5px solid var(--surface);
+        }
+
+        .header-profile {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 10px 5px 6px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            margin-left: 4px;
+        }
+        .header-profile:hover { background: var(--surface-2); }
+
+        .header-avatar {
+            width: 28px; height: 28px;
+            border-radius: 7px;
+            background: var(--red-700);
+            color: white;
+            font-size: 11px;
+            font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .header-profile span {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* Dropdown */
+        .dropdown-wrap { position: relative; }
+        .dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            z-index: 100;
+            min-width: 200px;
+            opacity: 0;
+            transform: translateY(-8px) scale(.97);
+            pointer-events: none;
+            transition: all .18s cubic-bezier(.4,0,.2,1);
+        }
+        .dropdown.open {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+        .dropdown-header {
+            padding: 14px 16px 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        .dropdown-header p { font-size: 13px; font-weight: 700; }
+        .dropdown-header span { font-size: 10px; color: var(--text-3); }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 14px;
+            font-size: 12.5px;
+            color: var(--text-2);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .dropdown-item:hover { background: var(--surface-2); color: var(--text); }
+        .dropdown-item i { width: 14px; font-size: 11px; color: var(--text-3); }
+        .dropdown-item.danger { color: var(--accent); }
+        .dropdown-item.danger i { color: var(--accent); }
+        .dropdown-divider { border: none; border-top: 1px solid var(--border); margin: 4px 0; }
+
+        .notif-dropdown { min-width: 300px; }
+        .notif-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .notif-item:last-child { border-bottom: none; }
+        .notif-item:hover { background: var(--surface-2); }
+        .notif-item.unread { background: var(--accent-light); }
+        html.dark .notif-item.unread { background: #1e0f0f; }
+        .notif-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+        .notif-text p { font-size: 12px; font-weight: 700; line-height: 1.3; }
+        .notif-text span { font-size: 10.5px; color: var(--text-2); margin-top: 2px; display: block; line-height: 1.4; }
+        .notif-time { font-size: 9.5px; color: var(--text-3); margin-top: 4px; display: block; }
+
+        /* ===== PAGE ===== */
+        .page {
+            flex: 1;
+            overflow-y: auto;
+            padding: 28px 32px;
+        }
+
+        /* ===== PAGE HEADER ===== */
+        .page-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 28px;
+        }
+
+        .page-greeting {
+            font-family: 'DM Serif Display', serif;
+            font-size: 28px;
+            line-height: 1.15;
+            color: var(--text);
+        }
+        .page-greeting span { color: var(--accent); font-style: italic; }
+
+        .page-sub {
+            font-size: 13px;
+            color: var(--text-2);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .page-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-sm {
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 700;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-outline-sm {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-2);
+        }
+        .btn-outline-sm:hover { border-color: var(--accent); color: var(--accent); }
+
+        .btn-primary-sm {
+            background: var(--accent);
+            color: white;
+            border: 1px solid transparent;
+        }
+        .btn-primary-sm:hover { background: var(--red-700); }
+
+        /* ===== BANNER ===== */
+        .banner {
+            background: linear-gradient(135deg, var(--red-800) 0%, var(--red-700) 40%, #c03030 100%);
+            border-radius: var(--radius-xl);
+            padding: 32px 36px;
+            color: white;
+            margin-bottom: 28px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .banner::before {
+            content: '';
+            position: absolute;
+            top: -60px; right: -60px;
+            width: 260px; height: 260px;
+            background: rgba(255,255,255,.06);
+            border-radius: 50%;
+        }
+
+        .banner::after {
+            content: '';
+            position: absolute;
+            bottom: -80px; left: 30%;
+            width: 200px; height: 200px;
+            background: rgba(255,255,255,.04);
+            border-radius: 50%;
+        }
+
+        .banner-inner {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 32px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .banner-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,.15);
+            border: 1px solid rgba(255,255,255,.2);
+            border-radius: 40px;
+            padding: 4px 12px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .banner-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 30px;
+            line-height: 1.2;
+            margin-bottom: 10px;
+        }
+        .banner-title em { color: rgba(255,255,255,.75); font-style: italic; }
+
+        .banner-desc {
+            font-size: 13px;
+            line-height: 1.6;
+            color: rgba(255,255,255,.8);
+            margin-bottom: 20px;
+            max-width: 400px;
+        }
+        .banner-desc strong { color: white; font-weight: 700; }
+
+        .banner-prices {
+            display: flex;
+            gap: 12px;
+        }
+
+        .price-chip {
+            background: rgba(255,255,255,.12);
+            border: 1px solid rgba(255,255,255,.18);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+        }
+
+        .price-chip small {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            font-weight: 800;
+            color: rgba(255,255,255,.6);
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .price-chip strong {
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        /* Banner card */
+        .banner-card {
+            background: white;
+            color: var(--text);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            width: 280px;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .banner-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .banner-card-header h4 {
+            font-size: 12px;
+            font-weight: 800;
+            color: #1a1714;
+        }
+
+        .batch-badge {
+            background: var(--red-50);
+            color: var(--red-700);
+            font-size: 9px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 40px;
+            border: 1px solid var(--red-100);
+        }
+
+        .schedule-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            cursor: pointer;
+            margin-bottom: 4px;
+        }
+        .schedule-item:hover { background: #f6f5f2; }
+
+        .schedule-date {
+            width: 34px; height: 34px;
+            border-radius: 8px;
+            background: var(--red-50);
+            border: 1px solid var(--red-100);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--red-700);
+            flex-shrink: 0;
+        }
+        .schedule-item:hover .schedule-date { background: var(--red-700); color: white; border-color: transparent; }
+
+        .schedule-info { flex: 1; }
+        .schedule-info p { font-size: 11.5px; font-weight: 700; color: #1a1714; }
+        .schedule-info span { font-size: 10px; color: #9a9088; }
+        .schedule-arrow { font-size: 10px; color: #ccc6bb; }
+        .schedule-item:hover .schedule-arrow { color: var(--red-600); }
+
+        .banner-register-btn {
+            width: 100%;
+            padding: 11px;
+            background: var(--accent);
+            color: white;
+            border-radius: var(--radius-sm);
+            font-size: 12.5px;
+            font-weight: 800;
+            margin-top: 14px;
+            transition: var(--transition);
+            letter-spacing: .2px;
+        }
+        .banner-register-btn:hover { background: var(--red-700); }
+
+        /* ===== STATS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            transition: var(--transition);
+        }
+        .stat-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+
+        .stat-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            color: var(--text-3);
+        }
+
+        .stat-icon {
+            width: 34px; height: 34px;
+            border-radius: 9px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -1px;
+            margin-bottom: 6px;
+        }
+
+        .stat-delta {
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .delta-up { color: #16a34a; }
+        .delta-warn { color: #d97706; }
+        .delta-muted { color: var(--text-3); }
+
+        /* ===== CONTENT GRID ===== */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 22px;
+            margin-bottom: 28px;
+        }
+
+        /* ===== SECTION HEADER ===== */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title i { color: var(--accent); font-size: 13px; }
+
+        .see-all {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--accent);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .see-all:hover { opacity: .75; }
+
+        /* ===== NEWS CARDS ===== */
+        .news-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .news-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+        .news-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .news-card.wide { grid-column: 1 / -1; }
+
+        .news-visual {
+            padding: 22px 22px 16px;
+            position: relative;
+        }
+
+        .news-tag {
+            display: inline-flex;
+            align-items: center;
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            padding: 3px 9px;
+            border-radius: 40px;
+            margin-bottom: 10px;
+        }
+
+        .news-card-title {
+            font-size: 15px;
+            font-weight: 800;
+            line-height: 1.3;
+            color: var(--text);
+        }
+        .news-card.wide .news-card-title { font-size: 18px; }
+
+        .news-body {
+            padding: 0 22px 18px;
+        }
+
+        .news-desc {
+            font-size: 12px;
+            color: var(--text-2);
+            line-height: 1.6;
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 10.5px;
+        }
+
+        .news-date { color: var(--text-3); font-weight: 600; }
+        .news-read { font-weight: 700; }
+
+        /* Color variants */
+        .tag-blue { background: #eff6ff; color: #1d4ed8; }
+        .tag-rose { background: #fff1f2; color: #be123c; }
+        .tag-green { background: #f0fdf4; color: #15803d; }
+        html.dark .tag-blue { background: #1e2d4a; color: #60a5fa; }
+        html.dark .tag-rose { background: #2a1218; color: #fb7185; }
+        html.dark .tag-green { background: #142a1c; color: #4ade80; }
+
+        .read-blue { color: #1d4ed8; }
+        .read-rose { color: #be123c; }
+        .read-green { color: #15803d; }
+        html.dark .read-blue { color: #60a5fa; }
+        html.dark .read-rose { color: #fb7185; }
+        html.dark .read-green { color: #4ade80; }
+
+        /* news accent top border */
+        .news-card.blue { border-top: 3px solid #3b82f6; }
+        .news-card.rose { border-top: 3px solid #f43f5e; }
+        .news-card.green { border-top: 3px solid #22c55e; }
+
+        /* ===== RIGHT COLUMN ===== */
+        .right-col { display: flex; flex-direction: column; gap: 18px; }
+
+        /* Schedule Card */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 18px 20px 14px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        /* Timeline */
+        .timeline { padding: 16px 20px; display: flex; flex-direction: column; gap: 0; }
+
+        .tl-item {
+            display: flex;
+            gap: 14px;
+            position: relative;
+            padding-bottom: 18px;
+        }
+        .tl-item:last-child { padding-bottom: 0; }
+
+        .tl-line {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .tl-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            background: var(--bg);
+            flex-shrink: 0;
+            margin-top: 3px;
+        }
+
+        .tl-item.now .tl-dot {
+            border-color: var(--accent);
+            background: var(--accent);
+            box-shadow: 0 0 0 3px rgba(204,34,34,.2);
+        }
+
+        .tl-connector {
+            width: 1px;
+            flex: 1;
+            background: var(--border);
+            margin: 4px 0;
+            min-height: 20px;
+        }
+
+        .tl-content {
+            flex: 1;
+            padding-bottom: 4px;
+        }
+
+        .tl-time {
+            font-size: 9.5px;
+            font-weight: 800;
+            color: var(--text-3);
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            margin-bottom: 4px;
+        }
+        .tl-item.now .tl-time { color: var(--accent); }
+
+        .tl-subject {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.3;
+            margin-bottom: 3px;
+        }
+
+        .tl-meta {
+            font-size: 11px;
+            color: var(--text-3);
+            font-weight: 500;
+        }
+
+        .tl-now-badge {
+            display: inline-flex;
+            align-items: center;
+            background: var(--accent);
+            color: white;
+            font-size: 8.5px;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            letter-spacing: .4px;
+        }
+
+        .tl-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .tl-btn {
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+
+        .tl-btn-primary {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+        .tl-btn-primary:hover { background: var(--red-100); }
+        html.dark .tl-btn-primary:hover { background: #3a1a1a; }
+
+        .tl-btn-ghost {
+            background: var(--surface-2);
+            color: var(--text-2);
+        }
+        .tl-btn-ghost:hover { background: var(--border); }
+
+        .qr-btn {
+            margin: 4px 20px 20px;
+            width: calc(100% - 40px);
+            padding: 11px;
+            background: #1a1714;
+            color: white;
+            border-radius: var(--radius-sm);
+            font-size: 12.5px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+        html.dark .qr-btn { background: var(--border); }
+        .qr-btn:hover { opacity: .85; }
+
+        /* Progress Card */
+        .progress-section { padding: 20px; }
+
+        .progress-ring-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .ring-svg { transform: rotate(-90deg); }
+
+        .ring-label {
+            font-family: 'DM Serif Display', serif;
+            font-size: 28px;
+            font-weight: 400;
+            color: var(--text);
+        }
+
+        .ring-sub {
+            font-size: 10px;
+            color: var(--text-3);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        .bar-wrap { margin-bottom: 14px; }
+
+        .bar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            font-size: 11.5px;
+            font-weight: 600;
+        }
+
+        .bar-val { font-weight: 800; color: var(--accent); }
+
+        .bar-track {
+            height: 6px;
+            background: var(--surface-2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--red-600), var(--red-400));
+            border-radius: 3px;
+            transition: width .8s cubic-bezier(.4,0,.2,1);
+        }
+
+        .bar-note {
+            font-size: 10px;
+            color: var(--text-3);
+            margin-top: 4px;
+        }
+
+        .grad-target {
+            background: linear-gradient(135deg, var(--accent-light), #fff8f0);
+            border: 1px solid var(--red-100);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        html.dark .grad-target { background: #1e1210; border-color: #3a1a10; }
+
+        .grad-icon {
+            width: 38px; height: 38px;
+            border-radius: 10px;
+            background: var(--accent);
+            color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .grad-info p { font-size: 10px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 2px; }
+        .grad-info strong { font-size: 14px; font-weight: 800; color: var(--accent); }
+        .grad-note { font-size: 10px; color: var(--text-2); margin-top: 8px; line-height: 1.4; }
+
+        /* ===== DEADLINES TABLE ===== */
+        .deadlines-section { margin-bottom: 8px; }
+
+        .table-wrap {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+
+        thead tr {
+            background: var(--surface-2);
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            padding: 10px 18px;
+            text-align: left;
+            font-size: 9.5px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .7px;
+            color: var(--text-3);
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: var(--transition);
+        }
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: var(--surface-2); }
+
+        td {
+            padding: 13px 18px;
+            font-size: 12.5px;
+        }
+
+        td.subject-cell { font-weight: 700; color: var(--text); }
+        td.course-cell { color: var(--text-2); font-size: 11.5px; }
+        td.deadline-cell { font-weight: 700; }
+        .deadline-urgent { color: #d97706; }
+        .deadline-normal { color: var(--text-2); }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            font-size: 9.5px;
+            font-weight: 800;
+            padding: 3px 9px;
+            border-radius: 40px;
+            letter-spacing: .2px;
+        }
+        .pill-warn { background: #fef3c7; color: #92400e; }
+        .pill-draft { background: var(--surface-2); color: var(--text-3); border: 1px solid var(--border); }
+        .pill-ok { background: #dcfce7; color: #166534; }
+        html.dark .pill-warn { background: #2a1d06; color: #fbbf24; }
+        html.dark .pill-ok { background: #0d2a15; color: #4ade80; }
+
+        .action-link {
+            font-size: 11.5px;
+            font-weight: 800;
+            color: var(--accent);
+            transition: var(--transition);
+        }
+        .action-link:hover { opacity: .7; }
+
+        /* ===== MODAL ===== */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.5);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .2s;
+        }
+        .modal-backdrop.open { opacity: 1; pointer-events: auto; }
+
+        .modal {
+            background: var(--surface);
+            border-radius: var(--radius-xl);
+            width: 100%;
+            max-width: 500px;
+            box-shadow: var(--shadow-xl);
+            transform: scale(.96) translateY(8px);
+            transition: all .25s cubic-bezier(.16,1,.3,1);
+            overflow: hidden;
+        }
+        .modal-backdrop.open .modal { transform: scale(1) translateY(0); }
+
+        .modal-top {
+            padding: 24px 24px 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 20px;
+            line-height: 1.2;
+            margin-bottom: 4px;
+        }
+
+        .modal-body {
+            padding: 20px 24px;
+            font-size: 13px;
+            line-height: 1.75;
+            color: var(--text-2);
+            white-space: pre-line;
+            max-height: 360px;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: 14px 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .modal-close-x {
+            position: absolute;
+            top: 20px; right: 20px;
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            background: var(--surface-2);
+            color: var(--text-2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px;
+            transition: var(--transition);
+        }
+        .modal-close-x:hover { background: var(--border); color: var(--text); }
+
+        /* ===== TOAST ===== */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 500;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 16px;
+            border-radius: var(--radius-md);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-lg);
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text);
+            animation: toastIn .25s cubic-bezier(.16,1,.3,1);
+            max-width: 320px;
+        }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(8px) scale(.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .toast i { font-size: 13px; }
+        .toast.success i { color: #16a34a; }
+        .toast.info i { color: #2563eb; }
+        .toast.warning i { color: #d97706; }
+
+        .toast-close {
+            margin-left: 4px;
+            color: var(--text-3);
+            font-size: 11px;
+            transition: var(--transition);
+        }
+        .toast-close:hover { color: var(--text); }
+
+        /* ===== MOBILE ===== */
+        @media (max-width: 900px) {
+            .sidebar { display: none; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .content-grid { grid-template-columns: 1fr; }
+            .page { padding: 18px; }
+            .banner-inner { grid-template-columns: 1fr; }
+            .banner-card { width: 100%; }
+            .news-grid { grid-template-columns: 1fr; }
+            .news-card.wide { grid-column: 1; }
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fadein {
+            animation: fadeUp .5s cubic-bezier(.16,1,.3,1) both;
+        }
+
+        .d1 { animation-delay: .05s; }
+        .d2 { animation-delay: .1s; }
+        .d3 { animation-delay: .15s; }
+        .d4 { animation-delay: .2s; }
+        .d5 { animation-delay: .25s; }
+        .d6 { animation-delay: .3s; }
     </style>
 </head>
-<body class="flex h-screen overflow-hidden">
+<body>
 
-    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col hidden md:flex shrink-0">
-        <div class="p-6 flex items-center gap-3 border-b border-slate-100">
-            <div class="w-8 h-8 bg-red-700 rounded-lg flex items-center justify-center text-white font-bold italic shadow-sm">iG</div>
-            <span class="text-xl font-bold text-slate-800 tracking-tight">iGRACIAS</span>
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-mark">iG</div>
+            <span class="logo-text">iGRA<span>CIAS</span></span>
         </div>
 
-        <div class="px-6 py-4 border-b border-slate-100">
-            <p class="text-sm font-bold text-slate-800 truncate">Zahid Abdullah N. M.</p>
-            <p class="text-xs text-slate-500">101102400004</p>
-            <div class="mt-2 inline-flex items-center gap-1 bg-red-50 text-red-700 px-2 py-1 rounded text-[10px] font-bold border border-red-100">
-                <i class="fa-solid fa-user-graduate"></i> MAHASISWA
+        <div class="sidebar-user">
+            <div class="user-card">
+                <div class="user-avatar">ZA</div>
+                <div class="user-info">
+                    <p>Zahid Abdullah N.M.</p>
+                    <span>101102400004</span>
+                </div>
+            </div>
+            <div class="user-badge">
+                <i class="fa-solid fa-user-graduate" style="font-size:9px"></i>
+                Mahasiswa · Teknik Informatika
             </div>
         </div>
 
-        <nav class="flex-1 overflow-y-auto no-scrollbar px-4 py-4 space-y-1">
-            <p class="text-xs font-semibold text-slate-400 uppercase px-2 mb-2">Main Menu</p>
-            
-            <a href="landing_page.html" class="sidebar-item-active flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition">
-                <i class="fa-solid fa-house w-4 text-center"></i> Dashboard
+        <nav class="sidebar-nav">
+            <p class="nav-label">Main</p>
+            <a href="#" class="nav-item active">
+                <i class="fa-solid fa-house"></i> Dashboard
             </a>
-            
-            <div class="mt-4 mb-2">
-                <p class="text-xs font-semibold text-slate-400 uppercase px-2">Akademik & Layanan</p>
-            </div>
-            
-            <a href="akun.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
-                <i class="fa-solid fa-user w-4 text-center"></i> Akun
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-chart-line"></i> Progress Akademik
             </a>
-            <a href="asrama.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
-                <i class="fa-solid fa-building w-4 text-center"></i> Asrama Mahasiswa
-            </a>
-            <a href="bimbingan.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
-                <i class="fa-solid fa-comments w-4 text-center"></i> Bimbingan Akademik
-            </a>
-            <a href="elearning.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
-                <i class="fa-solid fa-laptop-code w-4 text-center"></i> Elearning (Idea)
-            </a>
-            <a href="pembayaran.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
-                <i class="fa-solid fa-file-invoice w-4 text-center"></i> Pembayaran
-            </a>
-            <a href="nilai.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
-                <i class="fa-solid fa-graduation-cap w-4 text-center"></i> Nilai
-            </a>
-            <a href="presensi.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
-                <i class="fa-solid fa-clipboard-list w-4 text-center"></i> Presensi
-            </a>
+
+            <p class="nav-label">Akademik</p>
+            <a href="#" class="nav-item"><i class="fa-solid fa-user"></i> Akun</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-building"></i> Asrama</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-comments"></i> Bimbingan</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-laptop-code"></i> E-Learning</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-file-invoice-dollar"></i> Pembayaran</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-graduation-cap"></i> Nilai & Transkrip</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-clipboard-check"></i> Presensi</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-calendar-days"></i> Jadwal Kuliah</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-book"></i> Perpustakaan</a>
         </nav>
 
-        <div class="p-4 border-t border-slate-200">
-            <a href="login.html" class="w-full flex items-center justify-center gap-2 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-red-50 hover:text-red-700 rounded-lg transition">
-                <i class="fa-solid fa-right-from-bracket"></i> Logout
+        <div class="sidebar-footer">
+            <button class="sidebar-footer-btn btn-ghost" onclick="toggleDark()">
+                <i class="fa-solid fa-moon dark-icon"></i>
+                <i class="fa-solid fa-sun light-icon" style="display:none"></i>
+                <span id="theme-label">Mode Gelap</span>
+            </button>
+            <a href="#" class="sidebar-footer-btn btn-danger">
+                <i class="fa-solid fa-right-from-bracket"></i> Keluar
             </a>
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col overflow-y-auto relative">
-        
-        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-30">
-            <div class="relative w-96">
-                <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="text" id="searchInput" onkeyup="searchSimulation()" placeholder="Search menu or info..." class="w-full pl-10 pr-4 py-2 bg-slate-100 rounded-full border-none focus:ring-2 focus:ring-red-500 focus:bg-white text-sm transition outline-none">
+    <!-- ===== MAIN ===== -->
+    <main class="main">
+
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-left">
+                <div class="search-wrap">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" class="search-input" placeholder="Cari menu, jadwal, info..." onkeyup="handleSearch(this)">
+                </div>
+                <div class="term-pill">TA 2526/2 · Genap</div>
             </div>
-            
-            <div class="flex items-center gap-6 relative">
-                <div class="hidden md:flex items-center gap-2 bg-slate-100 px-3 py-1 rounded-md">
-                    <i class="fa-regular fa-calendar text-slate-500 text-xs"></i>
-                    <span class="text-xs font-semibold text-slate-600">TA 2526/2</span>
-                </div>
-                
-                <div class="relative">
-                    <button onclick="toggleDropdown(event, 'notifDropdown')" class="relative text-slate-400 hover:text-red-600 transition p-2">
-                        <i class="fa-solid fa-bell text-lg"></i>
-                        <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+
+            <div class="header-right">
+                <!-- Dark mode -->
+                <button class="icon-btn" onclick="toggleDark()" title="Toggle theme">
+                    <i class="fa-solid fa-moon dark-icon"></i>
+                    <i class="fa-solid fa-sun light-icon" style="display:none"></i>
+                </button>
+
+                <!-- Notif -->
+                <div class="dropdown-wrap">
+                    <button class="icon-btn" onclick="toggleDropdown('notif-dd')">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="badge-dot"></span>
                     </button>
-                    <div id="notifDropdown" class="dropdown-enter absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden z-50">
-                        <div class="p-3 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
-                            <span class="font-bold text-sm text-slate-700">Notifikasi</span>
-                            <span class="text-[10px] text-blue-600 cursor-pointer hover:underline">Tandai dibaca</span>
+                    <div class="dropdown notif-dropdown" id="notif-dd">
+                        <div class="dropdown-header">
+                            <div style="display:flex;align-items:center;justify-content:space-between">
+                                <p>Notifikasi</p>
+                                <button onclick="showToast('Semua notifikasi ditandai dibaca','success')" style="font-size:10px;font-weight:700;color:var(--accent)">Tandai dibaca</button>
+                            </div>
                         </div>
-                        <div class="max-h-64 overflow-y-auto">
-                            <div class="p-3 border-b border-slate-50 hover:bg-slate-50 cursor-pointer transition">
-                                <p class="text-xs font-bold text-slate-800">Tenggat Waktu Kuis</p>
-                                <p class="text-[10px] text-slate-500 mt-0.5">Kuis Kecerdasan Buatan ditutup besok jam 23:59.</p>
+                        <div class="notif-item unread" style="display:flex;gap:10px">
+                            <div class="notif-dot" style="background:#ef4444;margin-top:5px;flex-shrink:0"></div>
+                            <div class="notif-text">
+                                <p>🎓 Tenggat Kuis AI</p>
+                                <span>Kuis Kecerdasan Buatan ditutup besok, 23:59 WIB</span>
+                                <span class="notif-time">2 jam lalu</span>
                             </div>
-                            <div class="p-3 hover:bg-slate-50 cursor-pointer transition">
-                                <p class="text-xs font-bold text-slate-800">Persetujuan Dosen</p>
-                                <p class="text-[10px] text-slate-500 mt-0.5">Pak Dimas telah membalas log bimbingan Anda.</p>
+                        </div>
+                        <div class="notif-item" style="display:flex;gap:10px">
+                            <div class="notif-dot" style="background:#22c55e;margin-top:5px;flex-shrink:0"></div>
+                            <div class="notif-text">
+                                <p>✅ Bimbingan Disetujui</p>
+                                <span>Pak Dimas telah membalas log bimbingan Anda</span>
+                                <span class="notif-time">Kemarin</span>
                             </div>
+                        </div>
+                        <div class="notif-item" style="display:flex;gap:10px">
+                            <div class="notif-dot" style="background:#3b82f6;margin-top:5px;flex-shrink:0"></div>
+                            <div class="notif-text">
+                                <p>📢 Jadwal UTS Dirilis</p>
+                                <span>Jadwal UTS Semester Genap 2025/2026 tersedia</span>
+                                <span class="notif-time">3 hari lalu</span>
+                            </div>
+                        </div>
+                        <div style="padding:10px 16px;border-top:1px solid var(--border);text-align:center">
+                            <button style="font-size:11px;font-weight:700;color:var(--accent)">Lihat semua notifikasi →</button>
                         </div>
                     </div>
                 </div>
 
-                <div class="relative">
-                    <div onclick="toggleDropdown(event, 'profileDropdown')" class="flex items-center gap-2 bg-slate-100 p-1 rounded-full px-4 cursor-pointer hover:bg-slate-200 transition">
-                        <img src="https://ui-avatars.com/api/?name=Zahid+Abdullah&background=b91c1c&color=fff" class="w-8 h-8 rounded-full">
-                        <span class="text-sm font-semibold text-slate-700">Zahid</span>
+                <!-- Profile -->
+                <div class="dropdown-wrap">
+                    <div class="header-profile" onclick="toggleDropdown('profile-dd')">
+                        <div class="header-avatar">ZA</div>
+                        <span>Zahid</span>
+                        <i class="fa-solid fa-chevron-down" style="font-size:9px;color:var(--text-3)"></i>
                     </div>
-                    <div id="profileDropdown" class="dropdown-enter absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden z-50">
-                        <div class="p-3 border-b border-slate-100">
-                            <p class="text-sm font-bold text-slate-800">Zahid Abdullah</p>
-                            <p class="text-[10px] text-slate-500">NIM: 101102400004</p>
+                    <div class="dropdown" id="profile-dd" style="min-width:200px">
+                        <div class="dropdown-header">
+                            <p>Zahid Abdullah</p>
+                            <span>101102400004 · S1 Teknik Informatika</span>
                         </div>
-                        <div class="p-1">
-                            <a href="akun.html" class="flex items-center gap-2 px-3 py-2 text-xs text-slate-600 hover:bg-slate-50 hover:text-red-600 rounded-lg transition"><i class="fa-solid fa-user-pen w-4"></i> Edit Profil</a>
-                            <a href="#" class="flex items-center gap-2 px-3 py-2 text-xs text-slate-600 hover:bg-slate-50 hover:text-red-600 rounded-lg transition"><i class="fa-solid fa-gear w-4"></i> Pengaturan</a>
-                            <a href="login.html" class="flex items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 rounded-lg transition mt-1 border-t border-slate-100"><i class="fa-solid fa-right-from-bracket w-4"></i> Keluar</a>
+                        <div style="padding:6px">
+                            <div class="dropdown-item"><i class="fa-solid fa-user-pen"></i> Edit Profil</div>
+                            <div class="dropdown-item"><i class="fa-solid fa-gear"></i> Pengaturan</div>
+                            <div class="dropdown-item"><i class="fa-solid fa-circle-question"></i> Bantuan</div>
+                            <hr class="dropdown-divider">
+                            <div class="dropdown-item danger"><i class="fa-solid fa-right-from-bracket"></i> Keluar</div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </header>
 
-        <div class="p-8">
-            
-            <div class="flex justify-between items-end mb-8">
+        <!-- PAGE -->
+        <div class="page">
+
+            <!-- Page Header -->
+            <div class="page-header animate-fadein">
                 <div>
-                    <h1 class="text-2xl font-bold text-slate-800">Welcome back, Zahid! 👋</h1>
-                    <p class="text-sm text-slate-500 mt-1">Here is your academic overview and latest announcements.</p>
+                    <h1 class="page-greeting">Selamat pagi, <span>Zahid!</span> 👋</h1>
+                    <p class="page-sub">Semangat mengejar target Cumlaude — kamu sudah sangat dekat 🎯</p>
                 </div>
-            </div>
-
-            <div class="bg-gradient-to-br from-red-700 to-red-900 rounded-2xl p-8 text-white shadow-lg mb-8 relative overflow-hidden flex flex-col md:flex-row gap-8 items-center justify-between">
-                <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -translate-y-1/2 translate-x-1/3"></div>
-                <div class="absolute bottom-0 left-0 w-40 h-40 bg-red-500 opacity-20 rounded-full translate-y-1/3 -translate-x-1/4 filter blur-xl"></div>
-                
-                <div class="relative z-10 max-w-lg">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-semibold mb-4 border border-white/20">
-                        <i class="fa-solid fa-bullhorn"></i> Announcement
-                    </div>
-                    <h2 class="text-3xl lg:text-4xl font-extrabold mb-2 leading-tight">Jadwal TOEFL ITP®<br><span class="text-red-200">Daring & Luring</span></h2>
-                    <p class="text-sm text-red-100 mb-6">Pendaftaran tes TOEFL ITP untuk periode Mei 2026 telah dibuka. Pastikan Anda mendaftar sebelum kuota penuh.</p>
-                    
-                    <div class="flex flex-wrap gap-4">
-                        <div class="bg-white/10 border border-white/20 backdrop-blur px-5 py-3 rounded-xl">
-                            <p class="text-[10px] text-red-200 uppercase tracking-wider font-semibold mb-1">Civitas Tel-U</p>
-                            <p class="font-bold text-xl text-white">Rp 550.000</p>
-                        </div>
-                        <div class="bg-black/20 border border-black/10 backdrop-blur px-5 py-3 rounded-xl">
-                            <p class="text-[10px] text-red-200 uppercase tracking-wider font-semibold mb-1">Umum</p>
-                            <p class="font-bold text-xl text-white">Rp 610.500</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="relative z-10 bg-white text-slate-800 rounded-xl p-5 shadow-xl w-full md:w-80 shrink-0">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-sm">Mei 2026</h3>
-                        <span class="text-[10px] font-semibold text-red-600 bg-red-50 px-2 py-1 rounded">4 Batch Tersedia</span>
-                    </div>
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between text-xs border-b border-slate-100 pb-2">
-                            <div class="flex items-center gap-2 font-semibold">
-                                <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-slate-600">5</div><span>Mei</span>
-                            </div>
-                            <div class="text-right"><p class="text-slate-500">Tutup: <span class="font-medium text-slate-700">20 Apr</span></p></div>
-                        </div>
-                        <div class="flex items-center justify-between text-xs border-b border-slate-100 pb-2">
-                            <div class="flex items-center gap-2 font-semibold">
-                                <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-slate-600">12</div><span>Mei</span>
-                            </div>
-                            <div class="text-right"><p class="text-slate-500">Tutup: <span class="font-medium text-slate-700">27 Apr</span></p></div>
-                        </div>
-                        <div class="flex items-center justify-between text-xs border-b border-slate-100 pb-2">
-                            <div class="flex items-center gap-2 font-semibold">
-                                <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-slate-600">19</div><span>Mei</span>
-                            </div>
-                            <div class="text-right"><p class="text-slate-500">Tutup: <span class="font-medium text-slate-700">4 Mei</span></p></div>
-                        </div>
-                    </div>
-                    <button class="w-full mt-4 bg-red-700 text-white text-xs font-bold py-2 rounded-lg hover:bg-red-800 transition shadow">
-                        Daftar Sekarang
+                <div class="page-actions">
+                    <button class="btn-sm btn-outline-sm" onclick="showToast('Mengunduh kalender akademik...','info')">
+                        <i class="fa-solid fa-download"></i> Unduh Kalender
+                    </button>
+                    <button class="btn-sm btn-primary-sm" onclick="showToast('Membuka formulir janji dosen...','success')">
+                        <i class="fa-solid fa-plus"></i> Buat Janji Dosen
                     </button>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                
-                <div class="col-span-1 lg:col-span-2 space-y-6">
-                    <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
-                        <i class="fa-solid fa-newspaper text-red-600"></i> Informasi & Berita
-                    </h3>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div onclick="openModal('Beasiswa LPDP 2026 Batch 2', 'Pendaftaran beasiswa LPDP Batch 2 Intake Februari 2027 resmi dibuka mulai 11 Maret 2026. Beasiswa ini diperuntukkan bagi mahasiswa yang ingin melanjutkan studi Magister (S2) dan Doktoral (S3). Segera lengkapi dokumen persyaratan Anda di website resmi LPDP.')" class="card overflow-hidden hover:shadow-md transition cursor-pointer group">
-                            <div class="h-32 bg-blue-50 relative p-6 flex flex-col justify-center border-b border-slate-100">
-                                <div class="absolute top-4 right-4 text-slate-300 group-hover:text-blue-500 transition"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
-                                <span class="text-[10px] font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded w-max mb-2">BEASISWA</span>
-                                <h4 class="font-bold text-xl text-blue-900">LPDP 2026 Batch 2</h4>
+            <!-- Banner -->
+            <div class="banner animate-fadein d1">
+                <div class="banner-inner">
+                    <div>
+                        <div class="banner-tag">
+                            <i class="fa-solid fa-bullhorn" style="font-size:9px"></i>
+                            Pengumuman Penting
+                        </div>
+                        <h2 class="banner-title">Pendaftaran TOEFL ITP®<br><em>Daring & Luring</em> Dibuka!</h2>
+                        <p class="banner-desc">Periode Mei 2026 telah dibuka. Kuota terbatas — daftar sebelum <strong>30 April 2026</strong>.</p>
+                        <div class="banner-prices">
+                            <div class="price-chip">
+                                <small>Mahasiswa Tel-U</small>
+                                <strong>Rp 550.000</strong>
                             </div>
-                            <div class="p-5">
-                                <p class="text-xs text-slate-500 mb-3 line-clamp-2">Pendaftaran beasiswa LPDP Batch 2 Intake Februari 2027 telah dibuka untuk mahasiswa jenjang Magister dan Doktoral.</p>
-                                <div class="flex items-center justify-between text-[10px] font-medium text-slate-400">
-                                    <span><i class="fa-regular fa-clock"></i> 11 Mar 2026</span>
-                                    <span class="text-blue-600 font-semibold">Klik untuk baca</span>
+                            <div class="price-chip">
+                                <small>Umum</small>
+                                <strong>Rp 610.500</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="banner-card">
+                        <div class="banner-card-header">
+                            <h4>📅 Jadwal Tes Mei 2026</h4>
+                            <span class="batch-badge">4 Batch</span>
+                        </div>
+
+                        <div class="schedule-item">
+                            <div class="schedule-date">5</div>
+                            <div class="schedule-info">
+                                <p>Senin, 5 Mei</p>
+                                <span>08.00 – 12.00 WIB</span>
+                            </div>
+                            <i class="fa-solid fa-arrow-right schedule-arrow"></i>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-date" style="background:#f6f5f2;color:#5a5248;border-color:#e5e0d8">12</div>
+                            <div class="schedule-info">
+                                <p>Senin, 12 Mei</p>
+                                <span>08.00 – 12.00 WIB</span>
+                            </div>
+                            <i class="fa-solid fa-arrow-right schedule-arrow"></i>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-date" style="background:#f6f5f2;color:#5a5248;border-color:#e5e0d8">19</div>
+                            <div class="schedule-info">
+                                <p>Senin, 19 Mei</p>
+                                <span>08.00 – 12.00 WIB</span>
+                            </div>
+                            <i class="fa-solid fa-arrow-right schedule-arrow"></i>
+                        </div>
+
+                        <button class="banner-register-btn" onclick="showToast('Menuju halaman pendaftaran TOEFL...','success')">
+                            <i class="fa-solid fa-arrow-right-to-bracket"></i> Daftar Sekarang
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card animate-fadein d2">
+                    <div class="stat-header">
+                        <span class="stat-label">IPK Kumulatif</span>
+                        <div class="stat-icon" style="background:#f0fdf4">
+                            <i class="fa-solid fa-star" style="color:#16a34a;font-size:15px"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">3.87</div>
+                    <div class="stat-delta delta-up">
+                        <i class="fa-solid fa-arrow-trend-up"></i> +0.12 dari semester lalu
+                    </div>
+                </div>
+
+                <div class="stat-card animate-fadein d3">
+                    <div class="stat-header">
+                        <span class="stat-label">SKS Terambil</span>
+                        <div class="stat-icon" style="background:#eff6ff">
+                            <i class="fa-solid fa-layer-group" style="color:#2563eb;font-size:14px"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">142<span style="font-size:16px;font-weight:600;color:var(--text-3)">/144</span></div>
+                    <div class="stat-delta delta-muted">2 SKS lagi untuk lulus 🎓</div>
+                </div>
+
+                <div class="stat-card animate-fadein d4">
+                    <div class="stat-header">
+                        <span class="stat-label">Tugas Aktif</span>
+                        <div class="stat-icon" style="background:#fffbeb">
+                            <i class="fa-solid fa-file-pen" style="color:#d97706;font-size:14px"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">3</div>
+                    <div class="stat-delta delta-warn">
+                        <i class="fa-solid fa-circle-exclamation"></i> 1 deadline besok
+                    </div>
+                </div>
+
+                <div class="stat-card animate-fadein d5">
+                    <div class="stat-header">
+                        <span class="stat-label">Kehadiran</span>
+                        <div class="stat-icon" style="background:#faf5ff">
+                            <i class="fa-solid fa-user-check" style="color:#9333ea;font-size:14px"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">96<span style="font-size:16px;font-weight:600;color:var(--text-3)">%</span></div>
+                    <div class="stat-delta delta-up">
+                        <i class="fa-solid fa-check"></i> Memenuhi syarat UAS
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Grid -->
+            <div class="content-grid animate-fadein d6">
+
+                <!-- News -->
+                <div>
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fa-solid fa-newspaper"></i> Informasi & Berita</h2>
+                        <a href="#" class="see-all">Lihat semua <i class="fa-solid fa-arrow-right" style="font-size:9px"></i></a>
+                    </div>
+
+                    <div class="news-grid">
+                        <!-- Card 1 -->
+                        <div class="news-card blue" onclick="openModal('🎓 Beasiswa LPDP 2026 Batch 2', 'Pendaftaran beasiswa LPDP Batch 2 untuk jenjang S2 & S3 resmi dibuka mulai 11 Maret 2026.\n\n✅ Persyaratan:\n• WNI, usia maksimal 35 tahun\n• IPK min. 3.00\n• TOEFL ITP min. 500 / iBT min. 61\n• Esai motivasi & rencana studi\n\n📅 Timeline:\n• Pendaftaran: 11 Mar – 10 Apr 2026\n• Seleksi Administrasi: April 2026\n• Pengumuman: Mei 2026\n\nKunjungi: https://www.lpdp.kemenkeu.go.id')">
+                            <div class="news-visual">
+                                <div class="news-tag tag-blue">Beasiswa</div>
+                                <div class="news-card-title">LPDP 2026<br>Batch 2</div>
+                            </div>
+                            <div class="news-body">
+                                <p class="news-desc">Pendaftaran LPDP Batch 2 untuk S2 & S3 telah dibuka. Kuota terbatas!</p>
+                                <div class="news-footer">
+                                    <span class="news-date"><i class="fa-regular fa-clock"></i> 11 Mar 2026</span>
+                                    <span class="news-read read-blue">Baca →</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div onclick="openModal('Survei Literasi Baca-Tulis & Numerasi', 'Direktorat Akademik mewajibkan seluruh mahasiswa aktif untuk mengisi survei pemetaan literasi. Survei ini berlangsung dari tanggal 10 Maret hingga 25 Maret 2026. Mahasiswa yang tidak mengisi survei tidak dapat melakukan perwalian pada semester berikutnya.')" class="card overflow-hidden hover:shadow-md transition cursor-pointer group">
-                            <div class="h-32 bg-rose-50 relative p-6 flex flex-col justify-center border-b border-slate-100">
-                                <div class="absolute top-4 right-4 text-slate-300 group-hover:text-rose-500 transition"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
-                                <span class="text-[10px] font-bold text-rose-600 bg-rose-100 px-2 py-1 rounded w-max mb-2">SURVEI</span>
-                                <h4 class="font-bold text-lg text-rose-900 leading-tight">Literasi Baca-Tulis & Numerasi</h4>
+                        <!-- Card 2 -->
+                        <div class="news-card rose" onclick="openModal('📊 Survei Literasi Wajib', 'Direktorat Akademik mewajibkan seluruh mahasiswa aktif mengisi survei pemetaan literasi baca-tulis dan numerasi.\n\n📋 Detail:\n• Periode: 10 – 25 Maret 2026\n• Durasi: ±15 menit\n• Akses: iGRACIAS > Menu Survei\n\n⚠️ Penting: Mahasiswa yang tidak mengisi tidak dapat melakukan perwalian semester berikutnya.')">
+                            <div class="news-visual">
+                                <div class="news-tag tag-rose">Wajib Diisi</div>
+                                <div class="news-card-title">Survei Literasi<br>Kampus</div>
                             </div>
-                            <div class="p-5">
-                                <p class="text-xs text-slate-500 mb-3 line-clamp-2">Wajib diisi oleh seluruh mahasiswa aktif. Survei ini bertujuan untuk pemetaan tingkat literasi kampus.</p>
-                                <div class="flex items-center justify-between text-[10px] font-medium text-slate-400">
-                                    <span><i class="fa-regular fa-clock"></i> 10 Mar 2026</span>
-                                    <span class="text-rose-600 font-semibold">Klik untuk baca</span>
+                            <div class="news-body">
+                                <p class="news-desc">Wajib diisi sebelum 25 Maret. Tidak mengisi = tidak bisa perwalian!</p>
+                                <div class="news-footer">
+                                    <span class="news-date"><i class="fa-regular fa-clock"></i> 10 Mar 2026</span>
+                                    <span class="news-read read-rose">Baca →</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3 wide -->
+                        <div class="news-card green wide" onclick="openModal('🏆 Lomba Karya Ilmiah 2026', 'BEM Fakultas Informatika mengundang mahasiswa untuk LKIM 2026.\n\n📌 Kategori:\n• AI & Data Science\n• Cybersecurity & Network\n• Software Engineering & UX\n• IoT & Embedded Systems\n\n🎁 Hadiah:\n🥇 Juara 1: Rp 10.000.000\n🥈 Juara 2: Rp 7.000.000\n🥉 Juara 3: Rp 5.000.000\n\n📅 Submit Proposal: 1 – 30 Apr 2026\nPresentasi Final: 15 Mei 2026')">
+                            <div class="news-visual" style="display:flex;align-items:center;gap:16px;padding-bottom:12px">
+                                <div>
+                                    <div class="news-tag tag-green">Lomba</div>
+                                    <div class="news-card-title">🏆 Lomba Karya Ilmiah 2026</div>
+                                    <p style="font-size:12px;color:var(--text-2);margin-top:6px">Tunjukkan inovasi — menangkan hadiah hingga Rp 10 Juta!</p>
+                                </div>
+                            </div>
+                            <div class="news-body" style="padding-top:0">
+                                <p class="news-desc">Terbuka untuk seluruh mahasiswa Informatika. Deadline proposal: 30 April 2026.</p>
+                                <div class="news-footer">
+                                    <span class="news-date"><i class="fa-regular fa-clock"></i> 15 Mar 2026</span>
+                                    <span class="news-read read-green">Daftar sekarang →</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-span-1">
-                    <div class="card p-6 h-full flex flex-col">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="font-bold text-slate-800 text-lg">Jadwal Kuliah</h3>
-                            <button class="text-xs font-semibold text-red-600 hover:underline">Lihat Semua</button>
+                <!-- Right Column -->
+                <div class="right-col">
+
+                    <!-- Schedule Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📅 Jadwal Hari Ini</span>
+                            <button class="see-all" style="font-size:10.5px">Minggu ini →</button>
                         </div>
-                        
-                        <div class="space-y-6 flex-1">
-                            <div class="flex gap-4 group cursor-pointer">
-                                <div class="flex flex-col items-center">
-                                    <div class="w-3 h-3 rounded-full bg-red-500 outline outline-4 outline-red-50 group-hover:outline-red-100 transition"></div>
-                                    <div class="w-0.5 h-full bg-slate-100 my-1"></div>
+
+                        <div class="timeline">
+                            <!-- Current class -->
+                            <div class="tl-item now">
+                                <div class="tl-line">
+                                    <div class="tl-dot"></div>
+                                    <div class="tl-connector"></div>
                                 </div>
-                                <div class="pb-2">
-                                    <p class="text-[10px] font-bold text-red-500 mb-1">HARI INI • 08:30 - 11:30</p>
-                                    <h4 class="text-sm font-bold text-slate-800">Rekayasa Perangkat Lunak</h4>
-                                    <p class="text-xs text-slate-500 flex items-center gap-1 mt-1">
-                                        <i class="fa-solid fa-location-dot"></i> TULT 08.01
-                                    </p>
+                                <div class="tl-content">
+                                    <span class="tl-now-badge">BERLANGSUNG</span>
+                                    <div class="tl-time">08:30 – 11:30</div>
+                                    <div class="tl-subject">Rekayasa Perangkat Lunak</div>
+                                    <div class="tl-meta"><i class="fa-solid fa-location-dot"></i> TULT 08.01 · Pak Andi, M.Kom</div>
+                                    <div class="tl-actions">
+                                        <button class="tl-btn tl-btn-primary" onclick="showToast('Membuka materi RPL...','info')">Materi</button>
+                                        <button class="tl-btn tl-btn-ghost" onclick="showToast('Membuka Zoom...','info')">Zoom</button>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="flex gap-4 group cursor-pointer">
-                                <div class="flex flex-col items-center">
-                                    <div class="w-3 h-3 rounded-full bg-indigo-500 outline outline-4 outline-indigo-50 group-hover:outline-indigo-100 transition"></div>
-                                    <div class="w-0.5 h-full bg-slate-100 my-1"></div>
+                            <div class="tl-item">
+                                <div class="tl-line">
+                                    <div class="tl-dot"></div>
+                                    <div class="tl-connector"></div>
                                 </div>
-                                <div class="pb-2">
-                                    <p class="text-[10px] font-bold text-indigo-500 mb-1">HARI INI • 13:30 - 15:30</p>
-                                    <h4 class="text-sm font-bold text-slate-800">Kecerdasan Buatan</h4>
-                                    <p class="text-xs text-slate-500 flex items-center gap-1 mt-1">
-                                        <i class="fa-solid fa-laptop"></i> Online (Zoom)
-                                    </p>
+                                <div class="tl-content">
+                                    <div class="tl-time">13:30 – 15:30</div>
+                                    <div class="tl-subject">Kecerdasan Buatan</div>
+                                    <div class="tl-meta"><i class="fa-solid fa-laptop"></i> Online · Bu Sari, Ph.D</div>
+                                </div>
+                            </div>
+
+                            <div class="tl-item">
+                                <div class="tl-line">
+                                    <div class="tl-dot"></div>
+                                </div>
+                                <div class="tl-content">
+                                    <div class="tl-time">16:00 – 18:00</div>
+                                    <div class="tl-subject">Kewirausahaan Digital</div>
+                                    <div class="tl-meta"><i class="fa-solid fa-building"></i> GKB 2.05 · Pak Rizal, MM</div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="mt-6 pt-6 border-t border-slate-100">
-                            <button onclick="window.location.href='presensi.html'" class="w-full flex items-center justify-center gap-2 py-3 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-sm font-semibold transition shadow-md">
-                                <i class="fa-solid fa-qrcode"></i> Scan Presensi Kehadiran
-                            </button>
+                        <button class="qr-btn" onclick="showToast('Membuka scanner QR presensi...','info')">
+                            <i class="fa-solid fa-qrcode"></i> Scan QR Presensi
+                        </button>
+                    </div>
+
+                    <!-- Progress Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📊 Progress Akademik</span>
+                        </div>
+
+                        <div class="progress-section">
+                            <div class="progress-ring-wrap">
+                                <div style="position:relative;width:110px;height:110px;display:flex;align-items:center;justify-content:center">
+                                    <svg class="ring-svg" width="110" height="110" viewBox="0 0 110 110">
+                                        <circle cx="55" cy="55" r="44" fill="none" stroke="var(--surface-2)" stroke-width="9"/>
+                                        <circle cx="55" cy="55" r="44" fill="none" stroke="var(--accent)" stroke-width="9"
+                                            stroke-linecap="round"
+                                            stroke-dasharray="276.46"
+                                            stroke-dashoffset="34"
+                                            style="transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1)"/>
+                                    </svg>
+                                    <div style="position:absolute;text-align:center">
+                                        <div class="ring-label">3.87</div>
+                                        <div class="ring-sub">IPK</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bar-wrap">
+                                <div class="bar-header">
+                                    <span>SKS Diselesaikan</span>
+                                    <span class="bar-val">142/144</span>
+                                </div>
+                                <div class="bar-track">
+                                    <div class="bar-fill" style="width:98.6%"></div>
+                                </div>
+                                <p class="bar-note">Hanya 2 SKS lagi untuk wisuda 🎉</p>
+                            </div>
+
+                            <div class="grad-target">
+                                <div class="grad-icon">
+                                    <i class="fa-solid fa-graduation-cap"></i>
+                                </div>
+                                <div class="grad-info">
+                                    <p>Target Lulus</p>
+                                    <strong>Agustus 2026</strong>
+                                    <p class="grad-note" style="margin-top:4px">Berpotensi lulus <span style="color:#16a34a;font-weight:700">Cumlaude</span> ✨</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
+                </div>
             </div>
-        </div>
 
-        <div id="news-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
-            <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-6 transform transition-all scale-95 opacity-0" id="modal-content">
-                <div class="flex justify-between items-start mb-4">
-                    <h3 id="modal-title" class="font-bold text-slate-800 text-xl pr-4">Judul Berita</h3>
-                    <button onclick="closeModal()" class="text-slate-400 hover:text-red-500 transition bg-slate-100 rounded-full w-8 h-8 flex items-center justify-center shrink-0"><i class="fa-solid fa-xmark"></i></button>
+            <!-- Deadlines -->
+            <div class="deadlines-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fa-solid fa-triangle-exclamation" style="color:#d97706"></i>
+                        Deadline Mendatang
+                    </h2>
                 </div>
-                <div class="text-sm text-slate-600 leading-relaxed mb-6" id="modal-body">
-                    Isi detail berita akan muncul di sini...
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tugas / Event</th>
+                                <th>Mata Kuliah</th>
+                                <th>Tenggat</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="subject-cell">Tugas Besar RPL – Sprint 3</td>
+                                <td class="course-cell">Rekayasa Perangkat Lunak</td>
+                                <td class="deadline-cell deadline-urgent">Besok, 23:59</td>
+                                <td><span class="status-pill pill-warn">Menunggu</span></td>
+                                <td><button class="action-link" onclick="showToast('Membuka upload tugas...','info')">Upload</button></td>
+                            </tr>
+                            <tr>
+                                <td class="subject-cell">Kuis Online – Neural Networks</td>
+                                <td class="course-cell">Kecerdasan Buatan</td>
+                                <td class="deadline-cell deadline-urgent">Besok, 23:59</td>
+                                <td><span class="status-pill pill-warn">Belum Mulai</span></td>
+                                <td><button class="action-link" onclick="showToast('Membuka kuis...','info')">Mulai</button></td>
+                            </tr>
+                            <tr>
+                                <td class="subject-cell">Proposal LKIM 2026</td>
+                                <td class="course-cell">Ekstrakurikuler</td>
+                                <td class="deadline-cell deadline-normal">30 Apr 2026</td>
+                                <td><span class="status-pill pill-draft">Draft</span></td>
+                                <td><button class="action-link" onclick="showToast('Membuka form proposal...','info')">Edit</button></td>
+                            </tr>
+                            <tr>
+                                <td class="subject-cell">Pembayaran UKT Semester Depan</td>
+                                <td class="course-cell">Administrasi</td>
+                                <td class="deadline-cell deadline-normal">15 Mei 2026</td>
+                                <td><span class="status-pill pill-ok">Terjadwal</span></td>
+                                <td><button class="action-link" onclick="showToast('Membuka halaman pembayaran...','info')">Bayar</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <button onclick="closeModal()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl shadow-md transition">
-                    Tutup
-                </button>
             </div>
-        </div>
 
+        </div>
     </main>
 
+    <!-- ===== MODAL ===== -->
+    <div class="modal-backdrop" id="modal-backdrop" onclick="handleBackdropClick(event)">
+        <div class="modal" id="modal">
+            <div class="modal-top" style="position:relative">
+                <h3 class="modal-title" id="modal-title">Judul</h3>
+                <button class="modal-close-x" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" id="modal-body">Konten</div>
+            <div class="modal-footer">
+                <button class="btn-sm btn-outline-sm" onclick="closeModal()">Tutup</button>
+                <button class="btn-sm btn-primary-sm" onclick="showToast('Tindakan berhasil!','success');closeModal()">Konfirmasi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div id="toast-container"></div>
+
     <script>
-        // 1. Logic Dropdown (Notif & Profile)
-        function toggleDropdown(event, id) {
-            event.stopPropagation(); // Mencegah event klik bocor ke window
-            const dropdown = document.getElementById(id);
-            
-            // Tutup dropdown lain yang sedang terbuka
-            const allDropdowns = document.querySelectorAll('.dropdown-active');
-            allDropdowns.forEach(dd => {
-                if(dd.id !== id) {
-                    dd.classList.remove('dropdown-active');
-                    dd.classList.add('dropdown-enter');
-                }
-            });
+        // ===== DARK MODE =====
+        function toggleDark() {
+            const dark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', dark ? 'dark' : 'light');
+            document.querySelectorAll('.dark-icon').forEach(i => i.style.display = dark ? 'none' : '');
+            document.querySelectorAll('.light-icon').forEach(i => i.style.display = dark ? '' : 'none');
+            document.getElementById('theme-label').textContent = dark ? 'Mode Terang' : 'Mode Gelap';
+        }
 
-            // Toggle dropdown yang di-klik
-            if(dropdown.classList.contains('dropdown-enter')) {
-                dropdown.classList.remove('dropdown-enter');
-                dropdown.classList.add('dropdown-active');
-            } else {
-                dropdown.classList.remove('dropdown-active');
-                dropdown.classList.add('dropdown-enter');
+        // Init theme
+        const saved = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (saved === 'dark' || (!saved && prefersDark)) {
+            document.documentElement.classList.add('dark');
+            document.querySelectorAll('.dark-icon').forEach(i => i.style.display = 'none');
+            document.querySelectorAll('.light-icon').forEach(i => i.style.display = '');
+            document.getElementById('theme-label').textContent = 'Mode Terang';
+        }
+
+        // ===== DROPDOWNS =====
+        function toggleDropdown(id) {
+            const dd = document.getElementById(id);
+            const isOpen = dd.classList.contains('open');
+
+            // close all
+            document.querySelectorAll('.dropdown.open').forEach(d => d.classList.remove('open'));
+
+            if (!isOpen) dd.classList.add('open');
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown-wrap')) {
+                document.querySelectorAll('.dropdown.open').forEach(d => d.classList.remove('open'));
             }
-        }
+        });
 
-        // Tutup dropdown jika klik sembarang tempat di layar
-        window.onclick = function() {
-            const allDropdowns = document.querySelectorAll('.dropdown-active');
-            allDropdowns.forEach(dd => {
-                dd.classList.remove('dropdown-active');
-                dd.classList.add('dropdown-enter');
-            });
-        }
-
-        // 2. Logic Modal (Pop-up Berita)
-        const modal = document.getElementById('news-modal');
-        const modalContent = document.getElementById('modal-content');
-        
-        function openModal(title, content) {
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-body').innerText = content;
-            
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modalContent.classList.remove('scale-95', 'opacity-0');
-                modalContent.classList.add('modal-active');
-            }, 10);
+        // ===== MODAL =====
+        function openModal(title, body) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-body').textContent = body;
+            document.getElementById('modal-backdrop').classList.add('open');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeModal() {
-            modalContent.classList.remove('modal-active');
-            modalContent.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 200);
+            document.getElementById('modal-backdrop').classList.remove('open');
+            document.body.style.overflow = '';
         }
+
+        function handleBackdropClick(e) {
+            if (e.target === document.getElementById('modal-backdrop')) closeModal();
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // ===== TOAST =====
+        function showToast(message, type = 'info') {
+            const icons = { success: 'fa-circle-check', info: 'fa-circle-info', warning: 'fa-triangle-exclamation' };
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.innerHTML = `
+                <i class="fa-solid ${icons[type]}"></i>
+                <span style="flex:1">${message}</span>
+                <button class="toast-close" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></button>
+            `;
+            document.getElementById('toast-container').appendChild(el);
+            setTimeout(() => {
+                el.style.transition = 'all .3s';
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(6px)';
+                setTimeout(() => el.remove(), 300);
+            }, 4000);
+        }
+
+        // ===== SEARCH =====
+        let searchTimer;
+        function handleSearch(input) {
+            clearTimeout(searchTimer);
+            const q = input.value.trim();
+            if (q.length < 2) return;
+            searchTimer = setTimeout(() => {
+                const items = ['Dashboard','Akun','Nilai','Presensi','Pembayaran','Bimbingan','E-Learning','Asrama','Jadwal','Perpustakaan'];
+                const matches = items.filter(i => i.toLowerCase().includes(q.toLowerCase()));
+                if (matches.length) showToast(`Ditemukan: ${matches.join(', ')}`, 'success');
+                else showToast('Tidak ada hasil', 'warning');
+            }, 600);
+        }
+
+        // ===== WELCOME TOAST =====
+        window.addEventListener('load', () => {
+            setTimeout(() => showToast('Selamat pagi, Zahid! Semangat kuliahnya 💪', 'success'), 800);
+        });
     </script>
 </body>
 </html>
