@@ -1,468 +1,1362 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Learning (Idea) - iGRACIAS Redesign</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>E-Learning — iGRACIAS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        .sidebar-item-active { border-left: 4px solid #b91c1c; background-color: #fee2e2; color: #b91c1c; }
-        .card { background: white; border-radius: 1rem; border: 1px solid #e2e8f0; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        /* ===== TOKENS — same system as dashboard ===== */
+        :root {
+            --red-50: #fff1f1;
+            --red-100: #ffe0e0;
+            --red-400: #f87171;
+            --red-500: #ef4444;
+            --red-600: #cc2222;
+            --red-700: #a81c1c;
+            --red-800: #8b1818;
+            --red-900: #6f1414;
 
-        /* Dropdown & Modal Animations */
-        .dropdown-enter { opacity: 0; transform: scale(0.95) translateY(-10px); visibility: hidden; }
-        .dropdown-active { opacity: 1; transform: scale(1) translateY(0); visibility: visible; transition: all 0.2s ease-out; }
-        .modal-enter { opacity: 0; transform: scale(0.95); }
-        .modal-active { opacity: 1; transform: scale(1); transition: all 0.2s ease-out; }
-        .toast-enter { transform: translateY(100%); opacity: 0; }
-        .toast-active { transform: translateY(0); opacity: 1; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+            --blue-50: #eff6ff;
+            --blue-100: #dbeafe;
+            --blue-500: #3b82f6;
+            --blue-600: #2563eb;
+            --blue-700: #1d4ed8;
+
+            --bg: #f6f5f2;
+            --surface: #ffffff;
+            --surface-2: #f0ede8;
+            --border: #e5e0d8;
+            --border-strong: #ccc6bb;
+            --text: #1a1714;
+            --text-2: #5a5248;
+            --text-3: #9a9088;
+            --accent: var(--red-600);
+            --accent-light: #fff1f1;
+            --accent-blue: var(--blue-600);
+            --accent-blue-light: #eff6ff;
+
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+
+            --shadow-sm: 0 1px 3px rgba(0,0,0,.06);
+            --shadow-md: 0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
+            --shadow-lg: 0 12px 32px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05);
+            --shadow-xl: 0 24px 64px rgba(0,0,0,.14);
+
+            --sidebar-w: 256px;
+            --header-h: 60px;
+            --transition: all .2s cubic-bezier(.4,0,.2,1);
+        }
+
+        html.dark {
+            --bg: #0e0d0b;
+            --surface: #1a1815;
+            --surface-2: #242019;
+            --border: #2e2b26;
+            --border-strong: #3d3930;
+            --text: #f0ece6;
+            --text-2: #a09880;
+            --text-3: #6a6050;
+            --accent: #e03535;
+            --accent-light: #2a1414;
+            --accent-blue: #60a5fa;
+            --accent-blue-light: #1e2d4a;
+        }
+
+        /* ===== RESET ===== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            transition: background .3s, color .3s;
+        }
+        a { text-decoration: none; color: inherit; }
+        button { cursor: pointer; border: none; background: none; font-family: inherit; }
+        input { font-family: inherit; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 2px; }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: var(--sidebar-w);
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            z-index: 40;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 20px 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo-mark {
+            width: 36px; height: 36px;
+            background: var(--red-700);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: white;
+            font-family: 'DM Serif Display', serif;
+            font-style: italic;
+            font-size: 14px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(168,28,28,.35);
+        }
+
+        .logo-text {
+            font-size: 17px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        .logo-text span { color: var(--accent); }
+
+        .sidebar-user {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .user-card { display: flex; align-items: center; gap: 11px; }
+
+        .user-avatar {
+            width: 38px; height: 38px;
+            border-radius: 10px;
+            background: var(--red-700);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; color: white; font-size: 13px; flex-shrink: 0;
+        }
+
+        .user-info p { font-size: 12px; font-weight: 700; line-height: 1.3; }
+        .user-info span { font-size: 10px; color: var(--text-3); font-weight: 500; }
+
+        .user-badge {
+            margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: .4px;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--red-100);
+        }
+        html.dark .user-badge { border-color: transparent; }
+
+        .sidebar-nav { flex: 1; overflow-y: auto; padding: 12px; }
+
+        .nav-label {
+            font-size: 9px; font-weight: 800; letter-spacing: 1px;
+            text-transform: uppercase; color: var(--text-3);
+            padding: 8px 8px 6px; margin-top: 6px;
+        }
+
+        .nav-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 9px 10px; border-radius: var(--radius-sm);
+            font-size: 13px; font-weight: 500; color: var(--text-2);
+            transition: var(--transition); cursor: pointer; margin-bottom: 1px;
+        }
+        .nav-item:hover { background: var(--surface-2); color: var(--text); }
+        .nav-item.active {
+            background: var(--accent-blue-light);
+            color: var(--accent-blue);
+            font-weight: 700;
+        }
+        html.dark .nav-item.active { background: #1a2740; }
+        .nav-item i { width: 16px; text-align: center; font-size: 12px; opacity: .75; }
+        .nav-item.active i { opacity: 1; }
+
+        .sidebar-footer {
+            padding: 12px; border-top: 1px solid var(--border);
+            display: flex; flex-direction: column; gap: 6px;
+        }
+
+        .sidebar-footer-btn {
+            display: flex; align-items: center; justify-content: center;
+            gap: 8px; padding: 9px 12px; border-radius: var(--radius-sm);
+            font-size: 12px; font-weight: 600; transition: var(--transition);
+        }
+        .btn-ghost { color: var(--text-2); background: var(--surface-2); }
+        .btn-ghost:hover { background: var(--border); color: var(--text); }
+        .btn-danger { background: var(--accent); color: white; font-weight: 700; }
+        .btn-danger:hover { background: var(--red-700); }
+
+        /* ===== MAIN ===== */
+        .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+        /* ===== HEADER ===== */
+        .header {
+            height: var(--header-h);
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center;
+            justify-content: space-between;
+            padding: 0 28px; flex-shrink: 0;
+        }
+
+        .header-left { display: flex; align-items: center; gap: 14px; }
+
+        .page-icon {
+            width: 32px; height: 32px;
+            border-radius: 9px;
+            background: var(--accent-blue-light);
+            color: var(--accent-blue);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px;
+        }
+
+        .page-title { font-size: 15px; font-weight: 800; }
+        .page-title span { color: var(--text-3); font-weight: 500; font-size: 13px; margin-left: 6px; }
+
+        .search-wrap { position: relative; }
+        .search-wrap i {
+            position: absolute; left: 12px; top: 50%;
+            transform: translateY(-50%); color: var(--text-3); font-size: 11px;
+        }
+        .search-input {
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: 40px; padding: 7px 16px 7px 32px;
+            font-size: 12px; color: var(--text); width: 220px; outline: none;
+            transition: var(--transition);
+        }
+        .search-input::placeholder { color: var(--text-3); }
+        .search-input:focus { border-color: var(--accent-blue); width: 260px; background: var(--surface); }
+
+        .header-right { display: flex; align-items: center; gap: 6px; }
+
+        .icon-btn {
+            width: 36px; height: 36px; border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-2); font-size: 14px; transition: var(--transition);
+            position: relative;
+        }
+        .icon-btn:hover { background: var(--surface-2); color: var(--text); }
+
+        .header-profile {
+            display: flex; align-items: center; gap: 8px;
+            padding: 5px 10px 5px 6px; border-radius: var(--radius-sm);
+            cursor: pointer; transition: var(--transition); margin-left: 4px;
+        }
+        .header-profile:hover { background: var(--surface-2); }
+
+        .header-avatar {
+            width: 28px; height: 28px; border-radius: 7px;
+            background: var(--red-700); color: white;
+            font-size: 11px; font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .header-profile span { font-size: 13px; font-weight: 700; }
+
+        /* Dropdown */
+        .dropdown-wrap { position: relative; }
+        .dropdown {
+            position: absolute; top: calc(100% + 8px); right: 0;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius-md); box-shadow: var(--shadow-lg);
+            z-index: 100; min-width: 190px;
+            opacity: 0; transform: translateY(-8px) scale(.97);
+            pointer-events: none; transition: all .18s cubic-bezier(.4,0,.2,1);
+        }
+        .dropdown.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+        .dropdown-header { padding: 14px 16px 10px; border-bottom: 1px solid var(--border); }
+        .dropdown-header p { font-size: 13px; font-weight: 700; }
+        .dropdown-header span { font-size: 10px; color: var(--text-3); }
+        .dropdown-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 9px 14px; font-size: 12.5px; color: var(--text-2);
+            transition: var(--transition); cursor: pointer;
+        }
+        .dropdown-item:hover { background: var(--surface-2); color: var(--text); }
+        .dropdown-item i { width: 14px; font-size: 11px; color: var(--text-3); }
+        .dropdown-item.danger { color: var(--accent); }
+        .dropdown-item.danger i { color: var(--accent); }
+        .dropdown-divider { border: none; border-top: 1px solid var(--border); margin: 4px 0; }
+
+        /* ===== PAGE ===== */
+        .page { flex: 1; overflow-y: auto; padding: 28px 32px; }
+
+        /* ===== BANNER ===== */
+        .banner {
+            background: linear-gradient(135deg, #1a2f5e 0%, #1e3a7a 50%, #1d4ed8 100%);
+            border-radius: var(--radius-xl);
+            padding: 28px 32px;
+            color: white;
+            margin-bottom: 28px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .banner::before {
+            content: '';
+            position: absolute; top: -50px; right: -50px;
+            width: 220px; height: 220px;
+            background: rgba(255,255,255,.06); border-radius: 50%;
+        }
+
+        .banner::after {
+            content: '';
+            position: absolute; bottom: -70px; left: 20%;
+            width: 180px; height: 180px;
+            background: rgba(255,255,255,.04); border-radius: 50%;
+        }
+
+        .banner-left { position: relative; z-index: 1; }
+
+        .banner-eyebrow {
+            font-size: 10px; font-weight: 800; letter-spacing: .6px;
+            text-transform: uppercase; color: rgba(255,255,255,.6);
+            margin-bottom: 8px;
+        }
+
+        .banner-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 26px; line-height: 1.2; margin-bottom: 10px;
+        }
+        .banner-title em { font-style: italic; color: #93c5fd; }
+
+        .banner-sub {
+            font-size: 13px; color: rgba(255,255,255,.75);
+            line-height: 1.6; margin-bottom: 20px; max-width: 380px;
+        }
+
+        .banner-chips { display: flex; gap: 10px; flex-wrap: wrap; }
+
+        .chip {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border-radius: 40px;
+            font-size: 11px; font-weight: 700; border: 1px solid;
+        }
+
+        .chip-blue {
+            background: rgba(255,255,255,.12);
+            border-color: rgba(255,255,255,.2);
+            color: white;
+        }
+
+        .chip-red {
+            background: rgba(239,68,68,.2);
+            border-color: rgba(239,68,68,.35);
+            color: #fca5a5;
+        }
+
+        .chip-green {
+            background: rgba(34,197,94,.15);
+            border-color: rgba(34,197,94,.3);
+            color: #86efac;
+        }
+
+        .banner-right {
+            position: relative; z-index: 1;
+            display: flex; gap: 12px;
+        }
+
+        .banner-stat {
+            background: rgba(255,255,255,.1);
+            border: 1px solid rgba(255,255,255,.15);
+            border-radius: var(--radius-md);
+            padding: 16px 20px; text-align: center; min-width: 90px;
+        }
+
+        .banner-stat-val {
+            font-family: 'DM Serif Display', serif;
+            font-size: 28px; line-height: 1; margin-bottom: 4px;
+        }
+
+        .banner-stat-label {
+            font-size: 9.5px; color: rgba(255,255,255,.6);
+            font-weight: 700; text-transform: uppercase; letter-spacing: .4px;
+        }
+
+        /* ===== SECTION HEADER ===== */
+        .section-header {
+            display: flex; align-items: center;
+            justify-content: space-between; margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 15px; font-weight: 800;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .section-title i { color: var(--accent-blue); font-size: 13px; }
+
+        .section-controls { display: flex; align-items: center; gap: 8px; }
+
+        .filter-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 12px; border-radius: var(--radius-sm);
+            font-size: 11.5px; font-weight: 700;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-2);
+            transition: var(--transition);
+        }
+        .filter-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+        .filter-btn i { font-size: 10px; }
+
+        .view-toggle {
+            display: flex; background: var(--surface-2);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+
+        .view-btn {
+            padding: 6px 10px; font-size: 12px;
+            color: var(--text-3); transition: var(--transition);
+        }
+        .view-btn.active {
+            background: var(--surface); color: var(--accent-blue);
+        }
+        .view-btn:hover:not(.active) { color: var(--text-2); }
+
+        /* ===== COURSE GRID ===== */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 24px;
+        }
+
+        .courses-area { min-width: 0; }
+
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        /* Course Card */
+        .course-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex; flex-direction: column;
+        }
+        .course-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+
+        .course-thumb {
+            height: 96px;
+            position: relative;
+            padding: 16px 16px 12px;
+            display: flex; flex-direction: column; justify-content: flex-end;
+        }
+
+        .course-code {
+            position: absolute; top: 12px; right: 12px;
+            background: rgba(255,255,255,.18);
+            border: 1px solid rgba(255,255,255,.25);
+            color: rgba(255,255,255,.9);
+            font-size: 9px; font-weight: 800;
+            padding: 3px 8px; border-radius: 5px;
+            letter-spacing: .3px;
+        }
+
+        .course-name {
+            font-size: 14px; font-weight: 800;
+            color: white; line-height: 1.3;
+            text-shadow: 0 1px 4px rgba(0,0,0,.25);
+        }
+
+        .course-body { padding: 14px 16px 16px; flex: 1; display: flex; flex-direction: column; }
+
+        .course-lecturer {
+            font-size: 11px; color: var(--text-3); font-weight: 600;
+            display: flex; align-items: center; gap: 6px; margin-bottom: 14px;
+        }
+
+        .progress-wrap { margin-bottom: 14px; }
+
+        .progress-header {
+            display: flex; justify-content: space-between;
+            font-size: 10px; font-weight: 700; margin-bottom: 5px;
+        }
+
+        .progress-label { color: var(--text-3); }
+
+        .progress-track {
+            height: 5px; background: var(--surface-2);
+            border-radius: 3px; overflow: hidden;
+        }
+
+        .progress-bar { height: 100%; border-radius: 3px; }
+
+        .enter-btn {
+            margin-top: auto;
+            width: 100%; padding: 9px;
+            border-radius: var(--radius-sm);
+            font-size: 12px; font-weight: 700;
+            border: 1px solid var(--border);
+            background: var(--surface-2);
+            color: var(--text-2);
+            transition: var(--transition);
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .enter-btn:hover {
+            background: var(--accent-blue-light);
+            border-color: var(--blue-100);
+            color: var(--accent-blue);
+        }
+        html.dark .enter-btn:hover { border-color: #1e3a6a; }
+
+        /* Add more card */
+        .course-card-empty {
+            background: var(--surface);
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-lg);
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; gap: 8px;
+            padding: 32px 20px; cursor: pointer;
+            transition: var(--transition); min-height: 190px;
+        }
+        .course-card-empty:hover { border-color: var(--accent-blue); background: var(--accent-blue-light); }
+        html.dark .course-card-empty:hover { background: #1a2740; }
+
+        .empty-icon {
+            width: 40px; height: 40px; border-radius: 10px;
+            background: var(--surface-2); color: var(--text-3);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; transition: var(--transition);
+        }
+        .course-card-empty:hover .empty-icon { background: var(--blue-100); color: var(--accent-blue); }
+        html.dark .course-card-empty:hover .empty-icon { background: #1e3a6a; }
+
+        .empty-text { font-size: 12px; font-weight: 700; color: var(--text-2); }
+        .empty-sub { font-size: 11px; color: var(--text-3); text-align: center; }
+
+        /* Empty search state */
+        .empty-search {
+            display: none;
+            grid-column: 1 / -1;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .empty-search i { font-size: 32px; color: var(--border-strong); display: block; margin-bottom: 10px; }
+        .empty-search p { font-size: 13px; color: var(--text-3); }
+
+        /* ===== RIGHT SIDEBAR: DEADLINES ===== */
+        .right-sidebar { display: flex; flex-direction: column; gap: 16px; }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+        }
+
+        .card-header {
+            padding: 18px 20px 14px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .card-title { font-size: 14px; font-weight: 800; }
+
+        .deadline-count {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: var(--red-50); color: var(--accent);
+            font-size: 10px; font-weight: 800;
+            padding: 3px 9px; border-radius: 40px;
+            border: 1px solid var(--red-100);
+        }
+        html.dark .deadline-count { border-color: transparent; background: #2a1414; }
+
+        /* Deadline items */
+        .deadline-list { padding: 8px 0; }
+
+        .deadline-item {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer; transition: var(--transition);
+        }
+        .deadline-item:last-child { border-bottom: none; }
+        .deadline-item:hover { background: var(--surface-2); }
+        .deadline-item.done { opacity: .45; pointer-events: none; }
+
+        .deadline-top {
+            display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px;
+        }
+
+        .deadline-dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            flex-shrink: 0; margin-top: 4px;
+        }
+
+        .deadline-name {
+            font-size: 12.5px; font-weight: 700; line-height: 1.35;
+            color: var(--text);
+        }
+        .deadline-item:hover .deadline-name:not(.done) { color: var(--accent-blue); }
+        .deadline-item.done .deadline-name { text-decoration: line-through; }
+
+        .deadline-course {
+            font-size: 10.5px; color: var(--text-3);
+            font-weight: 600; margin-top: 2px;
+        }
+
+        .deadline-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 3px 9px; border-radius: 40px;
+            font-size: 10px; font-weight: 800; border: 1px solid;
+        }
+
+        .badge-urgent { background: var(--red-50); color: #b91c1c; border-color: var(--red-100); }
+        .badge-warn { background: #fffbeb; color: #92400e; border-color: #fde68a; }
+        .badge-done { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
+        html.dark .badge-urgent { background: #2a1414; border-color: transparent; }
+        html.dark .badge-warn { background: #2a1d06; border-color: transparent; color: #fbbf24; }
+        html.dark .badge-done { background: #0d2a15; border-color: transparent; color: #4ade80; }
+
+        .deadline-footer { padding: 12px 20px; border-top: 1px solid var(--border); }
+
+        .see-all-btn {
+            width: 100%; padding: 9px;
+            border-radius: var(--radius-sm);
+            font-size: 12px; font-weight: 700;
+            background: var(--surface-2); color: var(--text-2);
+            transition: var(--transition);
+        }
+        .see-all-btn:hover { background: var(--border); color: var(--text); }
+
+        /* Resources card */
+        .resource-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 20px; border-bottom: 1px solid var(--border);
+            transition: var(--transition); cursor: pointer;
+        }
+        .resource-item:last-child { border-bottom: none; }
+        .resource-item:hover { background: var(--surface-2); }
+
+        .resource-icon {
+            width: 34px; height: 34px; border-radius: 9px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; flex-shrink: 0;
+        }
+
+        .resource-info p { font-size: 12.5px; font-weight: 700; line-height: 1.3; }
+        .resource-info span { font-size: 10.5px; color: var(--text-3); }
+
+        .resource-action {
+            margin-left: auto;
+            font-size: 10.5px; font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        /* ===== MODAL ===== */
+        .modal-backdrop {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,.5);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px;
+            opacity: 0; pointer-events: none;
+            transition: opacity .2s;
+        }
+        .modal-backdrop.open { opacity: 1; pointer-events: auto; }
+
+        .modal {
+            background: var(--surface);
+            border-radius: var(--radius-xl);
+            width: 100%; max-width: 520px;
+            box-shadow: var(--shadow-xl);
+            transform: scale(.96) translateY(8px);
+            transition: all .25s cubic-bezier(.16,1,.3,1);
+            overflow: hidden; max-height: 90vh;
+            display: flex; flex-direction: column;
+        }
+        .modal-backdrop.open .modal { transform: scale(1) translateY(0); }
+
+        .modal-header {
+            padding: 22px 24px 18px;
+            border-bottom: 1px solid var(--border);
+            position: relative; flex-shrink: 0;
+        }
+
+        .modal-course-tag {
+            display: inline-flex; align-items: center;
+            background: var(--accent-blue-light);
+            color: var(--accent-blue);
+            font-size: 9.5px; font-weight: 800;
+            letter-spacing: .4px; text-transform: uppercase;
+            padding: 3px 10px; border-radius: 5px;
+            border: 1px solid var(--blue-100);
+            margin-bottom: 10px;
+        }
+        html.dark .modal-course-tag { border-color: transparent; }
+
+        .modal-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 20px; line-height: 1.25;
+        }
+
+        .modal-close {
+            position: absolute; top: 18px; right: 18px;
+            width: 30px; height: 30px; border-radius: 50%;
+            background: var(--surface-2); color: var(--text-2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; transition: var(--transition);
+        }
+        .modal-close:hover { background: var(--border); color: var(--text); }
+
+        .modal-body { padding: 20px 24px; overflow-y: auto; flex: 1; }
+
+        .deadline-pill {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--red-50); color: var(--red-700);
+            border: 1px solid var(--red-100); border-radius: var(--radius-sm);
+            padding: 6px 12px; font-size: 11px; font-weight: 800;
+            margin-bottom: 18px;
+        }
+        html.dark .deadline-pill { background: #2a1414; border-color: transparent; }
+
+        .modal-section-label {
+            font-size: 9.5px; font-weight: 800; text-transform: uppercase;
+            letter-spacing: .6px; color: var(--text-3); margin-bottom: 8px;
+        }
+
+        .modal-desc {
+            font-size: 13px; line-height: 1.75; color: var(--text-2);
+            background: var(--surface-2); border: 1px solid var(--border);
+            border-radius: var(--radius-md); padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-md);
+            padding: 28px 20px; text-align: center;
+            cursor: pointer; transition: var(--transition);
+            background: var(--surface-2);
+        }
+        .upload-area:hover { border-color: var(--accent-blue); background: var(--accent-blue-light); }
+        html.dark .upload-area:hover { background: #1a2740; }
+
+        .upload-area i { font-size: 28px; color: var(--text-3); display: block; margin-bottom: 10px; }
+        .upload-area:hover i { color: var(--accent-blue); }
+        .upload-title { font-size: 13px; font-weight: 700; color: var(--text-2); margin-bottom: 4px; }
+        .upload-sub { font-size: 11px; color: var(--text-3); }
+
+        .modal-footer {
+            padding: 16px 24px; border-top: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .submit-btn {
+            width: 100%; padding: 12px;
+            border-radius: var(--radius-md);
+            background: var(--accent-blue);
+            color: white; font-size: 13px; font-weight: 800;
+            transition: var(--transition);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .submit-btn:hover { background: var(--blue-700); }
+
+        /* ===== TOAST ===== */
+        #toast-container {
+            position: fixed; bottom: 20px; right: 20px; z-index: 500;
+            display: flex; flex-direction: column; gap: 8px; align-items: flex-end;
+        }
+
+        .toast {
+            display: flex; align-items: center; gap: 10px;
+            padding: 11px 16px; border-radius: var(--radius-md);
+            background: var(--surface); border: 1px solid var(--border);
+            box-shadow: var(--shadow-lg); font-size: 12.5px; font-weight: 600;
+            color: var(--text); animation: toastIn .25s cubic-bezier(.16,1,.3,1);
+            max-width: 300px;
+        }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(8px) scale(.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .toast i { font-size: 13px; }
+        .toast.success i { color: #16a34a; }
+        .toast.info i { color: var(--accent-blue); }
+        .toast.warning i { color: #d97706; }
+        .toast-close { margin-left: 4px; color: var(--text-3); font-size: 11px; transition: var(--transition); }
+        .toast-close:hover { color: var(--text); }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate { animation: fadeUp .5s cubic-bezier(.16,1,.3,1) both; }
+        .d1 { animation-delay: .05s; }
+        .d2 { animation-delay: .1s; }
+        .d3 { animation-delay: .15s; }
+        .d4 { animation-delay: .2s; }
+
+        /* Color themes for courses */
+        .thumb-teal { background: linear-gradient(135deg, #0d9488, #059669); }
+        .thumb-indigo { background: linear-gradient(135deg, #4f46e5, #7c3aed); }
+        .thumb-orange { background: linear-gradient(135deg, #ea580c, #dc2626); }
+        .thumb-sky { background: linear-gradient(135deg, #0ea5e9, #2563eb); }
+
+        .val-teal { color: #0d9488; }
+        .val-indigo { color: #4f46e5; }
+        .val-orange { color: #ea580c; }
+        .val-sky { color: #0ea5e9; }
+
+        .bar-teal { background: linear-gradient(90deg, #0d9488, #34d399); }
+        .bar-indigo { background: linear-gradient(90deg, #4f46e5, #818cf8); }
+        .bar-orange { background: linear-gradient(90deg, #ea580c, #f97316); }
+        .bar-sky { background: linear-gradient(90deg, #0ea5e9, #38bdf8); }
+
+        @media (max-width: 900px) {
+            .sidebar { display: none; }
+            .main-grid { grid-template-columns: 1fr; }
+            .page { padding: 18px; }
+            .course-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
-<body class="flex h-screen overflow-hidden">
+<body>
 
-    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col hidden md:flex shrink-0">
-        <div class="p-6 flex items-center gap-3 border-b border-slate-100">
-            <div class="w-8 h-8 bg-red-700 rounded-lg flex items-center justify-center text-white font-bold italic shadow-sm">iG</div>
-            <span class="text-xl font-bold text-slate-800 tracking-tight">iGRACIAS</span>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-mark">iG</div>
+            <span class="logo-text">iGRA<span>CIAS</span></span>
         </div>
 
-        <div class="px-6 py-4 border-b border-slate-100">
-            <p class="text-sm font-bold text-slate-800 truncate">Zahid Abdullah N. M.</p>
-            <p class="text-xs text-slate-500">101102400004</p>
-            <div class="mt-2 inline-flex items-center gap-1 bg-red-50 text-red-700 px-2 py-1 rounded text-[10px] font-bold border border-red-100">
-                <i class="fa-solid fa-user-graduate"></i> MAHASISWA
+        <div class="sidebar-user">
+            <div class="user-card">
+                <div class="user-avatar">ZA</div>
+                <div class="user-info">
+                    <p>Zahid Abdullah N.M.</p>
+                    <span>101102400004</span>
+                </div>
+            </div>
+            <div class="user-badge">
+                <i class="fa-solid fa-user-graduate" style="font-size:9px"></i>
+                Mahasiswa · Teknik Informatika
             </div>
         </div>
 
-        <nav class="flex-1 overflow-y-auto no-scrollbar px-4 py-4 space-y-1">
-            <p class="text-xs font-semibold text-slate-400 uppercase px-2 mb-2">Main Menu</p>
-            
-            <a href="landing_page.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
-                <i class="fa-solid fa-house w-4 text-center"></i> Dashboard
-            </a>
-            
-            <div class="mt-4 mb-2">
-                <p class="text-xs font-semibold text-slate-400 uppercase px-2">Akademik & Layanan</p>
-            </div>
-            
-            <a href="akun.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
-                <i class="fa-solid fa-user w-4 text-center"></i> Akun
-            </a>
-            <a href="nilai.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
-                <i class="fa-solid fa-graduation-cap w-4 text-center"></i> Nilai
-            </a>
-            <a href="pembayaran.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
-                <i class="fa-solid fa-file-invoice w-4 text-center"></i> Pembayaran
-            </a>
-            <a href="presensi.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
-                <i class="fa-solid fa-clipboard-list w-4 text-center"></i> Presensi
-            </a>
-            
-            <a href="elearning.html" class="sidebar-item-active flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition">
-                <i class="fa-solid fa-laptop-code w-4 text-center"></i> Elearning (Idea)
-            </a>
-            
-            <a href="bimbingan.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
-                <i class="fa-solid fa-comments w-4 text-center"></i> Bimbingan Akademik
-            </a>
+        <nav class="sidebar-nav">
+            <p class="nav-label">Main</p>
+            <a href="#" class="nav-item"><i class="fa-solid fa-house"></i> Dashboard</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-chart-line"></i> Progress Akademik</a>
+
+            <p class="nav-label">Akademik</p>
+            <a href="#" class="nav-item"><i class="fa-solid fa-user"></i> Akun</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-building"></i> Asrama</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-comments"></i> Bimbingan</a>
+            <a href="#" class="nav-item active"><i class="fa-solid fa-laptop-code"></i> E-Learning</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-file-invoice-dollar"></i> Pembayaran</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-graduation-cap"></i> Nilai & Transkrip</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-clipboard-check"></i> Presensi</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-calendar-days"></i> Jadwal Kuliah</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-book"></i> Perpustakaan</a>
         </nav>
 
-        <div class="p-4 border-t border-slate-200">
-            <a href="login.html" class="w-full flex items-center justify-center gap-2 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-red-50 hover:text-red-700 rounded-lg transition">
-                <i class="fa-solid fa-right-from-bracket"></i> Logout
+        <div class="sidebar-footer">
+            <button class="sidebar-footer-btn btn-ghost" onclick="toggleDark()">
+                <i class="fa-solid fa-moon dark-icon"></i>
+                <i class="fa-solid fa-sun light-icon" style="display:none"></i>
+                <span id="theme-label">Mode Gelap</span>
+            </button>
+            <a href="#" class="sidebar-footer-btn btn-danger">
+                <i class="fa-solid fa-right-from-bracket"></i> Keluar
             </a>
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col overflow-y-auto bg-slate-50/50">
-        
-        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-20">
-            <div class="flex items-center gap-4">
-                <div class="w-8 h-8 rounded bg-blue-100 text-blue-700 flex items-center justify-center font-bold italic shadow-sm">Id</div>
-                <h2 class="text-lg font-bold text-slate-800">Idea Learning</h2>
-            </div>
-            <div class="flex items-center gap-6 relative">
-                <div class="relative w-64 hidden lg:block">
-                    <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                    <input type="text" id="courseSearch" onkeyup="filterCourses()" placeholder="Cari materi / kelas..." class="w-full pl-9 pr-4 py-1.5 bg-slate-100 rounded-full border-none focus:ring-2 focus:ring-blue-500 text-xs outline-none transition">
+    <!-- MAIN -->
+    <main class="main">
+
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-left">
+                <div class="page-icon"><i class="fa-solid fa-laptop-code"></i></div>
+                <div>
+                    <span class="page-title">E-Learning <span>· Semester Genap 25/26</span></span>
                 </div>
-                
-                <div class="relative">
-                    <div onclick="toggleDropdown(event, 'profileDropdown')" class="flex items-center gap-2 bg-slate-100 p-1 rounded-full px-4 cursor-pointer hover:bg-slate-200 transition">
-                        <img src="https://ui-avatars.com/api/?name=Zahid+Abdullah&background=b91c1c&color=fff" class="w-8 h-8 rounded-full">
-                        <span class="text-sm font-semibold text-slate-700">Zahid</span>
+            </div>
+
+            <div class="header-right">
+                <div class="search-wrap">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" class="search-input" placeholder="Cari kelas atau materi..." id="searchInput" onkeyup="filterCourses()">
+                </div>
+
+                <button class="icon-btn" onclick="toggleDark()">
+                    <i class="fa-solid fa-moon dark-icon"></i>
+                    <i class="fa-solid fa-sun light-icon" style="display:none"></i>
+                </button>
+
+                <div class="dropdown-wrap">
+                    <div class="header-profile" onclick="toggleDropdown('profile-dd')">
+                        <div class="header-avatar">ZA</div>
+                        <span>Zahid</span>
+                        <i class="fa-solid fa-chevron-down" style="font-size:9px;color:var(--text-3)"></i>
                     </div>
-                    <div id="profileDropdown" class="dropdown-enter absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden z-50">
-                        <div class="p-3 border-b border-slate-100">
-                            <p class="text-sm font-bold text-slate-800">Zahid Abdullah</p>
-                            <p class="text-[10px] text-slate-500">NIM: 101102400004</p>
+                    <div class="dropdown" id="profile-dd">
+                        <div class="dropdown-header">
+                            <p>Zahid Abdullah</p>
+                            <span>101102400004 · S1 Teknik Informatika</span>
                         </div>
-                        <div class="p-1">
-                            <a href="akun.html" class="flex items-center gap-2 px-3 py-2 text-xs text-slate-600 hover:bg-slate-50 hover:text-red-600 rounded-lg transition"><i class="fa-solid fa-user-pen w-4"></i> Edit Profil</a>
-                            <a href="login.html" class="flex items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 rounded-lg transition mt-1 border-t border-slate-100"><i class="fa-solid fa-right-from-bracket w-4"></i> Keluar</a>
+                        <div style="padding:6px">
+                            <div class="dropdown-item"><i class="fa-solid fa-user-pen"></i> Edit Profil</div>
+                            <div class="dropdown-item"><i class="fa-solid fa-gear"></i> Pengaturan</div>
+                            <hr class="dropdown-divider">
+                            <div class="dropdown-item danger"><i class="fa-solid fa-right-from-bracket"></i> Keluar</div>
                         </div>
                     </div>
                 </div>
             </div>
         </header>
 
-        <div class="p-8">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                
-                <div class="col-span-1 lg:col-span-2 space-y-6">
-                    
-                    <div class="bg-gradient-to-r from-blue-800 to-indigo-900 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden flex items-center justify-between">
-                        <div class="absolute right-0 top-0 w-64 h-64 bg-white opacity-5 rounded-full -translate-y-1/2 translate-x-1/4"></div>
-                        <div class="relative z-10">
-                            <h2 class="text-2xl font-extrabold mb-1">Tetap Fokus dan Disiplin! 🚀</h2>
-                            <p class="text-sm text-blue-100 mb-4">Kamu memiliki 2 tugas yang harus diselesaikan minggu ini. Mari selesaikan lebih awal.</p>
-                            <div class="flex gap-3">
-                                <span class="bg-blue-900/50 backdrop-blur border border-blue-400/30 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2">
-                                    <i class="fa-solid fa-book"></i> <span id="activeCourseCount">6</span> Kelas Aktif
-                                </span>
-                                <span class="bg-red-500/80 backdrop-blur border border-red-400/30 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2">
-                                    <i class="fa-solid fa-fire"></i> 2 Deadline
-                                </span>
+        <!-- PAGE -->
+        <div class="page">
+
+            <!-- Banner -->
+            <div class="banner animate d1">
+                <div class="banner-left">
+                    <div class="banner-eyebrow">Ruang Belajar Digital</div>
+                    <h1 class="banner-title">Tetap Fokus &<br><em>Selesaikan Lebih Awal</em> 🚀</h1>
+                    <p class="banner-sub">Kamu punya 2 tugas yang perlu diselesaikan minggu ini. Jangan sampai ketinggalan!</p>
+                    <div class="banner-chips">
+                        <div class="chip chip-blue"><i class="fa-solid fa-book" style="font-size:9px"></i> <span id="activeCount">6</span> Kelas Aktif</div>
+                        <div class="chip chip-red"><i class="fa-solid fa-fire" style="font-size:9px"></i> 2 Deadline</div>
+                        <div class="chip chip-green"><i class="fa-solid fa-check" style="font-size:9px"></i> 1 Selesai</div>
+                    </div>
+                </div>
+                <div class="banner-right">
+                    <div class="banner-stat">
+                        <div class="banner-stat-val">3</div>
+                        <div class="banner-stat-label">Mata Kuliah<br>Semester Ini</div>
+                    </div>
+                    <div class="banner-stat">
+                        <div class="banner-stat-val">62<span style="font-size:16px">%</span></div>
+                        <div class="banner-stat-label">Rata-rata<br>Progress</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Grid -->
+            <div class="main-grid animate d2">
+
+                <!-- Courses -->
+                <div class="courses-area">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fa-solid fa-graduation-cap"></i> Kelas Saya</h2>
+                        <div class="section-controls">
+                            <button class="filter-btn" onclick="showToast('Fitur filter dalam pengembangan','info')">
+                                <i class="fa-solid fa-sliders"></i> Filter
+                            </button>
+                            <div class="view-toggle">
+                                <button class="view-btn active" id="grid-btn" onclick="setView('grid')"><i class="fa-solid fa-border-all"></i></button>
+                                <button class="view-btn" id="list-btn" onclick="setView('list')"><i class="fa-solid fa-list"></i></button>
                             </div>
                         </div>
                     </div>
 
-                    <div class="flex justify-between items-center border-b border-slate-200 pb-2">
-                        <h3 class="font-bold text-slate-800 text-lg">Kelas Saya (Semester Genap 25/26)</h3>
-                        <div class="flex gap-2">
-                            <button onclick="showToast('Fitur filter lanjutan sedang dalam pengembangan.')" class="bg-white border border-slate-200 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-50 transition"><i class="fa-solid fa-filter"></i> Filter</button>
-                            <button class="bg-white border border-slate-200 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-50 transition"><i class="fa-solid fa-list"></i></button>
-                            <button class="bg-blue-50 border border-blue-200 text-blue-700 px-3 py-1.5 rounded-lg text-xs font-semibold"><i class="fa-solid fa-border-all"></i></button>
-                        </div>
-                    </div>
+                    <div class="course-grid" id="courseGrid">
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="courseGrid">
-                        
-                        <div class="card course-card overflow-hidden hover:shadow-md transition group flex flex-col">
-                            <div class="h-24 bg-gradient-to-r from-teal-500 to-emerald-600 relative p-4 flex flex-col justify-end">
-                                <div class="absolute top-3 right-3 bg-white/20 backdrop-blur px-2 py-1 rounded text-[10px] text-white font-bold border border-white/30">CII3B4</div>
-                                <h4 class="course-title font-bold text-white text-lg leading-tight drop-shadow-sm">Kecerdasan Buatan</h4>
+                        <!-- Course 1 -->
+                        <div class="course-card" data-name="kecerdasan buatan">
+                            <div class="course-thumb thumb-teal">
+                                <span class="course-code">CII3B4</span>
+                                <span class="course-name">Kecerdasan Buatan</span>
                             </div>
-                            <div class="p-5 flex-1 flex flex-col">
-                                <p class="text-xs font-semibold text-slate-500 flex items-center gap-2 mb-4">
-                                    <i class="fa-solid fa-chalkboard-user"></i> Pak Dimas
-                                </p>
-                                <div class="mb-4">
-                                    <div class="flex justify-between text-[10px] font-bold text-slate-400 mb-1">
-                                        <span>Progress Pertemuan</span>
-                                        <span class="text-teal-600">60%</span>
+                            <div class="course-body">
+                                <div class="course-lecturer">
+                                    <i class="fa-solid fa-chalkboard-user"></i> Pak Dimas, M.Kom
+                                </div>
+                                <div class="progress-wrap">
+                                    <div class="progress-header">
+                                        <span class="progress-label">Progress Pertemuan</span>
+                                        <span class="val-teal">60%</span>
                                     </div>
-                                    <div class="w-full bg-slate-100 rounded-full h-1.5">
-                                        <div class="bg-teal-500 h-1.5 rounded-full" style="width: 60%"></div>
+                                    <div class="progress-track">
+                                        <div class="progress-bar bar-teal" style="width:60%"></div>
                                     </div>
                                 </div>
-                                <button onclick="enterCourse(event, this, 'Kecerdasan Buatan')" class="w-full mt-auto bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 text-slate-700 hover:text-blue-700 font-semibold py-2 rounded-lg text-xs transition">
-                                    Masuk Kelas
+                                <button class="enter-btn" onclick="enterCourse(event, this, 'Kecerdasan Buatan')">
+                                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Masuk Kelas
                                 </button>
                             </div>
                         </div>
 
-                        <div class="card course-card overflow-hidden hover:shadow-md transition group flex flex-col">
-                            <div class="h-24 bg-gradient-to-r from-indigo-500 to-purple-600 relative p-4 flex flex-col justify-end">
-                                <div class="absolute top-3 right-3 bg-white/20 backdrop-blur px-2 py-1 rounded text-[10px] text-white font-bold border border-white/30">CII3H3</div>
-                                <h4 class="course-title font-bold text-white text-lg leading-tight drop-shadow-sm">Bioinformatika Dasar</h4>
+                        <!-- Course 2 -->
+                        <div class="course-card" data-name="bioinformatika dasar">
+                            <div class="course-thumb thumb-indigo">
+                                <span class="course-code">CII3H3</span>
+                                <span class="course-name">Bioinformatika Dasar</span>
                             </div>
-                            <div class="p-5 flex-1 flex flex-col">
-                                <p class="text-xs font-semibold text-slate-500 flex items-center gap-2 mb-4">
+                            <div class="course-body">
+                                <div class="course-lecturer">
                                     <i class="fa-solid fa-chalkboard-user"></i> Dr. Anisa Maharani
-                                </p>
-                                <div class="mb-4">
-                                    <div class="flex justify-between text-[10px] font-bold text-slate-400 mb-1">
-                                        <span>Progress Pertemuan</span>
-                                        <span class="text-indigo-600">55%</span>
+                                </div>
+                                <div class="progress-wrap">
+                                    <div class="progress-header">
+                                        <span class="progress-label">Progress Pertemuan</span>
+                                        <span class="val-indigo">55%</span>
                                     </div>
-                                    <div class="w-full bg-slate-100 rounded-full h-1.5">
-                                        <div class="bg-indigo-500 h-1.5 rounded-full" style="width: 55%"></div>
+                                    <div class="progress-track">
+                                        <div class="progress-bar bar-indigo" style="width:55%"></div>
                                     </div>
                                 </div>
-                                <button onclick="enterCourse(event, this, 'Bioinformatika Dasar')" class="w-full mt-auto bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 text-slate-700 hover:text-blue-700 font-semibold py-2 rounded-lg text-xs transition">
-                                    Masuk Kelas
+                                <button class="enter-btn" onclick="enterCourse(event, this, 'Bioinformatika Dasar')">
+                                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Masuk Kelas
                                 </button>
                             </div>
                         </div>
 
-                        <div class="card course-card overflow-hidden hover:shadow-md transition group flex flex-col">
-                            <div class="h-24 bg-gradient-to-r from-orange-500 to-red-500 relative p-4 flex flex-col justify-end">
-                                <div class="absolute top-3 right-3 bg-white/20 backdrop-blur px-2 py-1 rounded text-[10px] text-white font-bold border border-white/30">PKM2026</div>
-                                <h4 class="course-title font-bold text-white text-lg leading-tight drop-shadow-sm">Metodologi Penelitian & Inovasi</h4>
+                        <!-- Course 3 -->
+                        <div class="course-card" data-name="metodologi penelitian inovasi">
+                            <div class="course-thumb thumb-orange">
+                                <span class="course-code">PKM2026</span>
+                                <span class="course-name">Metodologi Penelitian & Inovasi</span>
                             </div>
-                            <div class="p-5 flex-1 flex flex-col">
-                                <p class="text-xs font-semibold text-slate-500 flex items-center gap-2 mb-4">
+                            <div class="course-body">
+                                <div class="course-lecturer">
                                     <i class="fa-solid fa-chalkboard-user"></i> Prof. Bambang S.
-                                </p>
-                                <div class="mb-4">
-                                    <div class="flex justify-between text-[10px] font-bold text-slate-400 mb-1">
-                                        <span>Progress Pertemuan</span>
-                                        <span class="text-orange-600">70%</span>
+                                </div>
+                                <div class="progress-wrap">
+                                    <div class="progress-header">
+                                        <span class="progress-label">Progress Pertemuan</span>
+                                        <span class="val-orange">70%</span>
                                     </div>
-                                    <div class="w-full bg-slate-100 rounded-full h-1.5">
-                                        <div class="bg-orange-500 h-1.5 rounded-full" style="width: 70%"></div>
+                                    <div class="progress-track">
+                                        <div class="progress-bar bar-orange" style="width:70%"></div>
                                     </div>
                                 </div>
-                                <button onclick="enterCourse(event, this, 'Metodologi Penelitian & Inovasi')" class="w-full mt-auto bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 text-slate-700 hover:text-blue-700 font-semibold py-2 rounded-lg text-xs transition">
-                                    Masuk Kelas
+                                <button class="enter-btn" onclick="enterCourse(event, this, 'Metodologi Penelitian')">
+                                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Masuk Kelas
                                 </button>
                             </div>
                         </div>
 
-                        <div class="card overflow-hidden hover:shadow-md transition group flex flex-col border-dashed border-2 bg-slate-50 cursor-pointer" onclick="showToast('Menampilkan seluruh kelas dari arsip semester sebelumnya.')">
-                            <div class="p-5 flex-1 flex flex-col items-center justify-center text-center">
-                                <div class="w-12 h-12 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
-                                    <i class="fa-solid fa-layer-group"></i>
-                                </div>
-                                <p class="text-sm font-bold text-slate-600">Lihat Semua Kelas</p>
-                                <p class="text-xs text-slate-400 mt-1">Tampilkan sisa 3 kelas lainnya semester ini.</p>
-                            </div>
+                        <!-- Show more -->
+                        <div class="course-card-empty" onclick="showToast('Menampilkan arsip kelas sebelumnya...','info')">
+                            <div class="empty-icon"><i class="fa-solid fa-plus"></i></div>
+                            <span class="empty-text">Tampilkan 3 Kelas Lainnya</span>
+                            <span class="empty-sub">Semester ini & arsip sebelumnya</span>
                         </div>
 
-                        <div id="emptySearch" class="hidden col-span-1 md:col-span-2 text-center py-10">
-                            <i class="fa-solid fa-magnifying-glass text-4xl text-slate-300 mb-3"></i>
-                            <p class="text-slate-500 font-medium text-sm">Kelas tidak ditemukan.</p>
+                        <!-- Empty search -->
+                        <div class="empty-search" id="emptySearch">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <p>Tidak ada kelas yang cocok dengan pencarianmu.</p>
                         </div>
 
                     </div>
                 </div>
 
-                <div class="col-span-1 space-y-6">
-                    
-                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sticky top-24">
-                        <h3 class="font-bold text-slate-800 border-b border-slate-100 pb-3 mb-5 flex items-center justify-between">
-                            <span><i class="fa-regular fa-clock text-blue-600 mr-2"></i> Tenggat Tugas</span>
-                            <span class="bg-red-100 text-red-600 px-2 py-0.5 rounded text-[10px]">2 Due</span>
-                        </h3>
+                <!-- Right Sidebar -->
+                <div class="right-sidebar animate d3">
 
-                        <div class="space-y-5">
-                            
-                            <div class="group cursor-pointer" onclick="openTaskModal('Implementasi Arsitektur Model untuk Deteksi Citra Medis', 'Kecerdasan Buatan', 'Besok, 23:59', 'Tugas ini mengharuskan praktikan untuk mengimplementasikan algoritma MobileNetV2 dan melakukan evaluasi akurasi pada dataset citra medis yang diberikan di modul. Kumpulkan dalam bentuk file .ipynb dan laporan PDF.')">
-                                <div class="flex items-start gap-3">
-                                    <div class="w-2 h-2 mt-1.5 rounded-full bg-red-500 outline outline-2 outline-red-100 shrink-0"></div>
+                    <!-- Deadlines -->
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">⏰ Tenggat Tugas</span>
+                            <span class="deadline-count"><i class="fa-solid fa-fire" style="font-size:9px"></i> 2 Due</span>
+                        </div>
+
+                        <div class="deadline-list">
+
+                            <div class="deadline-item"
+                                onclick="openModal('Implementasi Arsitektur Model untuk Deteksi Citra Medis', 'Kecerdasan Buatan', 'Besok, 23:59', 'Implementasikan algoritma MobileNetV2 dan lakukan evaluasi akurasi pada dataset citra medis yang diberikan di modul.\n\nKumpulkan dalam bentuk:\n• File .ipynb (Jupyter Notebook)\n• Laporan PDF (maks. 10 halaman)\n\nPastikan notebook bisa dijalankan ulang dari awal. Sertakan juga confusion matrix dan laporan classification report sebagai output akhir.')">
+                                <div class="deadline-top">
+                                    <div class="deadline-dot" style="background:#ef4444"></div>
                                     <div>
-                                        <h4 class="text-sm font-bold text-slate-800 group-hover:text-blue-600 transition leading-tight mb-1">Implementasi Arsitektur Model untuk Deteksi Citra Medis</h4>
-                                        <p class="text-xs text-slate-500 mb-2 font-medium">Kecerdasan Buatan</p>
-                                        <div class="flex items-center gap-4 text-[10px] font-bold">
-                                            <span class="text-red-600 flex items-center gap-1 bg-red-50 px-2 py-1 rounded border border-red-100">
-                                                <i class="fa-solid fa-hourglass-half"></i> Besok, 23:59
-                                            </span>
-                                        </div>
+                                        <div class="deadline-name">Implementasi Arsitektur Model untuk Deteksi Citra Medis</div>
+                                        <div class="deadline-course">Kecerdasan Buatan</div>
                                     </div>
                                 </div>
+                                <span class="deadline-badge badge-urgent">
+                                    <i class="fa-solid fa-hourglass-half" style="font-size:8px"></i> Besok, 23:59
+                                </span>
                             </div>
 
-                            <div class="group cursor-pointer" onclick="openTaskModal('Pengumpulan Draft Proposal PKM-KC (Leukoscan)', 'Metodologi Penelitian', '15 April 2026, 23:59', 'Kumpulkan draft Bab 1 hingga Bab 3 beserta Rencana Anggaran Biaya (RAB) terbaru untuk proyek Leukoscan. Pastikan format penulisan sudah sesuai dengan pedoman Simbelmawa terbaru.')">
-                                <div class="flex items-start gap-3">
-                                    <div class="w-2 h-2 mt-1.5 rounded-full bg-orange-500 outline outline-2 outline-orange-100 shrink-0"></div>
+                            <div class="deadline-item"
+                                onclick="openModal('Draft Proposal PKM-KC (Leukoscan)', 'Metodologi Penelitian', '15 April 2026, 23:59', 'Kumpulkan draft Bab 1 hingga Bab 3 beserta Rencana Anggaran Biaya (RAB) terbaru untuk proyek Leukoscan.\n\nFormat:\n• Sesuai pedoman Simbelmawa terbaru\n• Margin 3-3-3-3 cm, Times New Roman 12pt\n• Sertakan daftar referensi minimal 10 sumber\n\nUpload dalam format PDF yang telah di-compress.')">
+                                <div class="deadline-top">
+                                    <div class="deadline-dot" style="background:#f97316"></div>
                                     <div>
-                                        <h4 class="text-sm font-bold text-slate-800 group-hover:text-blue-600 transition leading-tight mb-1">Pengumpulan Draft Proposal PKM-KC (Leukoscan)</h4>
-                                        <p class="text-xs text-slate-500 mb-2 font-medium">Metodologi Penelitian</p>
-                                        <div class="flex items-center gap-4 text-[10px] font-bold">
-                                            <span class="text-orange-600 flex items-center gap-1 bg-orange-50 px-2 py-1 rounded border border-orange-100">
-                                                <i class="fa-regular fa-calendar-days"></i> 15 April 2026
-                                            </span>
-                                        </div>
+                                        <div class="deadline-name">Draft Proposal PKM-KC (Leukoscan)</div>
+                                        <div class="deadline-course">Metodologi Penelitian</div>
                                     </div>
                                 </div>
+                                <span class="deadline-badge badge-warn">
+                                    <i class="fa-regular fa-calendar" style="font-size:8px"></i> 15 April 2026
+                                </span>
                             </div>
 
-                            <div class="group cursor-pointer opacity-50" onclick="showToast('Tugas ini sudah kamu kumpulkan!', 'success')">
-                                <div class="flex items-start gap-3">
-                                    <div class="w-2 h-2 mt-1.5 rounded-full bg-green-500 shrink-0"></div>
+                            <div class="deadline-item done">
+                                <div class="deadline-top">
+                                    <div class="deadline-dot" style="background:#22c55e"></div>
                                     <div>
-                                        <h4 class="text-sm font-bold text-slate-800 line-through leading-tight mb-1">Kuis 1: Neural Networks</h4>
-                                        <p class="text-xs text-slate-500 font-medium">Kecerdasan Buatan</p>
+                                        <div class="deadline-name">Kuis 1: Neural Networks</div>
+                                        <div class="deadline-course">Kecerdasan Buatan</div>
                                     </div>
                                 </div>
+                                <span class="deadline-badge badge-done">
+                                    <i class="fa-solid fa-check" style="font-size:8px"></i> Selesai
+                                </span>
                             </div>
 
                         </div>
-                        
-                        <button onclick="showToast('Membuka kalender tugas lengkap...')" class="w-full mt-6 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold py-2.5 rounded-lg transition">
-                            Lihat Semua Tugas
-                        </button>
+
+                        <div class="deadline-footer">
+                            <button class="see-all-btn" onclick="showToast('Membuka kalender tugas lengkap...','info')">
+                                Lihat semua tugas
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Resources -->
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">📎 Sumber Belajar</span>
+                        </div>
+
+                        <div class="resource-item" onclick="showToast('Membuka repositori materi...','info')">
+                            <div class="resource-icon" style="background:#eff6ff">
+                                <i class="fa-solid fa-folder-open" style="color:#2563eb"></i>
+                            </div>
+                            <div class="resource-info">
+                                <p>Repositori Materi</p>
+                                <span>Slide, modul & referensi</span>
+                            </div>
+                            <span class="resource-action">Buka →</span>
+                        </div>
+
+                        <div class="resource-item" onclick="showToast('Membuka rekaman kuliah...','info')">
+                            <div class="resource-icon" style="background:#fef3c7">
+                                <i class="fa-solid fa-video" style="color:#d97706"></i>
+                            </div>
+                            <div class="resource-info">
+                                <p>Rekaman Kuliah</p>
+                                <span>12 video tersedia</span>
+                            </div>
+                            <span class="resource-action">Tonton →</span>
+                        </div>
+
+                        <div class="resource-item" onclick="showToast('Membuka forum diskusi...','info')">
+                            <div class="resource-icon" style="background:#f0fdf4">
+                                <i class="fa-solid fa-comments" style="color:#16a34a"></i>
+                            </div>
+                            <div class="resource-info">
+                                <p>Forum Diskusi</p>
+                                <span>3 pertanyaan baru</span>
+                            </div>
+                            <span class="resource-action">Buka →</span>
+                        </div>
+
                     </div>
 
                 </div>
-
             </div>
+
         </div>
-
-        <div id="taskModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-            <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl transform transition-all scale-95 opacity-0 flex flex-col max-h-[90vh]" id="taskModalContent">
-                
-                <div class="flex justify-between items-start p-6 border-b border-slate-100">
-                    <div>
-                        <span id="modalCourse" class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded border border-blue-100 uppercase">Mata Kuliah</span>
-                        <h3 id="modalTitle" class="font-bold text-slate-800 text-lg mt-2 leading-tight">Judul Tugas</h3>
-                    </div>
-                    <button onclick="closeTaskModal()" class="text-slate-400 hover:text-red-500 transition bg-slate-50 rounded-full w-8 h-8 flex items-center justify-center shrink-0"><i class="fa-solid fa-xmark"></i></button>
-                </div>
-                
-                <div class="p-6 overflow-y-auto flex-1">
-                    <div class="flex items-center gap-2 mb-4 bg-red-50 border border-red-100 p-3 rounded-lg w-max">
-                        <i class="fa-solid fa-hourglass-half text-red-600 text-xs"></i>
-                        <span class="text-xs font-bold text-red-700">Tenggat: <span id="modalDeadline">Tanggal</span></span>
-                    </div>
-                    <p class="text-xs font-bold text-slate-400 uppercase mb-2">Instruksi Tugas</p>
-                    <p id="modalDesc" class="text-sm text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-100">
-                        Deskripsi tugas...
-                    </p>
-                    
-                    <div class="mt-6 border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-blue-400 transition cursor-pointer bg-slate-50 hover:bg-blue-50/50">
-                        <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-400 mb-2"></i>
-                        <p class="text-sm font-bold text-slate-700">Klik atau Drag & Drop file ke sini</p>
-                        <p class="text-[10px] text-slate-500 mt-1">Maks. ukuran file 10MB (.pdf, .zip, .ipynb)</p>
-                    </div>
-                </div>
-
-                <div class="p-6 border-t border-slate-100 bg-slate-50 rounded-b-2xl">
-                    <button onclick="submitTask(this)" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-md transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-paper-plane"></i> Kumpulkan Tugas
-                    </button>
-                </div>
-            </div>
-        </div>
-
     </main>
 
-    <div id="toast" class="fixed bottom-6 right-6 bg-slate-800 text-white px-5 py-3.5 rounded-xl shadow-2xl toast-enter z-50 flex items-center gap-3 border border-slate-700">
-        <i id="toast-icon" class="fa-solid fa-circle-info text-blue-400 text-lg"></i>
-        <span id="toast-message" class="text-sm font-medium">Ini adalah pesan notifikasi.</span>
+    <!-- MODAL -->
+    <div class="modal-backdrop" id="modal-backdrop" onclick="handleBackdropClick(event)">
+        <div class="modal" id="modal">
+            <div class="modal-header">
+                <div class="modal-course-tag" id="modal-course">Mata Kuliah</div>
+                <h3 class="modal-title" id="modal-title">Judul Tugas</h3>
+                <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="deadline-pill">
+                    <i class="fa-solid fa-hourglass-half" style="font-size:10px"></i>
+                    Tenggat: <span id="modal-deadline">Tanggal</span>
+                </div>
+
+                <p class="modal-section-label">Instruksi Tugas</p>
+                <div class="modal-desc" id="modal-desc">Deskripsi tugas...</div>
+
+                <p class="modal-section-label">Unggah File</p>
+                <div class="upload-area" onclick="showToast('Membuka file picker...','info')">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <div class="upload-title">Klik atau drag & drop file ke sini</div>
+                    <div class="upload-sub">Maks. 10 MB · .pdf, .zip, .ipynb</div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="submit-btn" id="submit-btn" onclick="submitTask()">
+                    <i class="fa-solid fa-paper-plane"></i> Kumpulkan Tugas
+                </button>
+            </div>
+        </div>
     </div>
 
+    <!-- TOAST -->
+    <div id="toast-container"></div>
+
     <script>
-        // 1. Profile Dropdown Logic
-        function toggleDropdown(event, id) {
-            event.stopPropagation();
-            const dropdown = document.getElementById(id);
-            const isClosing = dropdown.classList.contains('dropdown-active');
-            
-            document.querySelectorAll('.dropdown-active').forEach(dd => {
-                dd.classList.remove('dropdown-active');
-                dd.classList.add('dropdown-enter');
-            });
+        // ===== DARK MODE =====
+        function toggleDark() {
+            const dark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', dark ? 'dark' : 'light');
+            document.querySelectorAll('.dark-icon').forEach(i => i.style.display = dark ? 'none' : '');
+            document.querySelectorAll('.light-icon').forEach(i => i.style.display = dark ? '' : 'none');
+            document.getElementById('theme-label').textContent = dark ? 'Mode Terang' : 'Mode Gelap';
+        }
 
-            if (!isClosing) {
-                dropdown.classList.remove('dropdown-enter');
-                dropdown.classList.add('dropdown-active');
+        const saved = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (saved === 'dark' || (!saved && prefersDark)) {
+            document.documentElement.classList.add('dark');
+            document.querySelectorAll('.dark-icon').forEach(i => i.style.display = 'none');
+            document.querySelectorAll('.light-icon').forEach(i => i.style.display = '');
+            document.getElementById('theme-label').textContent = 'Mode Terang';
+        }
+
+        // ===== DROPDOWN =====
+        function toggleDropdown(id) {
+            const dd = document.getElementById(id);
+            const isOpen = dd.classList.contains('open');
+            document.querySelectorAll('.dropdown.open').forEach(d => d.classList.remove('open'));
+            if (!isOpen) dd.classList.add('open');
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown-wrap')) {
+                document.querySelectorAll('.dropdown.open').forEach(d => d.classList.remove('open'));
             }
-        }
+        });
 
-        window.onclick = function() {
-            document.querySelectorAll('.dropdown-active').forEach(dd => {
-                dd.classList.remove('dropdown-active');
-                dd.classList.add('dropdown-enter');
-            });
-        }
-
-        // 2. Toast Notification System
-        let toastTimeout;
-        function showToast(message, type = 'info') {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toast-message');
-            const toastIcon = document.getElementById('toast-icon');
-            
-            toastMsg.innerText = message;
-            toastIcon.className = type === 'success' ? "fa-solid fa-circle-check text-green-400 text-lg" : "fa-solid fa-circle-info text-blue-400 text-lg";
-            
-            toast.classList.remove('toast-enter');
-            toast.classList.add('toast-active');
-            
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toast.classList.remove('toast-active');
-                toast.classList.add('toast-enter');
-            }, 3000);
-        }
-
-        // 3. Search / Filter Class Live
+        // ===== SEARCH =====
+        let searchTimer;
         function filterCourses() {
-            const input = document.getElementById('courseSearch').value.toLowerCase();
-            const cards = document.querySelectorAll('.course-card');
-            const emptyState = document.getElementById('emptySearch');
-            let visibleCount = 0;
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => {
+                const q = document.getElementById('searchInput').value.toLowerCase().trim();
+                const cards = document.querySelectorAll('.course-card[data-name]');
+                const empty = document.getElementById('emptySearch');
+                let found = 0;
 
-            cards.forEach(card => {
-                const title = card.querySelector('.course-title').innerText.toLowerCase();
-                if (title.includes(input)) {
-                    card.style.display = 'flex';
-                    visibleCount++;
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+                cards.forEach(card => {
+                    const name = card.dataset.name;
+                    const show = !q || name.includes(q);
+                    card.style.display = show ? 'flex' : 'none';
+                    if (show) found++;
+                });
 
-            // Tampilkan Empty State jika tidak ada yang cocok
-            if (visibleCount === 0 && input !== "") {
-                emptyState.classList.remove('hidden');
-                emptyState.classList.add('block');
+                empty.style.display = (found === 0 && q) ? 'block' : 'none';
+            }, 300);
+        }
+
+        // ===== VIEW TOGGLE =====
+        function setView(mode) {
+            const grid = document.getElementById('courseGrid');
+            document.getElementById('grid-btn').classList.toggle('active', mode === 'grid');
+            document.getElementById('list-btn').classList.toggle('active', mode === 'list');
+
+            if (mode === 'list') {
+                grid.style.gridTemplateColumns = '1fr';
+                document.querySelectorAll('.course-card').forEach(c => {
+                    c.style.flexDirection = 'row';
+                });
+                document.querySelectorAll('.course-thumb').forEach(t => {
+                    t.style.cssText = 'width:120px;height:auto;flex-shrink:0;min-height:100px';
+                });
             } else {
-                emptyState.classList.remove('block');
-                emptyState.classList.add('hidden');
+                grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
+                document.querySelectorAll('.course-card').forEach(c => {
+                    c.style.flexDirection = 'column';
+                });
+                document.querySelectorAll('.course-thumb').forEach(t => {
+                    t.style.cssText = 'height:96px;width:auto';
+                });
             }
         }
 
-        // 4. Animasi Loading Masuk Kelas
-        function enterCourse(event, btn, courseName) {
-            event.stopPropagation();
-            const originalHTML = btn.innerHTML;
-            
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memuat materi...';
+        // ===== ENTER COURSE =====
+        function enterCourse(e, btn, name) {
+            e.stopPropagation();
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memuat...';
             btn.disabled = true;
-            btn.classList.add('opacity-75', 'cursor-wait');
-
+            btn.style.opacity = '.7';
             setTimeout(() => {
-                btn.innerHTML = originalHTML;
+                btn.innerHTML = orig;
                 btn.disabled = false;
-                btn.classList.remove('opacity-75', 'cursor-wait');
-                showToast('Berhasil masuk ke ruang kelas ' + courseName, 'success');
+                btn.style.opacity = '1';
+                showToast('Berhasil masuk ke kelas ' + name, 'success');
             }, 1000);
         }
 
-        // 5. Modal Detail Tugas
-        const modal = document.getElementById('taskModal');
-        const modalContent = document.getElementById('taskModalContent');
-
-        function openTaskModal(title, course, deadline, desc) {
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalCourse').innerText = course;
-            document.getElementById('modalDeadline').innerText = deadline;
-            document.getElementById('modalDesc').innerText = desc;
-            
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modalContent.classList.remove('scale-95', 'opacity-0');
-                modalContent.classList.add('modal-active');
-            }, 10);
+        // ===== MODAL =====
+        function openModal(title, course, deadline, desc) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-course').textContent = course;
+            document.getElementById('modal-deadline').textContent = deadline;
+            document.getElementById('modal-desc').textContent = desc;
+            document.getElementById('modal-backdrop').classList.add('open');
+            document.body.style.overflow = 'hidden';
         }
 
-        function closeTaskModal() {
-            modalContent.classList.remove('modal-active');
-            modalContent.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 200);
+        function closeModal() {
+            document.getElementById('modal-backdrop').classList.remove('open');
+            document.body.style.overflow = '';
+            const btn = document.getElementById('submit-btn');
+            btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Kumpulkan Tugas';
+            btn.disabled = false;
         }
 
-        function submitTask(btn) {
-            const originalHTML = btn.innerHTML;
+        function handleBackdropClick(e) {
+            if (e.target === document.getElementById('modal-backdrop')) closeModal();
+        }
+
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+        function submitTask() {
+            const btn = document.getElementById('submit-btn');
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengunggah...';
             btn.disabled = true;
-
             setTimeout(() => {
-                closeTaskModal();
+                closeModal();
                 showToast('Tugas berhasil dikumpulkan!', 'success');
-                btn.innerHTML = originalHTML;
-                btn.disabled = false;
             }, 1500);
+        }
+
+        // ===== TOAST =====
+        function showToast(message, type = 'info') {
+            const icons = { success: 'fa-circle-check', info: 'fa-circle-info', warning: 'fa-triangle-exclamation' };
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.innerHTML = `<i class="fa-solid ${icons[type]}"></i><span style="flex:1">${message}</span><button class="toast-close" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></button>`;
+            document.getElementById('toast-container').appendChild(el);
+            setTimeout(() => {
+                el.style.transition = 'all .3s';
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(6px)';
+                setTimeout(() => el.remove(), 300);
+            }, 4000);
         }
     </script>
 </body>
