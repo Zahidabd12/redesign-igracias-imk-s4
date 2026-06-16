@@ -1,445 +1,1050 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kartu Hasil Studi (KHS) - iGRACIAS Redesign</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>KHS — iGRACIAS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        .sidebar-item-active { border-left: 4px solid #b91c1c; background-color: #fee2e2; color: #b91c1c; }
-        .card { background: white; border-radius: 1rem; border: 1px solid #e2e8f0; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        /* ===== TOKENS ===== */
+        :root {
+            --red-50: #fff1f1; --red-100: #ffe0e0; --red-400: #f87171;
+            --red-500: #ef4444; --red-600: #cc2222; --red-700: #a81c1c;
+            --red-800: #8b1818; --red-900: #6f1414;
 
-        /* Dropdown Animations */
-        .dropdown-enter { opacity: 0; transform: scale(0.95) translateY(-10px); visibility: hidden; }
-        .dropdown-active { opacity: 1; transform: scale(1) translateY(0); visibility: visible; transition: all 0.2s ease-out; }
-        
-        /* Toast Animations */
-        .toast-enter { transform: translateY(100%); opacity: 0; }
-        .toast-active { transform: translateY(0); opacity: 1; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+            --bg: #f6f5f2;
+            --surface: #ffffff;
+            --surface-2: #f0ede8;
+            --border: #e5e0d8;
+            --border-strong: #ccc6bb;
+            --text: #1a1714;
+            --text-2: #5a5248;
+            --text-3: #7a7068;
+            --accent: var(--red-600);
+            --accent-light: #fff1f1;
 
-        /* Smooth Table Transition */
-        .fade-in { animation: fadeIn 0.4s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+            --radius-sm: 8px; --radius-md: 14px;
+            --radius-lg: 20px; --radius-xl: 28px;
+
+            --shadow-sm: 0 1px 3px rgba(0,0,0,.06);
+            --shadow-md: 0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
+            --shadow-lg: 0 12px 32px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05);
+            --shadow-xl: 0 24px 64px rgba(0,0,0,.14);
+
+            --sidebar-w: 256px;
+            --header-h: 60px;
+            --transition: all .2s cubic-bezier(.4,0,.2,1);
+        }
+
+        html.dark {
+            --bg: #0e0d0b; --surface: #1a1815; --surface-2: #242019;
+            --border: #2e2b26; --border-strong: #3d3930;
+            --text: #f0ece6; --text-2: #a09880; --text-3: #6a6050;
+            --accent: #e03535; --accent-light: #2a1414;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg); color: var(--text);
+            display: flex; height: 100vh; overflow: hidden;
+            transition: background .3s, color .3s;
+        }
+        a { text-decoration: none; color: inherit; }
+        button { cursor: pointer; border: none; background: none; font-family: inherit; }
+        input, select { font-family: inherit; }
+        :focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 2px; }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: var(--sidebar-w);
+            background: var(--surface); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; flex-shrink: 0; z-index: 40;
+        }
+
+        .sidebar-logo {
+            display: flex; align-items: center; gap: 12px;
+            padding: 20px 20px 18px; border-bottom: 1px solid var(--border);
+        }
+
+        .logo-mark {
+            width: 36px; height: 36px; background: var(--red-700);
+            border-radius: 10px; display: flex; align-items: center;
+            justify-content: center; color: white;
+            font-family: 'DM Serif Display', serif; font-style: italic;
+            font-size: 14px; flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(168,28,28,.35);
+        }
+
+        .logo-text { font-size: 17px; font-weight: 800; letter-spacing: -0.5px; }
+        .logo-text span { color: var(--accent); }
+
+        .sidebar-user { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+        .user-card { display: flex; align-items: center; gap: 11px; }
+
+        .user-avatar {
+            width: 38px; height: 38px; border-radius: 10px;
+            background: var(--red-700); display: flex; align-items: center;
+            justify-content: center; font-weight: 700; color: white;
+            font-size: 13px; flex-shrink: 0;
+        }
+
+        .user-info p { font-size: 12px; font-weight: 700; line-height: 1.3; }
+        .user-info span { font-size: 10px; color: var(--text-3); font-weight: 500; }
+
+        .user-badge {
+            margin-top: 10px; display: inline-flex; align-items: center; gap: 5px;
+            background: var(--accent-light); color: var(--accent);
+            font-size: 9px; font-weight: 800; letter-spacing: .4px;
+            text-transform: uppercase; padding: 4px 10px; border-radius: 6px;
+            border: 1px solid var(--red-100);
+        }
+        html.dark .user-badge { border-color: transparent; }
+
+        .sidebar-nav { flex: 1; overflow-y: auto; padding: 12px; }
+
+        .nav-label {
+            font-size: 9px; font-weight: 800; letter-spacing: 1px;
+            text-transform: uppercase; color: var(--text-3);
+            padding: 8px 8px 6px; margin-top: 6px;
+        }
+
+        .nav-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 9px 10px; border-radius: var(--radius-sm);
+            font-size: 13px; font-weight: 500; color: var(--text-2);
+            transition: var(--transition); cursor: pointer; margin-bottom: 1px;
+            border-left: 3px solid transparent;
+        }
+        .nav-item:hover { background: var(--surface-2); color: var(--text); }
+        .nav-item.active { background: var(--accent-light); color: var(--accent); font-weight: 700; border-left: 3px solid var(--accent); padding-left: 7px; }
+        html.dark .nav-item.active { background: #2a1212; border-left-color: var(--accent); }
+        .nav-item i { width: 16px; text-align: center; font-size: 12px; opacity: .75; }
+        .nav-item.active i { opacity: 1; }
+
+        .sidebar-footer {
+            padding: 12px; border-top: 1px solid var(--border);
+            display: flex; flex-direction: column; gap: 6px;
+        }
+
+        .sidebar-footer-btn {
+            display: flex; align-items: center; justify-content: center;
+            gap: 8px; padding: 9px 12px; border-radius: var(--radius-sm);
+            font-size: 12px; font-weight: 600; transition: var(--transition);
+        }
+
+        .btn-ghost { color: var(--text-2); background: var(--surface-2); }
+        .btn-ghost:hover { background: var(--border); color: var(--text); }
+        .btn-danger { background: var(--accent); color: white; font-weight: 700; }
+        .btn-danger:hover { background: var(--red-700); }
+
+        /* ===== MAIN ===== */
+        .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+        /* ===== HEADER ===== */
+        .header {
+            height: var(--header-h);
+            background: var(--surface); border-bottom: 1px solid var(--border);
+            display: flex; align-items: center;
+            justify-content: space-between; padding: 0 28px; flex-shrink: 0;
+        }
+
+        .header-left { display: flex; align-items: center; gap: 12px; }
+
+        .page-icon {
+            width: 32px; height: 32px; border-radius: 9px;
+            background: var(--accent-light); color: var(--accent);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px;
+        }
+
+        .page-title { font-size: 15px; font-weight: 800; }
+        .page-title span { color: var(--text-3); font-weight: 500; font-size: 13px; margin-left: 6px; }
+
+        .term-pill {
+            background: var(--surface-2); border: 1px solid var(--border);
+            border-radius: 40px; padding: 5px 12px;
+            font-size: 11px; font-weight: 700; color: var(--text-2);
+        }
+
+        .header-right { display: flex; align-items: center; gap: 6px; }
+
+        .icon-btn {
+            width: 36px; height: 36px; border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-2); font-size: 14px; transition: var(--transition);
+        }
+        .icon-btn:hover { background: var(--surface-2); color: var(--text); }
+
+        .header-profile {
+            display: flex; align-items: center; gap: 8px;
+            padding: 5px 10px 5px 6px; border-radius: var(--radius-sm);
+            cursor: pointer; transition: var(--transition); margin-left: 4px;
+        }
+        .header-profile:hover { background: var(--surface-2); }
+
+        .header-avatar {
+            width: 28px; height: 28px; border-radius: 7px;
+            background: var(--red-700); color: white;
+            font-size: 11px; font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .header-profile span { font-size: 13px; font-weight: 700; }
+
+        .dropdown-wrap { position: relative; }
+        .dropdown {
+            position: absolute; top: calc(100% + 8px); right: 0;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius-md); box-shadow: var(--shadow-lg);
+            z-index: 100; min-width: 190px;
+            opacity: 0; transform: translateY(-8px) scale(.97);
+            pointer-events: none; transition: all .18s cubic-bezier(.4,0,.2,1);
+        }
+        .dropdown.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+        .dropdown-header { padding: 14px 16px 10px; border-bottom: 1px solid var(--border); }
+        .dropdown-header p { font-size: 13px; font-weight: 700; }
+        .dropdown-header span { font-size: 10px; color: var(--text-3); }
+        .dropdown-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 9px 14px; font-size: 12.5px; color: var(--text-2);
+            transition: var(--transition); cursor: pointer;
+        }
+        .dropdown-item:hover { background: var(--surface-2); color: var(--text); }
+        .dropdown-item i { width: 14px; font-size: 11px; color: var(--text-3); }
+        .dropdown-item.danger { color: var(--accent); }
+        .dropdown-item.danger i { color: var(--accent); }
+        .dropdown-divider { border: none; border-top: 1px solid var(--border); margin: 4px 0; }
+
+        /* ===== PAGE ===== */
+        .page { flex: 1; overflow-y: auto; padding: 28px 32px; }
+
+        /* ===== TOP ROW ===== */
+        .top-row {
+            display: grid;
+            grid-template-columns: 260px 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        /* Filter card */
+        .filter-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius-lg); padding: 20px;
+            display: flex; flex-direction: column; gap: 16px;
+        }
+
+        .filter-label {
+            font-size: 9.5px; font-weight: 800; text-transform: uppercase;
+            letter-spacing: .6px; color: var(--text-3); margin-bottom: 8px;
+        }
+
+        .sem-select {
+            width: 100%; padding: 9px 12px;
+            background: var(--surface-2); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); font-size: 12.5px;
+            font-weight: 700; color: var(--text); outline: none;
+            cursor: pointer; transition: var(--transition);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239a9088' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 32px;
+        }
+        .sem-select:focus { border-color: var(--accent); }
+
+        .action-btns { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
+
+        .btn-print {
+            width: 100%; padding: 10px;
+            border-radius: var(--radius-sm);
+            background: #1a1714; color: white;
+            font-size: 12px; font-weight: 700;
+            display: flex; align-items: center; justify-content: center; gap: 7px;
+            transition: var(--transition);
+        }
+        .btn-print:hover { background: #2d2926; }
+        html.dark .btn-print { background: var(--border); }
+        html.dark .btn-print:hover { background: var(--border-strong); }
+
+        .btn-pdf {
+            width: 100%; padding: 10px;
+            border-radius: var(--radius-sm);
+            background: var(--accent-light); color: var(--accent);
+            border: 1px solid var(--red-100);
+            font-size: 12px; font-weight: 700;
+            display: flex; align-items: center; justify-content: center; gap: 7px;
+            transition: var(--transition);
+        }
+        .btn-pdf:hover { background: var(--red-100); }
+        html.dark .btn-pdf { border-color: transparent; background: #2a1414; }
+        html.dark .btn-pdf:hover { background: #3a1a1a; }
+
+        /* IPS/IPK score cards */
+        .score-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius-lg); padding: 22px;
+            position: relative; overflow: hidden;
+        }
+
+        .score-card-accent {
+            background: linear-gradient(135deg, var(--red-800) 0%, var(--red-700) 50%, #c03030 100%);
+            border: none; color: white;
+        }
+
+        .score-card-deco {
+            position: absolute; top: -40px; right: -40px;
+            width: 140px; height: 140px;
+            border-radius: 50%; background: rgba(255,255,255,.06);
+            pointer-events: none;
+        }
+
+        .score-header {
+            display: flex; justify-content: space-between;
+            align-items: flex-start; margin-bottom: 16px;
+        }
+
+        .score-label {
+            font-size: 10px; font-weight: 800; text-transform: uppercase;
+            letter-spacing: .5px; color: var(--text-3); margin-bottom: 2px;
+        }
+        .score-card-accent .score-label { color: rgba(255,255,255,.6); }
+
+        .score-sublabel { font-size: 11px; color: var(--text-3); font-weight: 600; }
+        .score-card-accent .score-sublabel { color: rgba(255,255,255,.55); }
+
+        .score-icon {
+            width: 36px; height: 36px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 15px; flex-shrink: 0;
+        }
+
+        .score-value-row {
+            display: flex; align-items: flex-end; gap: 6px; margin-bottom: 16px;
+        }
+
+        .score-value {
+            font-family: 'DM Serif Display', serif;
+            font-size: 44px; line-height: 1; letter-spacing: -1px;
+            transition: all .5s cubic-bezier(.16,1,.3,1);
+        }
+
+        .score-denom {
+            font-size: 14px; font-weight: 600; color: var(--text-3);
+            padding-bottom: 6px;
+        }
+        .score-card-accent .score-denom { color: rgba(255,255,255,.5); }
+
+        .score-bar-track {
+            height: 6px; background: var(--surface-2);
+            border-radius: 3px; overflow: hidden; margin-bottom: 16px;
+        }
+        .score-card-accent .score-bar-track { background: rgba(0,0,0,.2); }
+
+        .score-bar-fill {
+            height: 100%; border-radius: 3px; width: 0;
+            transition: width 1s cubic-bezier(.4,0,.2,1);
+        }
+
+        .score-meta {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 10px; border-top: 1px solid var(--border); padding-top: 14px;
+        }
+        .score-card-accent .score-meta { border-color: rgba(255,255,255,.15); }
+
+        .score-meta-item p {
+            font-size: 9.5px; font-weight: 800; text-transform: uppercase;
+            letter-spacing: .4px; color: var(--text-3); margin-bottom: 3px;
+        }
+        .score-card-accent .score-meta-item p { color: rgba(255,255,255,.55); }
+
+        .score-meta-item strong { font-size: 13px; font-weight: 800; color: var(--text); }
+        .score-card-accent .score-meta-item strong { color: white; }
+
+        .status-dot {
+            display: inline-flex; align-items: center; gap: 5px;
+            font-size: 13px; font-weight: 800;
+        }
+
+        /* ===== TABLE SECTION ===== */
+        .table-section {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius-lg); overflow: hidden;
+        }
+
+        .table-header {
+            padding: 18px 22px 14px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 12px;
+        }
+
+        .table-title { font-size: 14px; font-weight: 800; }
+
+        .legend {
+            display: flex; align-items: center; gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex; align-items: center; gap: 5px;
+            font-size: 11px; font-weight: 700; color: var(--text-2);
+        }
+
+        .legend-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+        .table-wrap {
+            overflow-x: auto;
+            transition: opacity .3s, transform .3s;
+        }
+
+        .table-wrap.fading {
+            opacity: 0; transform: translateY(6px);
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+
+        thead tr { border-bottom: 1px solid var(--border); }
+
+        th {
+            padding: 11px 18px; text-align: left;
+            font-size: 9.5px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: .6px;
+            color: var(--text-3); background: var(--surface-2);
+            white-space: nowrap;
+        }
+        th.center { text-align: center; }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: var(--transition);
+        }
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: var(--surface-2); }
+
+        td { padding: 14px 18px; font-size: 12.5px; }
+        td.center { text-align: center; }
+
+        .td-no { color: var(--text-3); font-size: 11px; font-weight: 700; }
+
+        .td-code {
+            font-family: 'DM Serif Display', serif;
+            font-size: 12px; color: var(--text-3); letter-spacing: .3px;
+        }
+
+        .td-name { font-weight: 700; color: var(--text); }
+
+        .td-sks { font-weight: 800; color: var(--text); }
+
+        .td-total { font-weight: 800; font-size: 13px; color: var(--text); }
+        .td-indeks { color: var(--text-2); font-weight: 600; }
+
+        /* Grade badges */
+        .grade-badge {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 32px; height: 32px; border-radius: 8px;
+            font-size: 12px; font-weight: 800; letter-spacing: .3px;
+        }
+
+        .grade-a { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+        .grade-ab { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+        .grade-b { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+        .grade-bc { background: #f0f9ff; color: #075985; border: 1px solid #bae6fd; }
+        .grade-c { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+        .grade-d { background: #fff7ed; color: #9a3412; border: 1px solid #fed7aa; }
+        .grade-e { background: var(--red-50); color: var(--red-700); border: 1px solid var(--red-100); }
+
+        html.dark .grade-a { background: #0d2a18; border-color: transparent; color: #4ade80; }
+        html.dark .grade-ab { background: #0d2a1e; border-color: transparent; color: #34d399; }
+        html.dark .grade-b { background: #1a2740; border-color: transparent; color: #60a5fa; }
+        html.dark .grade-bc { background: #1a2e40; border-color: transparent; color: #38bdf8; }
+        html.dark .grade-c { background: #2a1d06; border-color: transparent; color: #fbbf24; }
+        html.dark .grade-d { background: #2a1406; border-color: transparent; color: #fb923c; }
+        html.dark .grade-e { background: #2a1414; border-color: transparent; }
+
+        /* Table footer */
+        tfoot tr { background: #1a1714; }
+        html.dark tfoot tr { background: #0a0908; }
+
+        tfoot td {
+            padding: 14px 18px; font-size: 12px; font-weight: 800;
+            color: rgba(255,255,255,.65); white-space: nowrap;
+        }
+
+        .tfoot-label {
+            text-align: right; font-size: 10px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: .5px;
+            color: rgba(255,255,255,.45);
+        }
+
+        .tfoot-val {
+            text-align: center; font-family: 'DM Serif Display', serif;
+            font-size: 20px; color: #fbbf24; font-weight: 400;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate { animation: fadeUp .5s cubic-bezier(.16,1,.3,1) both; }
+        .d1 { animation-delay: .05s; } .d2 { animation-delay: .1s; }
+        .d3 { animation-delay: .15s; } .d4 { animation-delay: .2s; }
+
+        /* ===== TOAST ===== */
+        #toast-container {
+            position: fixed; bottom: 20px; right: 20px; z-index: 500;
+            display: flex; flex-direction: column; gap: 8px; align-items: flex-end;
+        }
+
+        .toast {
+            display: flex; align-items: center; gap: 10px;
+            padding: 11px 16px; border-radius: var(--radius-md);
+            background: var(--surface); border: 1px solid var(--border);
+            box-shadow: var(--shadow-lg); font-size: 12.5px;
+            font-weight: 600; color: var(--text);
+            animation: toastIn .25s cubic-bezier(.16,1,.3,1);
+            max-width: 300px;
+        }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(8px) scale(.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .toast i { font-size: 13px; }
+        .toast.success i { color: #16a34a; }
+        .toast.info i { color: #2563eb; }
+        .toast-close { margin-left: 4px; color: var(--text-3); font-size: 11px; cursor: pointer; transition: var(--transition); }
+        .toast-close:hover { color: var(--text); }
+
+        @media (max-width: 900px) {
+            .sidebar { display: none; }
+            .top-row { grid-template-columns: 1fr; }
+            .page { padding: 18px; }
+        }
     </style>
 </head>
-<body class="flex h-screen overflow-hidden">
+<body>
 
-    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col hidden md:flex shrink-0">
-        <div class="p-6 flex items-center gap-3 border-b border-slate-100">
-            <div class="w-8 h-8 bg-red-700 rounded-lg flex items-center justify-center text-white font-bold italic shadow-sm">iG</div>
-            <span class="text-xl font-bold text-slate-800 tracking-tight">iGRACIAS</span>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-mark">iG</div>
+            <span class="logo-text">iGRA<span>CIAS</span></span>
         </div>
 
-        <div class="px-6 py-4 border-b border-slate-100">
-            <p class="text-sm font-bold text-slate-800 truncate">Zahid Abdullah N. M.</p>
-            <p class="text-xs text-slate-500">101102400004</p>
-            <div class="mt-2 inline-flex items-center gap-1 bg-red-50 text-red-700 px-2 py-1 rounded text-[10px] font-bold border border-red-100">
-                <i class="fa-solid fa-user-graduate"></i> MAHASISWA
+        <div class="sidebar-user">
+            <div class="user-card">
+                <div class="user-avatar">ZA</div>
+                <div class="user-info">
+                    <p>Zahid Abdullah N.M.</p>
+                    <span>101102400004</span>
+                </div>
+            </div>
+            <div class="user-badge">
+                <i class="fa-solid fa-user-graduate" style="font-size:9px"></i>
+                Mahasiswa · S1 Sains Data
             </div>
         </div>
 
-        <nav class="flex-1 overflow-y-auto no-scrollbar px-4 py-4 space-y-1">
-            <p class="text-xs font-semibold text-slate-400 uppercase px-2 mb-2">Main Menu</p>
-            
-            <a href="landing_page.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
-                <i class="fa-solid fa-house w-4 text-center"></i> Dashboard
-            </a>
-            
-            <div class="mt-4 mb-2">
-                <p class="text-xs font-semibold text-slate-400 uppercase px-2">Akademik & Layanan</p>
-            </div>
-            
-            <a href="akun.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
-                <i class="fa-solid fa-user w-4 text-center"></i> Akun
-            </a>
-            
-            <a href="nilai.html" class="sidebar-item-active flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition">
-                <i class="fa-solid fa-graduation-cap w-4 text-center"></i> Nilai
-            </a>
-            
-            <a href="pembayaran.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
-                <i class="fa-solid fa-file-invoice w-4 text-center"></i> Pembayaran
-            </a>
-            <a href="presensi.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
-                <i class="fa-solid fa-clipboard-list w-4 text-center"></i> Presensi
-            </a>
-            <a href="elearning.html" class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-red-700 rounded-lg text-sm font-medium transition">
-                <i class="fa-solid fa-laptop-code w-4 text-center"></i> Elearning (Idea)
-            </a>
+        <nav class="sidebar-nav">
+            <p class="nav-label">Main</p>
+            <a href="landing_page.html" class="nav-item"><i class="fa-solid fa-house"></i> Dashboard</a>
+            <a href="landing_page.html" class="nav-item"><i class="fa-solid fa-chart-line"></i> Progress Akademik</a>
+
+            <p class="nav-label">Akademik</p>
+            <a href="akun.html" class="nav-item"><i class="fa-solid fa-user"></i> Akun</a>
+            <a href="asrama.html" class="nav-item"><i class="fa-solid fa-building"></i> Asrama</a>
+            <a href="bimbingan.html" class="nav-item"><i class="fa-solid fa-comments"></i> Bimbingan</a>
+            <a href="elearning.html" class="nav-item"><i class="fa-solid fa-laptop-code"></i> E-Learning</a>
+            <a href="pembayaran.html" class="nav-item"><i class="fa-solid fa-file-invoice-dollar"></i> Pembayaran</a>
+            <a href="nilai.html" class="nav-item active"><i class="fa-solid fa-graduation-cap"></i> Nilai &amp; Transkrip</a>
+            <a href="presensi.html" class="nav-item"><i class="fa-solid fa-clipboard-check"></i> Presensi</a>
+            <a href="landing_page.html" class="nav-item"><i class="fa-solid fa-calendar-days"></i> Jadwal Kuliah</a>
+            <a href="landing_page.html" class="nav-item"><i class="fa-solid fa-book"></i> Perpustakaan</a>
         </nav>
 
-        <div class="p-4 border-t border-slate-200">
-            <a href="login.html" class="w-full flex items-center justify-center gap-2 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-red-50 hover:text-red-700 rounded-lg transition">
-                <i class="fa-solid fa-right-from-bracket"></i> Logout
+        <div class="sidebar-footer">
+            <button class="sidebar-footer-btn btn-ghost" onclick="toggleDark()">
+                <i class="fa-solid fa-moon dark-icon"></i>
+                <i class="fa-solid fa-sun light-icon" style="display:none"></i>
+                <span id="theme-label">Mode Gelap</span>
+            </button>
+            <a href="login.html" class="sidebar-footer-btn btn-danger">
+                <i class="fa-solid fa-right-from-bracket"></i> Keluar
             </a>
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col overflow-y-auto bg-slate-50/50 relative">
-        
-        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-20">
-            <div class="flex items-center gap-4">
-                <h2 class="text-lg font-bold text-slate-800">Kartu Hasil Studi (KHS)</h2>
+    <!-- MAIN -->
+    <main class="main">
+
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-left">
+                <div class="page-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+                <span class="page-title">Kartu Hasil Studi <span>· KHS</span></span>
+                <div class="term-pill">TA 2526/2 · Genap</div>
             </div>
-            <div class="flex items-center gap-6 relative">
-                <div class="hidden md:flex items-center gap-2 bg-slate-100 px-3 py-1 rounded-md">
-                    <i class="fa-regular fa-calendar text-slate-500 text-xs"></i>
-                    <span class="text-xs font-semibold text-slate-600">TA 2526/2</span>
-                </div>
-                
-                <div class="relative">
-                    <div onclick="toggleDropdown(event, 'profileDropdown')" class="flex items-center gap-2 bg-slate-100 p-1 rounded-full px-4 cursor-pointer hover:bg-slate-200 transition">
-                        <img src="https://ui-avatars.com/api/?name=Zahid+Abdullah&background=b91c1c&color=fff" class="w-8 h-8 rounded-full">
-                        <span class="text-sm font-semibold text-slate-700">Zahid</span>
+
+            <div class="header-right">
+                <button class="icon-btn" onclick="toggleDark()">
+                    <i class="fa-solid fa-moon dark-icon"></i>
+                    <i class="fa-solid fa-sun light-icon" style="display:none"></i>
+                </button>
+
+                <div class="dropdown-wrap">
+                    <div class="header-profile" onclick="toggleDropdown('profile-dd')">
+                        <div class="header-avatar">ZA</div>
+                        <span>Zahid</span>
+                        <i class="fa-solid fa-chevron-down" style="font-size:9px;color:var(--text-3)"></i>
                     </div>
-                    <div id="profileDropdown" class="dropdown-enter absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden z-50">
-                        <div class="p-3 border-b border-slate-100">
-                            <p class="text-sm font-bold text-slate-800">Zahid Abdullah</p>
-                            <p class="text-[10px] text-slate-500">NIM: 101102400004</p>
+                    <div class="dropdown" id="profile-dd">
+                        <div class="dropdown-header">
+                            <p>Zahid Abdullah</p>
+                            <span>101102400004 · S1 Sains Data</span>
                         </div>
-                        <div class="p-1">
-                            <a href="akun.html" class="flex items-center gap-2 px-3 py-2 text-xs text-slate-600 hover:bg-slate-50 hover:text-red-600 rounded-lg transition"><i class="fa-solid fa-user-pen w-4"></i> Edit Profil</a>
-                            <a href="login.html" class="flex items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 rounded-lg transition mt-1 border-t border-slate-100"><i class="fa-solid fa-right-from-bracket w-4"></i> Keluar</a>
+                        <div style="padding:6px">
+                            <div class="dropdown-item"><i class="fa-solid fa-user-pen"></i> Edit Profil</div>
+                            <div class="dropdown-item"><i class="fa-solid fa-gear"></i> Pengaturan</div>
+                            <hr class="dropdown-divider">
+                            <div class="dropdown-item danger"><i class="fa-solid fa-right-from-bracket"></i> Keluar</div>
                         </div>
                     </div>
                 </div>
             </div>
         </header>
 
-        <div class="p-8">
-            
-            <div class="flex flex-col lg:flex-row gap-6 mb-8">
-                
-                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 w-full lg:w-1/3 flex flex-col justify-between">
+        <!-- PAGE CONTENT -->
+        <div class="page">
+
+            <!-- Top Row -->
+            <div class="top-row">
+
+                <!-- Filter & Actions -->
+                <div class="filter-card animate d1">
                     <div>
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3">Filter Semester</p>
-                        <select id="semesterFilter" onchange="changeSemester()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block p-2.5 outline-none font-semibold cursor-pointer transition">
-                            <option value="genap25" selected>Semester Genap 2025/2026</option>
-                            <option value="ganjil25">Semester Ganjil 2025/2026</option>
-                            <option value="genap24">Semester Genap 2024/2025</option>
+                        <p class="filter-label">Pilih Semester</p>
+                        <select class="sem-select" id="semesterSelect" onchange="changeSemester()">
+                            <option value="genap25" selected>Genap 2025/2026</option>
+                            <option value="ganjil25">Ganjil 2025/2026</option>
+                            <option value="genap24">Genap 2024/2025</option>
                         </select>
                     </div>
-                    
-                    <div class="mt-6 space-y-3">
-                        <button id="btnCetak" onclick="simulateDownload('btnCetak', 'Mempersiapkan Printer...', 'Dokumen berhasil dikirim ke antrean printer.')" class="w-full bg-slate-800 hover:bg-slate-900 text-white text-sm font-semibold py-2.5 rounded-lg transition shadow-md flex items-center justify-center gap-2">
+
+                    <!-- Mini summary -->
+                    <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;display:flex;flex-direction:column;gap:8px">
+                        <div style="display:flex;justify-content:space-between;align-items:center">
+                            <span style="font-size:10.5px;color:var(--text-3);font-weight:700">Semester</span>
+                            <span style="font-size:11px;font-weight:800;color:var(--text)" id="summary-sem">Genap 2025/2026</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center">
+                            <span style="font-size:10.5px;color:var(--text-3);font-weight:700">SKS Diambil</span>
+                            <span style="font-size:11px;font-weight:800;color:var(--text)" id="summary-sks">10 SKS</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center">
+                            <span style="font-size:10.5px;color:var(--text-3);font-weight:700">IPS</span>
+                            <span style="font-size:11px;font-weight:800;color:var(--accent)" id="summary-ips">3.85</span>
+                        </div>
+                    </div>
+
+                    <div class="action-btns">
+                        <button class="btn-print" id="btnPrint" onclick="simulateDownload('btnPrint','<i class=\'fa-solid fa-spinner fa-spin\'></i> Menyiapkan...','Dokumen berhasil dikirim ke printer','info')">
                             <i class="fa-solid fa-print"></i> Cetak KHS
                         </button>
-                        <button id="btnPDF" onclick="simulateDownload('btnPDF', 'Men-generate PDF...', 'KHS_Zahid_Semester_Genap.pdf berhasil diunduh!')" class="w-full bg-red-50 text-red-700 hover:bg-red-100 text-sm font-semibold py-2.5 rounded-lg transition flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-file-pdf"></i> Download PDF
+                        <button class="btn-pdf" id="btnPDF" onclick="simulateDownload('btnPDF','<i class=\'fa-solid fa-spinner fa-spin\'></i> Membuat PDF...','KHS_Zahid_Genap2526.pdf berhasil diunduh!','success')">
+                            <i class="fa-solid fa-file-pdf"></i> Unduh PDF
                         </button>
                     </div>
                 </div>
 
-                <div class="w-full lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-6">
-                    
-                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-full -translate-y-10 translate-x-10"></div>
-                        <div class="relative z-10 flex justify-between items-start">
-                            <div>
-                                <p class="text-sm font-bold text-slate-500 mb-1">Indeks Prestasi Semester (IPS)</p>
-                                <p id="text-semester" class="text-xs text-slate-400">Genap 2025/2026</p>
-                            </div>
-                            <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-lg">
-                                <i class="fa-solid fa-chart-bar"></i>
-                            </div>
+                <!-- IPS Card -->
+                <div class="score-card animate d2">
+                    <div class="score-header">
+                        <div>
+                            <div class="score-label">Indeks Prestasi Semester</div>
+                            <div class="score-sublabel" id="ips-sem-label">Genap 2025/2026</div>
                         </div>
-                        <div class="relative z-10 mt-4 flex items-end gap-3">
-                            <h2 id="ips-score" class="text-5xl font-extrabold text-slate-800 tracking-tighter">3.85</h2>
-                            <p class="text-sm font-medium text-slate-400 mb-1.5">/ 4.00</p>
-                        </div>
-                        <div class="relative z-10 mt-4 bg-slate-100 rounded-full h-2 w-full overflow-hidden">
-                            <div id="ips-bar" class="bg-blue-500 h-full rounded-full transition-all duration-1000 ease-out w-0" data-target="96%"></div>
-                        </div>
-                        <div class="relative z-10 mt-4 grid grid-cols-2 gap-4 text-sm border-t border-slate-100 pt-4">
-                            <div>
-                                <p class="text-slate-400 text-[10px] uppercase font-bold">SKS Diambil</p>
-                                <p id="sks-diambil" class="font-bold text-slate-700">18 SKS</p>
-                            </div>
-                            <div>
-                                <p class="text-slate-400 text-[10px] uppercase font-bold">SKS Lulus</p>
-                                <p id="sks-lulus" class="font-bold text-slate-700">18 SKS</p>
-                            </div>
+                        <div class="score-icon" style="background:#eff6ff">
+                            <i class="fa-solid fa-chart-bar" style="color:#2563eb"></i>
                         </div>
                     </div>
-
-                    <div class="bg-gradient-to-br from-red-700 to-red-900 rounded-2xl shadow-lg p-6 relative overflow-hidden text-white">
-                        <div class="absolute top-0 right-0 w-40 h-40 bg-white opacity-5 rounded-full -translate-y-1/2 translate-x-1/3"></div>
-                        <div class="relative z-10 flex justify-between items-start">
-                            <div>
-                                <p class="text-sm font-bold text-red-100 mb-1">Indeks Prestasi Kumulatif (IPK)</p>
-                                <p class="text-xs text-red-200">Total Keseluruhan</p>
-                            </div>
-                            <div class="w-10 h-10 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-lg">
-                                <i class="fa-solid fa-trophy text-yellow-300"></i>
-                            </div>
+                    <div class="score-value-row">
+                        <div class="score-value" id="ips-score">3.85</div>
+                        <div class="score-denom">/ 4.00</div>
+                    </div>
+                    <div class="score-bar-track">
+                        <div class="score-bar-fill" id="ips-bar" style="background:linear-gradient(90deg,#2563eb,#60a5fa)" data-target="96"></div>
+                    </div>
+                    <div class="score-meta">
+                        <div class="score-meta-item">
+                            <p>SKS Diambil</p>
+                            <strong id="sks-diambil">10 SKS</strong>
                         </div>
-                        <div class="relative z-10 mt-4 flex items-end gap-3">
-                            <h2 class="text-5xl font-extrabold text-white tracking-tighter drop-shadow-md">3.92</h2>
-                            <p class="text-sm font-medium text-red-200 mb-1.5">/ 4.00</p>
-                        </div>
-                        <div class="relative z-10 mt-4 bg-black/20 rounded-full h-2 w-full overflow-hidden border border-white/10">
-                            <div id="ipk-bar" class="bg-gradient-to-r from-yellow-300 to-yellow-400 h-full rounded-full relative transition-all duration-1000 ease-out w-0" data-target="98%">
-                                <div class="absolute top-0 right-0 w-2 h-full bg-white opacity-50 rounded-full animate-ping"></div>
-                            </div>
-                        </div>
-                        <div class="relative z-10 mt-4 grid grid-cols-2 gap-4 text-sm border-t border-white/20 pt-4">
-                            <div>
-                                <p class="text-red-200 text-[10px] uppercase font-bold">Total SKS</p>
-                                <p class="font-bold text-white">84 SKS</p>
-                            </div>
-                            <div>
-                                <p class="text-red-200 text-[10px] uppercase font-bold">Status Akademik</p>
-                                <p class="font-bold text-white"><i class="fa-solid fa-circle text-[8px] text-green-400"></i> Aman</p>
-                            </div>
+                        <div class="score-meta-item">
+                            <p>SKS Lulus</p>
+                            <strong id="sks-lulus">10 SKS</strong>
                         </div>
                     </div>
-
                 </div>
+
+                <!-- IPK Card -->
+                <div class="score-card score-card-accent animate d3">
+                    <div class="score-card-deco"></div>
+                    <div class="score-header" style="position:relative;z-index:1">
+                        <div>
+                            <div class="score-label">Indeks Prestasi Kumulatif</div>
+                            <div class="score-sublabel">Total Keseluruhan</div>
+                        </div>
+                        <div class="score-icon" style="background:rgba(255,255,255,.15);color:#fde68a">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                    </div>
+                    <div class="score-value-row" style="position:relative;z-index:1">
+                        <div class="score-value" style="color:white">3.92</div>
+                        <div class="score-denom">/ 4.00</div>
+                    </div>
+                    <div class="score-bar-track" style="position:relative;z-index:1">
+                        <div class="score-bar-fill" id="ipk-bar" style="background:linear-gradient(90deg,#fde68a,#fbbf24)" data-target="98"></div>
+                    </div>
+                    <div class="score-meta" style="position:relative;z-index:1">
+                        <div class="score-meta-item">
+                            <p>Total SKS</p>
+                            <strong>142 SKS</strong>
+                        </div>
+                        <div class="score-meta-item">
+                            <p>Status Akademik</p>
+                            <strong>
+                                <span class="status-dot">
+                                    <i class="fa-solid fa-circle" style="font-size:7px;color:#4ade80"></i> Aman
+                                </span>
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
-            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                <div class="p-5 border-b border-slate-100 bg-slate-50 flex flex-wrap items-center justify-between gap-4">
-                    <h3 class="font-bold text-slate-800">Daftar Nilai Mata Kuliah</h3>
-                    <div class="flex items-center gap-4 text-xs font-semibold text-slate-500">
-                        <span class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-green-500"></div> Lulus</span>
-                        <span class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-yellow-500"></div> Mengulang</span>
-                        <span class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-red-500"></div> Tidak Lulus</span>
+            <!-- Table Section -->
+            <div class="table-section animate d4">
+                <div class="table-header">
+                    <h3 class="table-title">Daftar Nilai Mata Kuliah</h3>
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background:#22c55e"></div> Lulus
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background:#f59e0b"></div> Mengulang
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background:var(--accent)"></div> Tidak Lulus
+                        </div>
                     </div>
                 </div>
-                
-                <div class="overflow-x-auto fade-in" id="table-container">
-                    <table id="table-genap25" class="w-full text-left text-sm">
-                        <thead class="bg-white text-slate-400 text-[11px] uppercase tracking-wider border-b border-slate-200">
+
+                <div class="table-wrap" id="tableWrap">
+
+                    <!-- Tabel Genap 2025/2026 -->
+                    <table id="table-genap25">
+                        <thead>
                             <tr>
-                                <th class="px-6 py-4 font-bold text-center w-16">No</th>
-                                <th class="px-6 py-4 font-bold">Kode MK</th>
-                                <th class="px-6 py-4 font-bold">Mata Kuliah</th>
-                                <th class="px-6 py-4 font-bold text-center">SKS</th>
-                                <th class="px-6 py-4 font-bold text-center">Nilai Huruf</th>
-                                <th class="px-6 py-4 font-bold text-center">Indeks</th>
-                                <th class="px-6 py-4 font-bold text-center">Total Nilai</th>
+                                <th style="width:48px" class="center">No</th>
+                                <th>Kode MK</th>
+                                <th>Mata Kuliah</th>
+                                <th class="center">SKS</th>
+                                <th class="center">Nilai</th>
+                                <th class="center">Indeks</th>
+                                <th class="center">Total</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100 text-slate-700">
-                            <tr class="hover:bg-slate-50 transition">
-                                <td class="px-6 py-4 text-center font-medium text-slate-400">1</td>
-                                <td class="px-6 py-4 font-mono text-xs text-slate-500">CII3B4</td>
-                                <td class="px-6 py-4 font-bold text-slate-800">Kecerdasan Buatan</td>
-                                <td class="px-6 py-4 text-center font-semibold">4</td>
-                                <td class="px-6 py-4 text-center"><span class="bg-green-100 text-green-700 px-3 py-1 rounded-md font-bold text-xs border border-green-200">A</span></td>
-                                <td class="px-6 py-4 text-center font-semibold">4.00</td>
-                                <td class="px-6 py-4 text-center font-bold text-slate-800">16.00</td>
+                        <tbody>
+                            <tr>
+                                <td class="center td-no">1</td>
+                                <td class="td-code">CII3B4</td>
+                                <td class="td-name">Kecerdasan Buatan</td>
+                                <td class="center td-sks">4</td>
+                                <td class="center"><span class="grade-badge grade-a">A</span></td>
+                                <td class="center td-indeks">4.00</td>
+                                <td class="center td-total">16.00</td>
                             </tr>
-                            <tr class="hover:bg-slate-50 transition">
-                                <td class="px-6 py-4 text-center font-medium text-slate-400">2</td>
-                                <td class="px-6 py-4 font-mono text-xs text-slate-500">CII3C3</td>
-                                <td class="px-6 py-4 font-bold text-slate-800">Rekayasa Perangkat Lunak</td>
-                                <td class="px-6 py-4 text-center font-semibold">3</td>
-                                <td class="px-6 py-4 text-center"><span class="bg-teal-50 text-teal-700 px-3 py-1 rounded-md font-bold text-xs border border-teal-200">AB</span></td>
-                                <td class="px-6 py-4 text-center font-semibold">3.50</td>
-                                <td class="px-6 py-4 text-center font-bold text-slate-800">10.50</td>
+                            <tr>
+                                <td class="center td-no">2</td>
+                                <td class="td-code">CII3C3</td>
+                                <td class="td-name">Rekayasa Perangkat Lunak</td>
+                                <td class="center td-sks">3</td>
+                                <td class="center"><span class="grade-badge grade-ab">AB</span></td>
+                                <td class="center td-indeks">3.50</td>
+                                <td class="center td-total">10.50</td>
                             </tr>
-                            <tr class="hover:bg-slate-50 transition">
-                                <td class="px-6 py-4 text-center font-medium text-slate-400">3</td>
-                                <td class="px-6 py-4 font-mono text-xs text-slate-500">CII3H3</td>
-                                <td class="px-6 py-4 font-bold text-slate-800">Desain Antarmuka Pengguna</td>
-                                <td class="px-6 py-4 text-center font-semibold">3</td>
-                                <td class="px-6 py-4 text-center"><span class="bg-green-100 text-green-700 px-3 py-1 rounded-md font-bold text-xs border border-green-200">A</span></td>
-                                <td class="px-6 py-4 text-center font-semibold">4.00</td>
-                                <td class="px-6 py-4 text-center font-bold text-slate-800">12.00</td>
+                            <tr>
+                                <td class="center td-no">3</td>
+                                <td class="td-code">CII3H3</td>
+                                <td class="td-name">Desain Antarmuka Pengguna</td>
+                                <td class="center td-sks">3</td>
+                                <td class="center"><span class="grade-badge grade-a">A</span></td>
+                                <td class="center td-indeks">4.00</td>
+                                <td class="center td-total">12.00</td>
                             </tr>
                         </tbody>
-                        <tfoot class="bg-slate-800 text-white border-t-2 border-slate-300">
+                        <tfoot>
                             <tr>
-                                <td colspan="3" class="px-6 py-4 text-right font-bold text-sm tracking-wide">TOTAL SEMESTER INI</td>
-                                <td class="px-6 py-4 text-center font-bold text-lg text-yellow-300">10</td>
-                                <td colspan="2" class="px-6 py-4"></td>
-                                <td class="px-6 py-4 text-center font-bold text-lg text-yellow-300">38.50</td>
+                                <td colspan="3" class="tfoot-label">Total Semester Ini</td>
+                                <td class="tfoot-val">10</td>
+                                <td colspan="2"></td>
+                                <td class="tfoot-val">38.50</td>
                             </tr>
                         </tfoot>
                     </table>
 
-                    <table id="table-ganjil25" class="w-full text-left text-sm hidden">
-                        <thead class="bg-white text-slate-400 text-[11px] uppercase tracking-wider border-b border-slate-200">
+                    <!-- Tabel Ganjil 2025/2026 -->
+                    <table id="table-ganjil25" style="display:none">
+                        <thead>
                             <tr>
-                                <th class="px-6 py-4 font-bold text-center w-16">No</th>
-                                <th class="px-6 py-4 font-bold">Kode MK</th>
-                                <th class="px-6 py-4 font-bold">Mata Kuliah</th>
-                                <th class="px-6 py-4 font-bold text-center">SKS</th>
-                                <th class="px-6 py-4 font-bold text-center">Nilai Huruf</th>
-                                <th class="px-6 py-4 font-bold text-center">Indeks</th>
-                                <th class="px-6 py-4 font-bold text-center">Total Nilai</th>
+                                <th style="width:48px" class="center">No</th>
+                                <th>Kode MK</th>
+                                <th>Mata Kuliah</th>
+                                <th class="center">SKS</th>
+                                <th class="center">Nilai</th>
+                                <th class="center">Indeks</th>
+                                <th class="center">Total</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100 text-slate-700">
-                            <tr class="hover:bg-slate-50 transition">
-                                <td class="px-6 py-4 text-center font-medium text-slate-400">1</td>
-                                <td class="px-6 py-4 font-mono text-xs text-slate-500">CSI3A3</td>
-                                <td class="px-6 py-4 font-bold text-slate-800">Jaringan Komputer</td>
-                                <td class="px-6 py-4 text-center font-semibold">3</td>
-                                <td class="px-6 py-4 text-center"><span class="bg-green-100 text-green-700 px-3 py-1 rounded-md font-bold text-xs border border-green-200">A</span></td>
-                                <td class="px-6 py-4 text-center font-semibold">4.00</td>
-                                <td class="px-6 py-4 text-center font-bold text-slate-800">12.00</td>
+                        <tbody>
+                            <tr>
+                                <td class="center td-no">1</td>
+                                <td class="td-code">CSI3A3</td>
+                                <td class="td-name">Jaringan Komputer</td>
+                                <td class="center td-sks">3</td>
+                                <td class="center"><span class="grade-badge grade-a">A</span></td>
+                                <td class="center td-indeks">4.00</td>
+                                <td class="center td-total">12.00</td>
                             </tr>
-                            <tr class="hover:bg-slate-50 transition">
-                                <td class="px-6 py-4 text-center font-medium text-slate-400">2</td>
-                                <td class="px-6 py-4 font-mono text-xs text-slate-500">LUH2A2</td>
-                                <td class="px-6 py-4 font-bold text-slate-800">Pembentukan Karakter</td>
-                                <td class="px-6 py-4 text-center font-semibold">2</td>
-                                <td class="px-6 py-4 text-center"><span class="bg-green-100 text-green-700 px-3 py-1 rounded-md font-bold text-xs border border-green-200">A</span></td>
-                                <td class="px-6 py-4 text-center font-semibold">4.00</td>
-                                <td class="px-6 py-4 text-center font-bold text-slate-800">8.00</td>
+                            <tr>
+                                <td class="center td-no">2</td>
+                                <td class="td-code">LUH2A2</td>
+                                <td class="td-name">Pembentukan Karakter</td>
+                                <td class="center td-sks">2</td>
+                                <td class="center"><span class="grade-badge grade-a">A</span></td>
+                                <td class="center td-indeks">4.00</td>
+                                <td class="center td-total">8.00</td>
                             </tr>
-                            <tr class="hover:bg-slate-50 transition">
-                                <td class="px-6 py-4 text-center font-medium text-slate-400">3</td>
-                                <td class="px-6 py-4 font-mono text-xs text-slate-500">CII3G3</td>
-                                <td class="px-6 py-4 font-bold text-slate-800">Pemrograman Web</td>
-                                <td class="px-6 py-4 text-center font-semibold">3</td>
-                                <td class="px-6 py-4 text-center"><span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-md font-bold text-xs border border-blue-200">B</span></td>
-                                <td class="px-6 py-4 text-center font-semibold">3.00</td>
-                                <td class="px-6 py-4 text-center font-bold text-slate-800">9.00</td>
+                            <tr>
+                                <td class="center td-no">3</td>
+                                <td class="td-code">CII3G3</td>
+                                <td class="td-name">Pemrograman Web</td>
+                                <td class="center td-sks">3</td>
+                                <td class="center"><span class="grade-badge grade-b">B</span></td>
+                                <td class="center td-indeks">3.00</td>
+                                <td class="center td-total">9.00</td>
                             </tr>
                         </tbody>
-                        <tfoot class="bg-slate-800 text-white border-t-2 border-slate-300">
+                        <tfoot>
                             <tr>
-                                <td colspan="3" class="px-6 py-4 text-right font-bold text-sm tracking-wide">TOTAL SEMESTER INI</td>
-                                <td class="px-6 py-4 text-center font-bold text-lg text-yellow-300">8</td>
-                                <td colspan="2" class="px-6 py-4"></td>
-                                <td class="px-6 py-4 text-center font-bold text-lg text-yellow-300">29.00</td>
+                                <td colspan="3" class="tfoot-label">Total Semester Ini</td>
+                                <td class="tfoot-val">8</td>
+                                <td colspan="2"></td>
+                                <td class="tfoot-val">29.00</td>
                             </tr>
                         </tfoot>
                     </table>
+
+                    <!-- Tabel Genap 2024/2025 (arsip) -->
+                    <table id="table-genap24" style="display:none">
+                        <thead>
+                            <tr>
+                                <th style="width:48px" class="center">No</th>
+                                <th>Kode MK</th>
+                                <th>Mata Kuliah</th>
+                                <th class="center">SKS</th>
+                                <th class="center">Nilai</th>
+                                <th class="center">Indeks</th>
+                                <th class="center">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="center td-no">1</td>
+                                <td class="td-code">CSI2A3</td>
+                                <td class="td-name">Algoritma & Pemrograman</td>
+                                <td class="center td-sks">3</td>
+                                <td class="center"><span class="grade-badge grade-a">A</span></td>
+                                <td class="center td-indeks">4.00</td>
+                                <td class="center td-total">12.00</td>
+                            </tr>
+                            <tr>
+                                <td class="center td-no">2</td>
+                                <td class="td-code">MAT2B4</td>
+                                <td class="td-name">Aljabar Linear</td>
+                                <td class="center td-sks">4</td>
+                                <td class="center"><span class="grade-badge grade-ab">AB</span></td>
+                                <td class="center td-indeks">3.50</td>
+                                <td class="center td-total">14.00</td>
+                            </tr>
+                            <tr>
+                                <td class="center td-no">3</td>
+                                <td class="td-code">CII2C3</td>
+                                <td class="td-name">Basis Data</td>
+                                <td class="center td-sks">3</td>
+                                <td class="center"><span class="grade-badge grade-a">A</span></td>
+                                <td class="center td-indeks">4.00</td>
+                                <td class="center td-total">12.00</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="tfoot-label">Total Semester Ini</td>
+                                <td class="tfoot-val">10</td>
+                                <td colspan="2"></td>
+                                <td class="tfoot-val">38.00</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
                 </div>
             </div>
 
         </div>
     </main>
 
-    <div id="toast" class="fixed bottom-6 right-6 bg-slate-800 text-white px-5 py-3.5 rounded-xl shadow-2xl toast-enter z-50 flex items-center gap-3 border border-slate-700">
-        <i id="toast-icon" class="fa-solid fa-circle-info text-blue-400 text-lg"></i>
-        <span id="toast-message" class="text-sm font-medium">Ini adalah pesan notifikasi.</span>
-    </div>
+    <!-- TOAST -->
+    <div id="toast-container"></div>
 
     <script>
-        // 1. Logic Animasi Progress Bar Nilai (Jalan otomatis saat web dibuka)
-        window.onload = function() {
+        // ===== DARK MODE =====
+        function toggleDark() {
+            const dark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', dark ? 'dark' : 'light');
+            document.querySelectorAll('.dark-icon').forEach(i => i.style.display = dark ? 'none' : '');
+            document.querySelectorAll('.light-icon').forEach(i => i.style.display = dark ? '' : 'none');
+            document.getElementById('theme-label').textContent = dark ? 'Mode Terang' : 'Mode Gelap';
+        }
+
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            document.querySelectorAll('.dark-icon').forEach(i => i.style.display = 'none');
+            document.querySelectorAll('.light-icon').forEach(i => i.style.display = '');
+            document.getElementById('theme-label').textContent = 'Mode Terang';
+        }
+
+        // ===== DROPDOWN =====
+        function toggleDropdown(id) {
+            const dd = document.getElementById(id);
+            const isOpen = dd.classList.contains('open');
+            document.querySelectorAll('.dropdown.open').forEach(d => d.classList.remove('open'));
+            if (!isOpen) dd.classList.add('open');
+        }
+        document.addEventListener('click', e => {
+            if (!e.target.closest('.dropdown-wrap')) {
+                document.querySelectorAll('.dropdown.open').forEach(d => d.classList.remove('open'));
+            }
+        });
+
+        // ===== PROGRESS BARS (animated on load) =====
+        function animateBars() {
             setTimeout(() => {
-                document.getElementById('ips-bar').style.width = document.getElementById('ips-bar').getAttribute('data-target');
-                document.getElementById('ipk-bar').style.width = document.getElementById('ipk-bar').getAttribute('data-target');
-            }, 300);
+                const ipsBar = document.getElementById('ips-bar');
+                const ipkBar = document.getElementById('ipk-bar');
+                ipsBar.style.width = ipsBar.dataset.target + '%';
+                ipkBar.style.width = ipkBar.dataset.target + '%';
+            }, 400);
+        }
+        window.addEventListener('load', animateBars);
+
+        // ===== SEMESTER CHANGE =====
+        const semData = {
+            genap25: {
+                semLabel: 'Genap 2025/2026',
+                ips: '3.85', ipsTarget: 96,
+                sksDiambil: '10 SKS', sksLulus: '10 SKS',
+                table: 'table-genap25',
+                summarySks: '10 SKS'
+            },
+            ganjil25: {
+                semLabel: 'Ganjil 2025/2026',
+                ips: '3.62', ipsTarget: 88,
+                sksDiambil: '8 SKS', sksLulus: '8 SKS',
+                table: 'table-ganjil25',
+                summarySks: '8 SKS'
+            },
+            genap24: {
+                semLabel: 'Genap 2024/2025',
+                ips: '3.70', ipsTarget: 90,
+                sksDiambil: '10 SKS', sksLulus: '10 SKS',
+                table: 'table-genap24',
+                summarySks: '10 SKS'
+            }
         };
 
-        // 2. Profile Dropdown Logic
-        function toggleDropdown(event, id) {
-            event.stopPropagation();
-            const dropdown = document.getElementById(id);
-            const isClosing = dropdown.classList.contains('dropdown-active');
-            
-            document.querySelectorAll('.dropdown-active').forEach(dd => {
-                dd.classList.remove('dropdown-active');
-                dd.classList.add('dropdown-enter');
-            });
-
-            if (!isClosing) {
-                dropdown.classList.remove('dropdown-enter');
-                dropdown.classList.add('dropdown-active');
-            }
-        }
-
-        window.onclick = function() {
-            document.querySelectorAll('.dropdown-active').forEach(dd => {
-                dd.classList.remove('dropdown-active');
-                dd.classList.add('dropdown-enter');
-            });
-        }
-
-        // 3. Toast Notification
-        let toastTimeout;
-        function showToast(message, type = 'info') {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toast-message');
-            const toastIcon = document.getElementById('toast-icon');
-            
-            toastMsg.innerText = message;
-            toastIcon.className = type === 'success' ? "fa-solid fa-circle-check text-green-400 text-lg" : "fa-solid fa-circle-info text-blue-400 text-lg";
-            
-            toast.classList.remove('toast-enter');
-            toast.classList.add('toast-active');
-            
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toast.classList.remove('toast-active');
-                toast.classList.add('toast-enter');
-            }, 3000);
-        }
-
-        // 4. Simulasi Download/Print KHS
-        function simulateDownload(btnId, loadingText, successText) {
-            const btn = document.getElementById(btnId);
-            const originalHTML = btn.innerHTML;
-            
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${loadingText}`;
-            btn.disabled = true;
-
-            setTimeout(() => {
-                btn.innerHTML = originalHTML;
-                btn.disabled = false;
-                showToast(successText, 'success');
-            }, 1500);
-        }
-
-        // 5. Logic Filter Semester (Mengganti Tabel & Nilai IPS Dinamis)
         function changeSemester() {
-            const val = document.getElementById('semesterFilter').value;
-            const container = document.getElementById('table-container');
-            const textSem = document.getElementById('text-semester');
-            const scoreIPS = document.getElementById('ips-score');
-            const barIPS = document.getElementById('ips-bar');
-            const sksDiambil = document.getElementById('sks-diambil');
-            const sksLulus = document.getElementById('sks-lulus');
-            
-            // Reset efek fade out
-            container.classList.remove('fade-in');
-            
-            // Sembunyikan semua tabel
-            document.getElementById('table-genap25').classList.add('hidden');
-            document.getElementById('table-ganjil25').classList.add('hidden');
-            
-            // Reset lebar bar IPS (animasi ulang)
-            barIPS.style.width = "0%";
+            const val = document.getElementById('semesterSelect').value;
+            const data = semData[val];
+            const wrap = document.getElementById('tableWrap');
+            const bar = document.getElementById('ips-bar');
+
+            // Fade out
+            wrap.classList.add('fading');
+            bar.style.width = '0%';
 
             setTimeout(() => {
-                container.classList.add('fade-in'); // Tambah efek fade in baru
-                
-                if(val === 'genap25') {
-                    document.getElementById('table-genap25').classList.remove('hidden');
-                    textSem.innerText = "Genap 2025/2026";
-                    scoreIPS.innerText = "3.85";
-                    sksDiambil.innerText = "10 SKS";
-                    sksLulus.innerText = "10 SKS";
-                    barIPS.style.width = "96%";
-                } 
-                else if (val === 'ganjil25') {
-                    document.getElementById('table-ganjil25').classList.remove('hidden');
-                    textSem.innerText = "Ganjil 2025/2026";
-                    scoreIPS.innerText = "3.62";
-                    sksDiambil.innerText = "8 SKS";
-                    sksLulus.innerText = "8 SKS";
-                    barIPS.style.width = "88%"; // Bar sedikit berkurang
-                } 
-                else {
-                    // Fallback jika data tidak ada (bisa dikembangkan)
-                    document.getElementById('table-genap25').classList.remove('hidden');
-                    textSem.innerText = "Data Arsip";
-                    scoreIPS.innerText = "3.70";
-                    barIPS.style.width = "90%";
-                }
-            }, 100);
+                // Update score card
+                document.getElementById('ips-score').textContent = data.ips;
+                document.getElementById('ips-sem-label').textContent = data.semLabel;
+                document.getElementById('sks-diambil').textContent = data.sksDiambil;
+                document.getElementById('sks-lulus').textContent = data.sksLulus;
+
+                // Update summary
+                document.getElementById('summary-sem').textContent = data.semLabel;
+                document.getElementById('summary-sks').textContent = data.summarySks;
+                document.getElementById('summary-ips').textContent = data.ips;
+
+                // Switch table
+                document.querySelectorAll('[id^="table-"]').forEach(t => t.style.display = 'none');
+                document.getElementById(data.table).style.display = 'table';
+
+                // Fade in
+                wrap.classList.remove('fading');
+                bar.style.width = data.ipsTarget + '%';
+
+            }, 200);
+        }
+
+        // ===== DOWNLOAD / PRINT SIMULATION =====
+        function simulateDownload(btnId, loadingHTML, successMsg, type) {
+            const btn = document.getElementById(btnId);
+            const orig = btn.innerHTML;
+            btn.innerHTML = loadingHTML;
+            btn.disabled = true;
+            btn.style.opacity = '.7';
+            setTimeout(() => {
+                btn.innerHTML = orig;
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                showToast(successMsg, type);
+            }, 1600);
+        }
+
+        // ===== TOAST =====
+        function showToast(message, type = 'info') {
+            const icons = { success: 'fa-circle-check', info: 'fa-circle-info', warning: 'fa-triangle-exclamation' };
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.innerHTML = `<i class="fa-solid ${icons[type] || icons.info}"></i><span style="flex:1">${message}</span><span class="toast-close" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></span>`;
+            document.getElementById('toast-container').appendChild(el);
+            setTimeout(() => {
+                el.style.transition = 'all .3s';
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(6px)';
+                setTimeout(() => el.remove(), 300);
+            }, 4000);
         }
     </script>
 </body>

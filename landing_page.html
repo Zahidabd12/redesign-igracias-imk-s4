@@ -1324,23 +1324,21 @@
 
         <nav class="sidebar-nav">
             <p class="nav-label">Main</p>
-            <a href="#" class="nav-item active">
+            <a href="landing_page.html" class="nav-item active">
                 <i class="fa-solid fa-house"></i> Dashboard
             </a>
-            <a href="#" class="nav-item">
+            <a href="nilai.html" class="nav-item">
                 <i class="fa-solid fa-chart-line"></i> Progress Akademik
             </a>
 
             <p class="nav-label">Akademik</p>
-            <a href="#" class="nav-item"><i class="fa-solid fa-user"></i> Akun</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-building"></i> Asrama</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-comments"></i> Bimbingan</a>
+            <a href="akun.html" class="nav-item"><i class="fa-solid fa-user"></i> Akun</a>
+            <a href="asrama.html" class="nav-item"><i class="fa-solid fa-building"></i> Asrama</a>
+            <a href="bimbingan.html" class="nav-item"><i class="fa-solid fa-comments"></i> Bimbingan</a>
             <a href="elearning.html" class="nav-item"><i class="fa-solid fa-laptop-code"></i> E-Learning</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-file-invoice-dollar"></i> Pembayaran</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-graduation-cap"></i> Nilai & Transkrip</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-clipboard-check"></i> Presensi</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-calendar-days"></i> Jadwal Kuliah</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-book"></i> Perpustakaan</a>
+            <a href="pembayaran.html" class="nav-item"><i class="fa-solid fa-file-invoice-dollar"></i> Pembayaran</a>
+            <a href="nilai.html" class="nav-item"><i class="fa-solid fa-graduation-cap"></i> Nilai & Transkrip</a>
+            <a href="presensi.html" class="nav-item"><i class="fa-solid fa-clipboard-check"></i> Presensi</a>
         </nav>
 
         <div class="sidebar-footer">
@@ -1349,7 +1347,7 @@
                 <i class="fa-solid fa-sun light-icon" style="display:none"></i>
                 <span id="theme-label">Mode Gelap</span>
             </button>
-            <a href="#" class="sidebar-footer-btn btn-danger">
+            <a href="login.html" class="sidebar-footer-btn btn-danger">
                 <i class="fa-solid fa-right-from-bracket"></i> Keluar
             </a>
         </div>
@@ -1431,11 +1429,11 @@
                             <span>101102400004 · S1 Teknik Informatika</span>
                         </div>
                         <div style="padding:6px">
-                            <div class="dropdown-item"><i class="fa-solid fa-user-pen"></i> Edit Profil</div>
-                            <div class="dropdown-item"><i class="fa-solid fa-gear"></i> Pengaturan</div>
-                            <div class="dropdown-item"><i class="fa-solid fa-circle-question"></i> Bantuan</div>
+                            <a href="akun.html" class="dropdown-item"><i class="fa-solid fa-user-pen"></i> Edit Profil</a>
+                            <div class="dropdown-item" onclick="showToast('Halaman pengaturan dalam pengembangan','info')"><i class="fa-solid fa-gear"></i> Pengaturan</div>
+                            <div class="dropdown-item" onclick="showToast('Halaman bantuan dalam pengembangan','info')"><i class="fa-solid fa-circle-question"></i> Bantuan</div>
                             <hr class="dropdown-divider">
-                            <div class="dropdown-item danger"><i class="fa-solid fa-right-from-bracket"></i> Keluar</div>
+                            <a href="login.html" class="dropdown-item danger"><i class="fa-solid fa-right-from-bracket"></i> Keluar</a>
                         </div>
                     </div>
                 </div>
@@ -1455,9 +1453,9 @@
                     <button class="btn-sm btn-outline-sm" onclick="showToast('Mengunduh kalender akademik...','info')">
                         <i class="fa-solid fa-download"></i> Unduh Kalender
                     </button>
-                    <button class="btn-sm btn-primary-sm" onclick="showToast('Membuka formulir janji dosen...','success')">
+                    <a href="bimbingan.html" class="btn-sm btn-primary-sm">
                         <i class="fa-solid fa-plus"></i> Buat Janji Dosen
-                    </button>
+                    </a>
                 </div>
             </div>
 
@@ -1688,9 +1686,9 @@
                             </div>
                         </div>
 
-                        <button class="qr-btn" onclick="showToast('Membuka scanner QR presensi...','info')">
+                        <a href="presensi.html" class="qr-btn">
                             <i class="fa-solid fa-qrcode"></i> Scan QR Presensi
-                        </button>
+                        </a>
                     </div>
 
                     <!-- Progress Card -->
@@ -1791,7 +1789,7 @@
                                 <td class="course-cell">Administrasi</td>
                                 <td class="deadline-cell deadline-normal">15 Mei 2026</td>
                                 <td><span class="status-pill pill-ok">Terjadwal</span></td>
-                                <td><button class="action-link" onclick="showToast('Membuka halaman pembayaran...','info')">Bayar</button></td>
+                                <td><a href="pembayaran.html" class="action-link">Bayar</a></td>
                             </tr>
                         </tbody>
                     </table>
