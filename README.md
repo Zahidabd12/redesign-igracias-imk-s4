@@ -32,8 +32,8 @@ Aplikasi ini dibangun murni menggunakan **Vanilla HTML, Custom Properties CSS (T
 
 | Halaman | Keterangan Fungsi |
 | :--- | :--- |
-| 🏠 `index.html` / `landing_page.html` | **Dashboard Utama:** Halaman pertama setelah *login*. Menampilkan *Hero Banner*, statistik KPI (IPK/SKS), Jadwal Hari Ini, dan tabel *deadline*. |
-| 🔑 `login.html` | **Otentikasi:** Halaman *login* SSO dengan simulasi validasi input dan *shake animation*. |
+| 🔑 `index.html` / `login.html` | **Otentikasi:** Halaman pertama (*Entry Point*) berupa *login* SSO dengan simulasi validasi input dan *shake animation*. |
+| 🏠 `landing_page.html` | **Dashboard Utama:** Halaman pertama setelah berhasil *login*. Menampilkan *Hero Banner*, statistik KPI (IPK/SKS), Jadwal Hari Ini, dan tabel *deadline*. |
 | 👤 `akun.html` | **Profil & Pengaturan:** Menampilkan progres kelengkapan profil mahasiswa dan fitur simulasi *edit* data diri. |
 | 📋 `presensi.html` | **Kehadiran:** Fitur simulasi *scanner* QR Code dan *donut chart* ringkasan kehadiran. |
 | 💻 `elearning.html` | **E-Learning (LMS):** Ruang kelas digital, filter pencarian mata kuliah, dan simulasi *upload* tugas. |
