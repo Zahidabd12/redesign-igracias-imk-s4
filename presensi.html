@@ -497,13 +497,7 @@
     
         /* ===== SMARTPHONE RESPONSIVE FIX ===== */
         @media (max-width: 600px) {
-            table, .table-wrap, .table-container, .history-table {
-                display: block !important;
-                width: 100% !important;
-                overflow-x: auto !important;
-                white-space: nowrap !important;
-                -webkit-overflow-scrolling: touch;
-            }
+            /* Removed bad table block */
             
             .header { padding: 0 16px; }
             .search-input { width: 130px !important; font-size: 12px; }
@@ -517,6 +511,26 @@
             .profile-avatar { margin-bottom: 12px; }
             .banner-inner { flex-direction: column; }
             .banner-left { margin-bottom: 20px; }
+        }
+    
+        /* ===== SURGICAL MOBILE FIXES ===== */
+        @media (max-width: 600px) {
+            /* Bimbingan Timeline Fix */
+            .timeline-top { flex-direction: column; align-items: flex-start !important; gap: 6px !important; }
+            .timeline-date { white-space: normal !important; }
+            .timeline-card { width: 100% !important; min-width: 0 !important; box-sizing: border-box !important; }
+            .timeline-item { gap: 12px !important; }
+            
+            /* Presensi Scanner Overlap Fix */
+            .scanner-panel { position: static !important; height: auto !important; padding: 16px !important; }
+            .camera-box { height: 200px !important; margin-bottom: 10px; }
+            .attendance-ring-wrap { padding: 10px 0 !important; margin-bottom: 10px !important; }
+            
+            /* Asrama Header Title Fix */
+            .header-left .page-title { font-size: 13px !important; white-space: normal !important; line-height: 1.3 !important; }
+            
+            /* Fix Nilai Table padding */
+            table { white-space: nowrap; }
         }
     </style>
 </head>
@@ -702,7 +716,8 @@
                             <span class="date-badge">11 April 2026</span>
                         </div>
                         <div style="overflow-x:auto">
-                            <table class="schedule-table">
+                            <div class="table-responsive" style="overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; padding-bottom: 8px;">
+<table class="schedule-table">
                                 <thead>
                                     <tr>
                                         <th>Mata Kuliah / Dosen</th>
@@ -745,6 +760,7 @@
                                     </tr>
                                 </tbody>
                             </table>
+</div>
                         </div>
                         <!-- Monthly Summary -->
                         <div style="padding: 18px 22px; border-top: 1px solid var(--border);">
