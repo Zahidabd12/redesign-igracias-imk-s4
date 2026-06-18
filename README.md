@@ -1,32 +1,56 @@
-# iGRACIAS Redesign — Tugas IMK 🎨
+# 🎨 Redesign Dashboard Academic iGracias Telkom University
 
-Repository ini berisi *source code* *High-Fidelity Mockup* (HTML/CSS/JS) untuk proyek redesain antarmuka portal akademik **iGRACIAS Telkom University** sebagai bagian dari pemenuhan tugas mata kuliah **Interaksi Manusia Komputer (IMK/HCI)** Semester 4.
+Repository ini berisi *source code High-Fidelity Mockup* (HTML/CSS/JS) untuk proyek redesain antarmuka portal akademik **iGRACIAS Telkom University**. Proyek ini dikembangkan secara kolaboratif sebagai bagian dari pemenuhan tugas mata kuliah **Interaksi Manusia Komputer (IMK / HCI)**.
 
-## 🚀 Fitur & Halaman
-Aplikasi ini dibuat menggunakan **Vanilla HTML, CSS (Custom Properties/Tokens), dan JavaScript murni** (tanpa framework/library pihak ketiga) agar performa tetap ringan dan mudah dikustomisasi.
+---
 
-Semua interaksi dirancang agar dapat digunakan secara fungsional untuk keperluan **Usability Testing**:
-- 🏠 `index.html` (Dashboard Utama - *Entry Point*)
-- 👤 `akun.html` (Profil Mahasiswa & Pengaturan)
-- 🏢 `asrama.html` (Status & Booking Fasilitas)
-- 💬 `bimbingan.html` (Log Bimbingan Dosen PA)
-- 💻 `elearning.html` (Sistem Manajemen Pembelajaran)
-- 💸 `pembayaran.html` (Informasi Tagihan & Histori UKT)
-- 🎓 `nilai.html` (Transkrip & IPK)
-- 📋 `presensi.html` (Scanner QR & Kehadiran)
-- 🔑 `login.html` (Halaman Otentikasi)
+## 👥 Tim Pengembang
 
-## ✨ Highlight UI/UX
-- **Tema Dinamis:** Mendukung *Light Mode* dan *Dark Mode* yang tersimpan secara lokal via `localStorage`.
-- **Navigasi Terpusat:** Struktur layout konsisten dengan koridor *sidebar* kiri yang presisi.
-- **Feedback Visual:** Implementasi *Toast Notification*, animasi rotasi *loading*, *focus rings* (aksesibilitas keyboard), dan efek *hover* pada kartu.
-- **Asymmetric Balance:** Penerapan hierarki tipografi (Kombinasi *Plus Jakarta Sans* & *DM Serif Display*) dan kontras visual berstandar WCAG.
-
-## 🌐 Live Demo (GitHub Pages)
-Anda dapat mengakses *mockup* interaktif ini secara langsung melalui browser:
-👉 **[Buka Demo Aplikasi](https://Zahidabd12.github.io/redesign-igracias-imk-s4/)**
-
-## 🛠️ Tentang
 Proyek ini disusun oleh:
-- **Zahid Abdullah N.M.** (101102400004)
-- Program Studi S1 Teknik Informatika / Sains Data, Telkom University
+| Nama | NIM |
+| :--- | :--- |
+| **Avrio De Galyn Athar** | 103102400032 |
+| **Zahid Abdullah Nur M.** | 103102400034 |
+| **Rafif Fikri** | 103102400068 |
+| **Al Falaq Axcellio Gais Blantran de Rozari** | 103102400074 |
+
+---
+
+## 🌐 Live Demo (Usability Testing)
+
+Anda dapat mengakses dan menguji coba *mockup* interaktif ini secara langsung melalui tautan GitHub Pages berikut:
+
+👉 **[Buka Live Demo Aplikasi](https://Zahidabd12.github.io/redesign-igracias-imk-s4/)**
+
+*(Seluruh fungsi JavaScript antarmuka seperti modal, navigasi sidebar, form feedback, dan filter telah disimulasikan agar dapat digunakan secara fungsional untuk keperluan **Usability Testing**).*
+
+---
+
+## 🚀 Daftar Halaman & Fitur Utama
+
+Aplikasi ini dibangun murni menggunakan **Vanilla HTML, Custom Properties CSS (Tokens), dan JavaScript murni** (tanpa framework/library pihak ketiga) guna menjaga performa yang ringan dan kemudahan modifikasi.
+
+| Halaman | Keterangan Fungsi |
+| :--- | :--- |
+| 🏠 `index.html` / `landing_page.html` | **Dashboard Utama:** Halaman pertama setelah *login*. Menampilkan *Hero Banner*, statistik KPI (IPK/SKS), Jadwal Hari Ini, dan tabel *deadline*. |
+| 🔑 `login.html` | **Otentikasi:** Halaman *login* SSO dengan simulasi validasi input dan *shake animation*. |
+| 👤 `akun.html` | **Profil & Pengaturan:** Menampilkan progres kelengkapan profil mahasiswa dan fitur simulasi *edit* data diri. |
+| 📋 `presensi.html` | **Kehadiran:** Fitur simulasi *scanner* QR Code dan *donut chart* ringkasan kehadiran. |
+| 💻 `elearning.html` | **E-Learning (LMS):** Ruang kelas digital, filter pencarian mata kuliah, dan simulasi *upload* tugas. |
+| 💬 `bimbingan.html` | **Log Bimbingan:** Modul penjadwalan (*Daring/Luring*) dan log riwayat bimbingan akademik dengan Dosen Wali. |
+| 💸 `pembayaran.html` | **Administrasi Keuangan:** *Live countdown* tagihan UKT aktif dan riwayat histori pembayaran. |
+| 🏢 `asrama.html` | **Fasilitas:** Modul reservasi berbagai fasilitas kampus *(Gym, Ruang Diskusi, Laundry)*. |
+| 🎓 `nilai.html` | **Transkrip Akademik:** *Bar chart* perolehan SKS dan KHS (Kartu Hasil Studi) mahasiswa per semester. |
+
+---
+
+## ✨ Highlight Prinsip UI/UX yang Diterapkan
+
+1. **Struktur Tata Letak (*Zoning & Dashboard Layout*)**  
+   Pemisahan jelas antara *Sidebar Vertikal* statis (sebagai jangkar navigasi) dan *Kanvas Konten* dinamis yang dibagi menjadi zona-zona hierarki: Top (Prioritas Tinggi), Middle (Tugas Harian), dan Bottom (Tabel *Deadline*).
+2. **Keseimbangan Visual Asimetris (*Asymmetric Balance*)**  
+   Menggunakan *Sidebar* berwarna padat/gelap untuk mengimbangi bidang konten putih/terang yang luas di sebelah kanan layar, mendistribusikan beban kognitif mata secara merata.
+3. **Aksesibilitas & Feedback (*Accessibility*)**  
+   Mendukung pergantian **Light Mode / Dark Mode** yang disimpan persisten di browser. Seluruh elemen input/tombol dilengkapi *focus rings* untuk kemudahan navigasi *keyboard*, serta *Toast Notification* setiap kali pengguna menyelesaikan tugas (*action*).
+4. **Hierarki Tipografi (*Visual Hierarchy*)**  
+   Penggunaan dua kelompok *font* yang kontras (*DM Serif Display* yang tebal untuk angka/sorotan utama, dan *Plus Jakarta Sans* untuk teks deskripsi) agar fokus pengguna terarah secara intuitif dari informasi terbesar ke detail pendukung.
