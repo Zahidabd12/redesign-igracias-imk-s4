@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iGRACIAS — Wireframe Dashboard</title>
+<style>
+    /* ============ TOKENS (grayscale only) ============ */
+    :root{
+        --ink:#1f1f1f;
+        --ink-2:#6b6b6b;
+        --ink-3:#a3a3a3;
+        --line:#1f1f1f;
+        --line-soft:#c9c9c9;
+        --fill:#e8e8e8;
+        --fill-2:#f4f4f4;
+        --bg:#ffffff;
+        --radius:3px;
+        --sidebar-w:248px;
+        --tag-h:34px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{-webkit-font-smoothing:antialiased;}
+    body{
+        font-family: Arial, Helvetica, sans-serif;
+        color:var(--ink);
+        background:var(--bg);
+        height:100vh;
+        display:flex;
+        flex-direction:column;
+        overflow:hidden;
+    }
+    a{color:inherit;text-decoration:none;}
+    button{cursor:pointer;font-family:inherit;background:none;border:none;color:inherit;}
+    ::-webkit-scrollbar{width:5px;}
+    ::-webkit-scrollbar-thumb{background:var(--line-soft);border-radius:3px;}
+
+    /* ============ WIREFRAME TAG ============ */
+    .wf-tag{
+        height:var(--tag-h);
+        flex-shrink:0;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        padding:0 16px;
+        background:var(--ink);
+        color:#fff;
+        font-size:11px;
+        letter-spacing:.5px;
+        text-transform:uppercase;
+        font-family:'Courier New',monospace;
+    }
+    .wf-tag span:last-child{color:#aaa;font-size:10px;}
+
+    /* ============ APP SHELL ============ */
+    .app-shell{
+        flex:1;
+        display:flex;
+        height:calc(100vh - var(--tag-h));
+        overflow:hidden;
+    }
+
+    /* ============ PLACEHOLDER PRIMITIVES ============ */
+    .ph-img{
+        background-image:
+            linear-gradient(45deg, transparent 47%, var(--line-soft) 49%, var(--line-soft) 51%, transparent 53%),
+            linear-gradient(-45deg, transparent 47%, var(--line-soft) 49%, var(--line-soft) 51%, transparent 53%);
+        background-color:var(--fill-2);
+        border:1px dashed var(--line-soft);
+    }
+    .ph-icon{
+        display:inline-flex;align-items:center;justify-content:center;
+        width:15px;height:15px;
+        border:1px solid var(--ink-2);
+        border-radius:2px;
+        flex-shrink:0;
+    }
+    .ph-icon.round{border-radius:50%;}
+    .ph-icon.sm{width:11px;height:11px;}
+    .ph-avatar{
+        border:1px solid var(--ink);
+        border-radius:50%;
+        background:var(--fill);
+        display:flex;align-items:center;justify-content:center;
+        font-size:11px;font-weight:700;color:var(--ink-2);
+        flex-shrink:0;
+    }
+    .line{
+        height:8px;background:var(--fill);border-radius:2px;
+    }
+    .box-label{
+        font-family:'Courier New',monospace;
+        font-size:9px;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-3);
+    }
+
+    /* ============ SIDEBAR ============ */
+    .sidebar{
+        width:var(--sidebar-w);
+        flex-shrink:0;
+        border-right:1px solid var(--line);
+        display:flex;flex-direction:column;
+    }
+    .sb-logo{
+        display:flex;align-items:center;gap:10px;
+        padding:18px 18px 16px;
+        border-bottom:1px solid var(--line);
+    }
+    .sb-logo .ph-icon{width:32px;height:32px;font-size:11px;font-family:'Courier New',monospace;font-weight:700;color:var(--ink);}
+    .sb-logo-text{font-size:15px;font-weight:700;letter-spacing:-.3px;}
+
+    .sb-user{padding:14px 18px;border-bottom:1px solid var(--line);}
+    .sb-user-row{display:flex;align-items:center;gap:10px;}
+    .sb-user .ph-avatar{width:34px;height:34px;}
+    .sb-user-lines{flex:1;display:flex;flex-direction:column;gap:4px;}
+    .sb-user-lines .line:first-child{width:80%;height:9px;background:var(--ink-2);}
+    .sb-user-lines .line:last-child{width:50%;height:7px;}
+    .sb-badge{
+        margin-top:9px;
+        display:inline-block;
+        border:1px solid var(--line);
+        font-size:9px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
+        padding:3px 8px;border-radius:var(--radius);
+    }
+
+    .sb-nav{flex:1;overflow-y:auto;padding:10px 10px;}
+    .nav-label{
+        font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+        color:var(--ink-3);padding:8px 8px 5px;
+    }
+    .nav-item{
+        display:flex;align-items:center;gap:9px;
+        padding:8px 9px;border-radius:var(--radius);
+        font-size:12.5px;font-weight:500;color:var(--ink-2);
+    }
+    .nav-item.active{background:var(--fill-2);border:1px solid var(--line);color:var(--ink);font-weight:700;}
+
+    .sb-footer{border-top:1px solid var(--line);padding:10px;display:flex;flex-direction:column;gap:6px;}
+    .sb-footer-btn{
+        display:flex;align-items:center;gap:8px;
+        padding:8px 9px;border:1px solid var(--line-soft);border-radius:var(--radius);
+        font-size:12px;font-weight:600;
+    }
+
+    /* ============ MAIN ============ */
+    .main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
+
+    .topbar{
+        height:58px;flex-shrink:0;
+        border-bottom:1px solid var(--line);
+        display:flex;align-items:center;justify-content:space-between;
+        padding:0 22px;
+    }
+    .topbar-left{display:flex;align-items:center;gap:12px;}
+    .search-box{
+        display:flex;align-items:center;gap:8px;
+        border:1px solid var(--line-soft);border-radius:var(--radius);
+        padding:7px 12px;width:260px;
+    }
+    .search-box .line{flex:1;width:auto;}
+    .term-pill{
+        border:1px solid var(--line-soft);border-radius:12px;
+        padding:5px 11px;font-size:10.5px;font-weight:700;color:var(--ink-2);
+    }
+    .topbar-right{display:flex;align-items:center;gap:10px;}
+    .icon-btn{
+        width:32px;height:32px;border:1px solid var(--line-soft);border-radius:50%;
+        display:flex;align-items:center;justify-content:center;position:relative;
+    }
+    .badge-dot{position:absolute;top:5px;right:6px;width:6px;height:6px;border-radius:50%;background:var(--ink);}
+    .profile-chip{
+        display:flex;align-items:center;gap:8px;
+        border:1px solid var(--line-soft);border-radius:20px;padding:5px 10px 5px 5px;
+    }
+    .profile-chip .ph-avatar{width:26px;height:26px;font-size:10px;}
+    .profile-chip span{font-size:12px;font-weight:700;}
+
+    .page{padding:26px 30px;flex:1;}
+
+    /* ---- page header ---- */
+    .page-header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap;}
+    .page-header h1{font-size:21px;font-weight:700;margin-bottom:6px;}
+    .page-header .line{width:300px;}
+    .page-actions{display:flex;gap:8px;}
+    .btn-wf{
+        border:1px solid var(--line);border-radius:var(--radius);
+        padding:8px 14px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px;
+    }
+    .btn-wf.primary{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+    /* ---- banner ---- */
+    .banner{border:1px solid var(--line);border-radius:8px;margin-bottom:22px;}
+    .banner-inner{display:grid;grid-template-columns:1.5fr 1fr;gap:0;}
+    .banner-left{padding:24px;border-right:1px solid var(--line-soft);}
+    .banner-tag{
+        display:inline-block;border:1px solid var(--line);border-radius:10px;
+        font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;
+        padding:4px 10px;margin-bottom:12px;
+    }
+    .banner-left h2{font-size:18px;font-weight:700;margin-bottom:8px;line-height:1.3;}
+    .banner-left .line{margin-bottom:7px;}
+    .banner-left .line.w70{width:70%;}
+    .banner-left .line.w90{width:90%;}
+    .price-chips{display:flex;gap:10px;margin-top:14px;}
+    .price-chip{border:1px solid var(--line-soft);border-radius:var(--radius);padding:8px 12px;}
+    .price-chip .box-label{margin-bottom:4px;}
+    .price-chip .line{width:70px;height:11px;background:var(--ink-2);}
+
+    .banner-right{padding:20px;display:flex;flex-direction:column;gap:10px;}
+    .banner-right-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+    .banner-right-head .line{width:60%;height:11px;background:var(--ink);}
+    .sched-row{display:flex;align-items:center;gap:10px;border:1px solid var(--line-soft);border-radius:var(--radius);padding:8px 10px;}
+    .sched-date{
+        width:30px;height:30px;border:1px solid var(--line);border-radius:6px;
+        display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;
+    }
+    .sched-lines{flex:1;display:flex;flex-direction:column;gap:4px;}
+    .sched-lines .line:first-child{width:70%;height:9px;}
+    .sched-lines .line:last-child{width:50%;}
+    .btn-wf.block{justify-content:center;margin-top:4px;}
+
+    /* ---- stats ---- */
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
+    .stat-card{border:1px solid var(--line-soft);border-radius:8px;padding:16px;}
+    .stat-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+    .stat-card-head .box-label{font-size:9.5px;}
+    .stat-value{font-size:24px;font-weight:700;margin-bottom:8px;}
+    .stat-delta{display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;color:var(--ink-2);}
+
+    /* ---- content grid ---- */
+    .content-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:20px;}
+    .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+    .section-title{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;}
+    .see-all{font-size:11px;font-weight:700;color:var(--ink-2);display:flex;align-items:center;gap:4px;}
+
+    .news-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .news-card{border:1px solid var(--line-soft);border-radius:8px;overflow:hidden;}
+    .news-card.wide{grid-column:1 / -1;}
+    .news-visual{height:84px;}
+    .news-body{padding:13px;}
+    .news-tag{
+        display:inline-block;border:1px solid var(--line);border-radius:9px;
+        font-size:8.5px;font-weight:700;text-transform:uppercase;padding:3px 8px;margin-bottom:8px;
+    }
+    .news-body .line{margin-bottom:6px;}
+    .news-footer{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
+    .news-footer .box-label{font-size:9px;}
+    .news-footer .read{font-size:10.5px;font-weight:700;}
+
+    .right-col{display:flex;flex-direction:column;gap:18px;}
+    .card{border:1px solid var(--line-soft);border-radius:8px;padding:16px;}
+    .card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+    .card-head .section-title{font-size:13px;}
+
+    .tl-item{display:flex;gap:10px;margin-bottom:16px;}
+    .tl-rail{display:flex;flex-direction:column;align-items:center;width:14px;flex-shrink:0;}
+    .tl-dot{width:11px;height:11px;border:2px solid var(--ink);border-radius:50%;background:#fff;flex-shrink:0;}
+    .tl-item.now .tl-dot{background:var(--ink);}
+    .tl-connector{flex:1;width:1px;background:var(--line-soft);margin-top:4px;}
+    .tl-content{flex:1;padding-bottom:2px;}
+    .tl-now-badge{
+        display:inline-block;border:1px solid var(--line);border-radius:8px;
+        font-size:8px;font-weight:700;letter-spacing:.4px;padding:2px 7px;margin-bottom:6px;text-transform:uppercase;
+    }
+    .tl-content .line{margin-bottom:6px;}
+    .tl-content .line.title{height:10px;width:65%;background:var(--ink-2);}
+    .tl-actions{display:flex;gap:6px;margin-top:8px;}
+    .tl-btn{border:1px solid var(--line-soft);border-radius:var(--radius);font-size:10px;font-weight:700;padding:5px 10px;}
+
+    .qr-btn{
+        display:flex;align-items:center;justify-content:center;gap:8px;
+        border:1px dashed var(--line);border-radius:var(--radius);
+        padding:10px;font-size:12px;font-weight:700;margin-top:6px;
+    }
+
+    .progress-row{display:flex;gap:18px;align-items:center;margin-bottom:18px;}
+    .ring-ph{
+        width:96px;height:96px;border-radius:50%;border:8px solid var(--fill);
+        border-top-color:var(--ink);border-right-color:var(--ink);
+        display:flex;align-items:center;justify-content:center;flex-shrink:0;
+        position:relative;
+    }
+    .ring-ph .num{font-size:16px;font-weight:700;}
+    .bar-block{flex:1;}
+    .bar-head{display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;margin-bottom:7px;}
+    .bar-track{height:9px;border:1px solid var(--line);border-radius:5px;overflow:hidden;background:var(--fill-2);}
+    .bar-fill{height:100%;background:var(--ink);}
+    .bar-note{font-size:10.5px;color:var(--ink-2);margin-top:6px;}
+
+    .grad-row{display:flex;align-items:center;gap:12px;border-top:1px solid var(--line-soft);padding-top:14px;}
+    .grad-row .ph-icon{width:34px;height:34px;border-radius:8px;}
+    .grad-row .line{margin-bottom:5px;}
+
+    /* ---- table ---- */
+    .table-wrap{border:1px solid var(--line-soft);border-radius:8px;overflow:hidden;}
+    table{width:100%;border-collapse:collapse;font-size:12px;}
+    thead tr{background:var(--fill-2);border-bottom:1px solid var(--line);}
+    th{text-align:left;padding:10px 14px;font-size:10px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;color:var(--ink-2);}
+    td{padding:11px 14px;border-bottom:1px solid var(--line-soft);}
+    tr:last-child td{border-bottom:none;}
+    .status-pill{border:1px solid var(--line);border-radius:9px;font-size:10px;font-weight:700;padding:3px 9px;display:inline-block;}
+    .action-link{font-size:11.5px;font-weight:700;text-decoration:underline;}
+
+    .deadlines-section{margin-top:24px;}
+
+    /* ============ MOBILE ============ */
+    @media (max-width:900px){
+        .sidebar{display:none;}
+        .stats-grid{grid-template-columns:repeat(2,1fr);}
+        .content-grid{grid-template-columns:1fr;}
+        .banner-inner{grid-template-columns:1fr;}
+        .banner-left{border-right:none;border-bottom:1px solid var(--line-soft);}
+        .news-grid{grid-template-columns:1fr;}
+        .news-card.wide{grid-column:1;}
+        .page{padding:18px;}
+    }
+</style>
+</head>
+<body>
+
+    <div class="wf-tag">
+        <span>Wireframe · Low-Fidelity — iGRACIAS Dashboard</span>
+        <span>v1 · Tidak final, hanya struktur layout</span>
+    </div>
+
+    <div class="app-shell">
+
+        <!-- ===== SIDEBAR ===== -->
+        <aside class="sidebar">
+            <div class="sb-logo">
+                <div class="ph-icon">iG</div>
+                <span class="sb-logo-text">iGRACIAS</span>
+            </div>
+
+            <div class="sb-user">
+                <div class="sb-user-row">
+                    <div class="ph-avatar">ZA</div>
+                    <div class="sb-user-lines">
+                        <div class="line"></div>
+                        <div class="line"></div>
+                    </div>
+                </div>
+                <div class="sb-badge">Mahasiswa · Informatika</div>
+            </div>
+
+            <nav class="sb-nav">
+                <p class="nav-label">Main</p>
+                <div class="nav-item active"><span class="ph-icon sm"></span> Dashboard</div>
+                <div class="nav-item"><span class="ph-icon sm"></span> Progress Akademik</div>
+
+                <p class="nav-label">Akademik</p>
+                <div class="nav-item"><span class="ph-icon sm"></span> Akun</div>
+                <div class="nav-item"><span class="ph-icon sm"></span> Asrama</div>
+                <div class="nav-item"><span class="ph-icon sm"></span> Bimbingan</div>
+                <div class="nav-item"><span class="ph-icon sm"></span> E-Learning</div>
+                <div class="nav-item"><span class="ph-icon sm"></span> Pembayaran</div>
+                <div class="nav-item"><span class="ph-icon sm"></span> Nilai & Transkrip</div>
+                <div class="nav-item"><span class="ph-icon sm"></span> Presensi</div>
+            </nav>
+
+            <div class="sb-footer">
+                <div class="sb-footer-btn"><span class="ph-icon sm round"></span> Mode Gelap</div>
+                <div class="sb-footer-btn"><span class="ph-icon sm"></span> Keluar</div>
+            </div>
+        </aside>
+
+        <!-- ===== MAIN ===== -->
+        <main class="main">
+
+            <!-- TOPBAR -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <div class="search-box">
+                        <span class="ph-icon sm round"></span>
+                        <div class="line"></div>
+                    </div>
+                    <div class="term-pill">TA 2526/2 · Genap</div>
+                </div>
+                <div class="topbar-right">
+                    <div class="icon-btn"><span class="ph-icon sm round"></span></div>
+                    <div class="icon-btn"><span class="ph-icon sm round"></span><span class="badge-dot"></span></div>
+                    <div class="profile-chip">
+                        <div class="ph-avatar">ZA</div>
+                        <span>Zahid</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="page">
+
+                <!-- PAGE HEADER -->
+                <div class="page-header">
+                    <div>
+                        <h1>Selamat pagi, Zahid! 👋</h1>
+                        <div class="line"></div>
+                    </div>
+                    <div class="page-actions">
+                        <div class="btn-wf"><span class="ph-icon sm"></span> Unduh Kalender</div>
+                        <div class="btn-wf primary"><span class="ph-icon sm"></span> Buat Janji Dosen</div>
+                    </div>
+                </div>
+
+                <!-- BANNER -->
+                <div class="banner">
+                    <div class="banner-inner">
+                        <div class="banner-left">
+                            <div class="banner-tag">Pengumuman Penting</div>
+                            <h2>Pendaftaran TOEFL ITP®<br>Daring & Luring Dibuka!</h2>
+                            <div class="line w90"></div>
+                            <div class="line w70"></div>
+                            <div class="price-chips">
+                                <div class="price-chip">
+                                    <p class="box-label">Mahasiswa Tel-U</p>
+                                    <div class="line"></div>
+                                </div>
+                                <div class="price-chip">
+                                    <p class="box-label">Umum</p>
+                                    <div class="line"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="banner-right">
+                            <div class="banner-right-head">
+                                <div class="line"></div>
+                                <span class="box-label">4 Batch</span>
+                            </div>
+                            <div class="sched-row">
+                                <div class="sched-date">5</div>
+                                <div class="sched-lines"><div class="line"></div><div class="line"></div></div>
+                                <span class="ph-icon sm"></span>
+                            </div>
+                            <div class="sched-row">
+                                <div class="sched-date">12</div>
+                                <div class="sched-lines"><div class="line"></div><div class="line"></div></div>
+                                <span class="ph-icon sm"></span>
+                            </div>
+                            <div class="sched-row">
+                                <div class="sched-date">19</div>
+                                <div class="sched-lines"><div class="line"></div><div class="line"></div></div>
+                                <span class="ph-icon sm"></span>
+                            </div>
+                            <div class="btn-wf primary block"><span class="ph-icon sm"></span> Daftar Sekarang</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STATS -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-head"><p class="box-label">IPK Kumulatif</p><span class="ph-icon"></span></div>
+                        <div class="stat-value">3.87</div>
+                        <div class="stat-delta"><span class="ph-icon sm"></span> +0.12 dari semester lalu</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-head"><p class="box-label">SKS Terambil</p><span class="ph-icon"></span></div>
+                        <div class="stat-value">142/144</div>
+                        <div class="stat-delta">2 SKS lagi untuk lulus</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-head"><p class="box-label">Tugas Aktif</p><span class="ph-icon"></span></div>
+                        <div class="stat-value">3</div>
+                        <div class="stat-delta"><span class="ph-icon sm"></span> 1 deadline besok</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-head"><p class="box-label">Kehadiran</p><span class="ph-icon"></span></div>
+                        <div class="stat-value">96%</div>
+                        <div class="stat-delta"><span class="ph-icon sm"></span> Memenuhi syarat UAS</div>
+                    </div>
+                </div>
+
+                <!-- CONTENT GRID -->
+                <div class="content-grid">
+
+                    <!-- NEWS -->
+                    <div>
+                        <div class="section-header">
+                            <h2 class="section-title"><span class="ph-icon"></span> Informasi & Berita</h2>
+                            <span class="see-all">Lihat semua <span class="ph-icon sm"></span></span>
+                        </div>
+                        <div class="news-grid">
+                            <div class="news-card">
+                                <div class="news-visual ph-img"></div>
+                                <div class="news-body">
+                                    <div class="news-tag">Beasiswa</div>
+                                    <div class="line w90"></div>
+                                    <div class="line w70"></div>
+                                    <div class="news-footer">
+                                        <span class="box-label">11 Mar 2026</span>
+                                        <span class="read">Baca →</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="news-card">
+                                <div class="news-visual ph-img"></div>
+                                <div class="news-body">
+                                    <div class="news-tag">Wajib Diisi</div>
+                                    <div class="line w90"></div>
+                                    <div class="line w70"></div>
+                                    <div class="news-footer">
+                                        <span class="box-label">10 Mar 2026</span>
+                                        <span class="read">Baca →</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="news-card wide">
+                                <div class="news-visual ph-img" style="height:64px"></div>
+                                <div class="news-body">
+                                    <div class="news-tag">Lomba</div>
+                                    <div class="line w90"></div>
+                                    <div class="line w70"></div>
+                                    <div class="news-footer">
+                                        <span class="box-label">15 Mar 2026</span>
+                                        <span class="read">Daftar sekarang →</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN -->
+                    <div class="right-col">
+
+                        <!-- SCHEDULE CARD -->
+                        <div class="card">
+                            <div class="card-head">
+                                <span class="section-title">Jadwal Hari Ini</span>
+                                <span class="see-all">Minggu ini →</span>
+                            </div>
+                            <div class="tl-item now">
+                                <div class="tl-rail"><div class="tl-dot"></div><div class="tl-connector"></div></div>
+                                <div class="tl-content">
+                                    <span class="tl-now-badge">Berlangsung</span>
+                                    <div class="line title"></div>
+                                    <div class="line w70"></div>
+                                    <div class="tl-actions">
+                                        <div class="tl-btn">Materi</div>
+                                        <div class="tl-btn">Zoom</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tl-item">
+                                <div class="tl-rail"><div class="tl-dot"></div><div class="tl-connector"></div></div>
+                                <div class="tl-content">
+                                    <div class="line title"></div>
+                                    <div class="line w70"></div>
+                                </div>
+                            </div>
+                            <div class="tl-item">
+                                <div class="tl-rail"><div class="tl-dot"></div></div>
+                                <div class="tl-content">
+                                    <div class="line title"></div>
+                                    <div class="line w70"></div>
+                                </div>
+                            </div>
+                            <div class="qr-btn"><span class="ph-icon"></span> Scan QR Presensi</div>
+                        </div>
+
+                        <!-- PROGRESS CARD -->
+                        <div class="card">
+                            <div class="card-head"><span class="section-title">Progress Akademik</span></div>
+                            <div class="progress-row">
+                                <div class="ring-ph"><span class="num">3.87</span></div>
+                                <div class="bar-block">
+                                    <div class="bar-head"><span>SKS Diselesaikan</span><span>142/144</span></div>
+                                    <div class="bar-track"><div class="bar-fill" style="width:98.6%"></div></div>
+                                    <p class="bar-note">Hanya 2 SKS lagi untuk wisuda</p>
+                                </div>
+                            </div>
+                            <div class="grad-row">
+                                <div class="ph-icon"></div>
+                                <div>
+                                    <p class="box-label">Target Lulus</p>
+                                    <div class="line" style="width:90px;height:11px;background:var(--ink-2)"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- DEADLINES TABLE -->
+                <div class="deadlines-section">
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="ph-icon"></span> Deadline Mendatang</h2>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tugas / Event</th>
+                                    <th>Mata Kuliah</th>
+                                    <th>Tenggat</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Tugas Besar RPL – Sprint 3</td>
+                                    <td>Rekayasa Perangkat Lunak</td>
+                                    <td>Besok, 23:59</td>
+                                    <td><span class="status-pill">Menunggu</span></td>
+                                    <td><span class="action-link">Upload</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Kuis Online – Neural Networks</td>
+                                    <td>Kecerdasan Buatan</td>
+                                    <td>Besok, 23:59</td>
+                                    <td><span class="status-pill">Belum Mulai</span></td>
+                                    <td><span class="action-link">Mulai</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Proposal LKIM 2026</td>
+                                    <td>Ekstrakurikuler</td>
+                                    <td>30 Apr 2026</td>
+                                    <td><span class="status-pill">Draft</span></td>
+                                    <td><span class="action-link">Edit</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Pembayaran UKT Semester Depan</td>
+                                    <td>Administrasi</td>
+                                    <td>15 Mei 2026</td>
+                                    <td><span class="status-pill">Terjadwal</span></td>
+                                    <td><span class="action-link">Bayar</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Interaksi minimal — hanya highlight nav aktif (sesuai tujuan wireframe: fokus ke struktur, bukan fungsi)
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
